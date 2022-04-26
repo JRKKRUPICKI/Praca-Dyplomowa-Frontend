@@ -6,43 +6,43 @@ export default function QuestionListPage() {
 
     const [loading, setLoading] = useState(true);
 
-    const [data, setData] = useState([]);
+    const [questionList, setQuestionList] = useState([]);
 
     const params = useParams();
 
     useEffect(() => {
-        axios.get('http://localhost:4000/test/' + params.testId).then((res) => {
-            setData(res.data.questions);
+        axios.get('http://localhost:4000/question').then((res) => {
+            setQuestionList(res.data.filter(question => question.test.id === parseInt(params.testId)));
             setLoading(false);
         })
     }, [])
 
-    const getQuestionListItem = (question) => {
-        return(
-            <tr key={question.id}>
-                <td>{question.id}</td>
-                <td>{question.name}</td>
-                <td><Link to={'' + question.id}><button>Edytuj</button></Link></td>
-                <td><button>Usuń</button></td>
-            </tr>
-        )
-    }
-
     return loading ? <div>Loading</div> : (
         <div>
             <Link to={'/tests/' + params.testId}><button>Powrót</button></Link>
-            <button>Dodaj pytanie</button>
+            <Link to='add'><button>Dodaj pytanie</button></Link>
             <table>
                 <thead>
                     <tr>
                         <td>ID</td>
                         <td>Nazwa</td>
+                        <td>Liczba odpowiedzi</td>
+                        <td>Odpowiedzi poprawnych</td>
                         <td></td>
                         <td></td>
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map(question => getQuestionListItem(question))}
+                    {questionList.map(question =>
+                        <tr key={question.id}>
+                            <td>{question.id}</td>
+                            <td>{question.name}</td>
+                            <td>{question.answers.length}</td>
+                            <td>{question.answers.filter(answer => answer.correct).length}</td>
+                            <td><Link to={'' + question.id}><button>Edytuj</button></Link></td>
+                            <td><button>Usuń</button></td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
         </div>

@@ -7,6 +7,8 @@ import QuestionListPage from './pages/QuestionListPage';
 import StudentListPage from './pages/StudentListPage';
 import StudentPage from './pages/StudentPage';
 import StudentAddPage from './pages/StudentAddPage';
+import QuestionPage from './pages/QuestionPage';
+import QuestionAddPage from './pages/QuestionAddPage';
 
 function App() {
 
@@ -22,7 +24,8 @@ function App() {
         <Route path='tests' element={<TestListPage/>}/>
         <Route path='tests/:testId' element={<TestPage/>}/>
         <Route path='tests/:testId/questions' element={<QuestionListPage/>}/>
-        <Route path='tests/:testId/questions/:questionId' element={<TestListPage/>}/>
+        <Route path='tests/:testId/questions/:questionId' element={<QuestionPage/>}/>
+        <Route path='tests/:testId/questions/add' element={<QuestionAddPage/>}/>
         <Route path='tests/:testId/students' element={<StudentListPage/>}/>
         <Route path='tests/:testId/students/:studentId' element={<StudentPage/>}/>
         <Route path='tests/:testId/students/add' element={<StudentAddPage/>}/>
