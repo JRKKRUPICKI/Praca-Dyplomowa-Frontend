@@ -11,7 +11,6 @@ export default function StudentAddPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        alert(login + ':' + password);
         if(!login){
             alert('Nieprawidłowy login');
             return true;
@@ -29,7 +28,9 @@ export default function StudentAddPage() {
             password,
             testId: parseInt(params.testId)
         }).then((res) => {
-            alert('OK')
+            alert('OK');
+            setLogin('');
+            setPassword('');
         }).catch((err) => {
             alert(err.response.data.message)
         })

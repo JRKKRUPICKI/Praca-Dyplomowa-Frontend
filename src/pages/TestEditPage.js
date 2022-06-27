@@ -1,53 +1,48 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import AnswerAddForm from "../components/AnswerAddForm";
-import AnswerForm from "../components/AnswerForm";
 
-export default function QuestionPage() {
+export default function TestEditPage() {
 
     const [loading, setLoading] = useState(true);
 
-    const [question, setQuestion] = useState([]);
+    const [test, setTest] = useState([]);
+
+    const [nameField, setNameField] = useState('');
+    const [nameError, setNameError] = useState();
 
     const params = useParams();
 
     useEffect(() => {
-        axios.get('http://localhost:4000/question/' + params.questionId).then((res) => {
-            setQuestion(res.data);
+        axios.get('http://localhost:4000/test/' + params.testId).then((res) => {
+            setTest(res.data);
             setNameField(res.data.name);
             setLoading(false);
         });
         
     }, [params])
 
-    const [nameField, setNameField] = useState('');
-
-    const [nameError, setNameError] = useState('');
-
     const validate = () => {
         let valid = true;
         if(!nameField){
-            setNameError('Brak pytania');
+            setNameError('Brak nazwy testu');
             valid = false;
         }
         else if(nameField !== nameField.trim()){
-            setNameError('Nieprawidłowe pytanie');
+            setNameError('Nieprawidłowa nazwa testu');
             valid = false;
         }
-        else if(nameField === question.name){
-            setNameError('Pytanie jest takie samo');
+        else if(nameField === test.name){
+            setNameError('Nazwa testu jest taka sama');
             valid = false;
         }
         else setNameError('');
         return valid;
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = () => {
         if(!validate()) return;
-        alert(nameField);
-        axios.patch('http://localhost:4000/question/' + question.id, {
+        axios.patch('http://localhost:4000/test/' + test.id, {
             name: nameField
         }).then((res) => {
             alert('OK');
@@ -59,8 +54,8 @@ export default function QuestionPage() {
 
     const getData = () => {
         setLoading(true);
-        axios.get('http://localhost:4000/question/' + params.questionId).then((res) => {
-            setQuestion(res.data);
+        axios.get('http://localhost:4000/test/' + params.testId).then((res) => {
+            setTest(res.data);
             setNameField(res.data.name);
             setLoading(false);
         });
@@ -68,17 +63,16 @@ export default function QuestionPage() {
 
     return loading ? <div>Loading</div> : (
         <div>
-            <Link to={'/tests/' + params.testId + '/questions'}><button>Powrót</button></Link>
+            <Link to={'/tests'}><button>Powrót</button></Link>
             <form>
                 <label>
-                    Pytanie:
+                    Nazwa testu:
                     <input type='text' value={nameField} onChange={(e) => setNameField(e.target.value)}/>
                     {nameError && <div>{nameError}</div>}
                 </label>
+                <Link to={'/tests'}><button>Anuluj</button></Link>
                 <button type='button' onClick={() => handleSubmit()}>Zapisz</button>
             </form>
-            {question.answers.map(answer => <AnswerForm answerId={answer.id} onDelete={getData} key={answer.id}/>)}
-            <AnswerAddForm onAdd={getData}/>
         </div>
     );
 }

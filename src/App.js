@@ -1,5 +1,4 @@
 import './App.css';
-import { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import TestListPage from './pages/TestListPage';
 import TestPage from './pages/TestPage';
@@ -9,28 +8,33 @@ import StudentPage from './pages/StudentPage';
 import StudentAddPage from './pages/StudentAddPage';
 import QuestionPage from './pages/QuestionPage';
 import QuestionAddPage from './pages/QuestionAddPage';
+import TeacherLoginPage from './pages/TeacherLoginPage';
+import { AuthProvider } from './auth/Auth';
+import RequireAuth from './auth/RequireAuth';
+import TestAddPage from './pages/TestAddPage';
+import TestEditPage from './pages/TestEditPage';
 
 function App() {
 
-  useEffect(() => {
-    console.log('MOUNT');
-    return () => console.log('UNMOUNT');
-  }, []);
-
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<TestListPage/>}/>
-        <Route path='tests' element={<TestListPage/>}/>
-        <Route path='tests/:testId' element={<TestPage/>}/>
-        <Route path='tests/:testId/questions' element={<QuestionListPage/>}/>
-        <Route path='tests/:testId/questions/:questionId' element={<QuestionPage/>}/>
-        <Route path='tests/:testId/questions/add' element={<QuestionAddPage/>}/>
-        <Route path='tests/:testId/students' element={<StudentListPage/>}/>
-        <Route path='tests/:testId/students/:studentId' element={<StudentPage/>}/>
-        <Route path='tests/:testId/students/add' element={<StudentAddPage/>}/>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<TeacherLoginPage/>}/>
+          <Route path='tests' element={<RequireAuth><TestListPage/></RequireAuth>}/>
+          <Route path='tests/add' element={<RequireAuth><TestAddPage/></RequireAuth>}/>
+          <Route path='tests/:testId' element={<RequireAuth><TestPage/></RequireAuth>}/>
+          <Route path='tests/:testId/edit' element={<RequireAuth><TestEditPage/></RequireAuth>}/>
+          <Route path='tests/:testId/questions' element={<RequireAuth><QuestionListPage/></RequireAuth>}/>
+          <Route path='tests/:testId/questions/:questionId' element={<RequireAuth><QuestionPage/></RequireAuth>}/>
+          <Route path='tests/:testId/questions/add' element={<RequireAuth><QuestionAddPage/></RequireAuth>}/>
+          <Route path='tests/:testId/students' element={<RequireAuth><StudentListPage/></RequireAuth>}/>
+          <Route path='tests/:testId/students/:studentId' element={<RequireAuth><StudentPage/></RequireAuth>}/>
+          <Route path='tests/:testId/students/add' element={<RequireAuth><StudentAddPage/></RequireAuth>}/>
+          <Route path='*' element={<>404</>}/>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

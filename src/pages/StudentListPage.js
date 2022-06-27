@@ -31,7 +31,6 @@ export default function StudentListPage() {
     const getStudentListItem = (student) => {
         return(
             <tr key={student.id}>
-                <td>{student.id}</td>
                 <td>{student.login}</td>
                 <td>{student.password}</td>
                 <td><Link to={'' + student.id}><button>Edytuj</button></Link></td>
@@ -47,7 +46,6 @@ export default function StudentListPage() {
             <table>
                 <thead>
                     <tr>
-                        <td>ID</td>
                         <td>Login</td>
                         <td>Hasło</td>
                         <td></td>
