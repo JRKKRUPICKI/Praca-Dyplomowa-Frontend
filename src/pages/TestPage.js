@@ -17,6 +17,11 @@ export default function TestPage() {
         })
     }, [params])
 
+    const toHTMLinputDatetime = (datetime) => {
+        let dt = new Date(datetime);
+        return dt.getFullYear() + '-' + (dt.getMonth() < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1) + '-' + dt.getDate() + 'T' + dt.getHours() + ':' + dt.getMinutes();
+    }
+
     return loading ? <div>Loading</div> : (
         <div>
             <Link to='/tests'><button>Powrót</button></Link>
@@ -30,6 +35,12 @@ export default function TestPage() {
                     </tr>
                     <tr>
                         <td>Liczba pytań</td><td>{data.questions.length}</td>
+                    </tr>
+                    <tr>
+                        <td>Czas trwania</td><td>{data.time} min</td>
+                    </tr>
+                    <tr>
+                        <td>Czas logowania</td><td>{toHTMLinputDatetime(new Date(data.loginTimeStart)) + ' - ' + toHTMLinputDatetime(new Date(data.loginTimeEnd))}</td>
                     </tr>
                 </tbody>
             </table>
