@@ -16,14 +16,16 @@ export default function QuestionPage() {
         axios.get('http://localhost:4000/question/' + params.questionId).then((res) => {
             setQuestion(res.data);
             setNameField(res.data.name);
+            setTypeField(res.data.type);
             setLoading(false);
         });
         
     }, [params])
 
     const [nameField, setNameField] = useState('');
-
     const [nameError, setNameError] = useState('');
+
+    const [typeField, setTypeField] = useState(false);
 
     const validate = () => {
         let valid = true;
@@ -44,11 +46,10 @@ export default function QuestionPage() {
     }
 
     const handleSubmit = (e) => {
-        e.preventDefault();
         if(!validate()) return;
-        alert(nameField);
         axios.patch('http://localhost:4000/question/' + question.id, {
-            name: nameField
+            name: nameField,
+            type: typeField
         }).then((res) => {
             alert('OK');
             getData();
@@ -75,6 +76,12 @@ export default function QuestionPage() {
                     <input type='text' value={nameField} onChange={(e) => setNameField(e.target.value)}/>
                     {nameError && <div>{nameError}</div>}
                 </label>
+                <label htmlFor='type'>Pytanie wielokrotnego wyboru?</label>
+                {typeField ? (
+                    <input type='checkbox' id='type' name='type' checked onChange={(e) => setTypeField(e.target.checked)}/>
+                ) : (
+                    <input type='checkbox' id='type' name='type' onChange={(e) => setTypeField(e.target.checked)}/>
+                )}
                 <button type='button' onClick={() => handleSubmit()}>Zapisz</button>
             </form>
             {question.answers.map(answer => <AnswerForm answerId={answer.id} onDelete={getData} key={answer.id}/>)}

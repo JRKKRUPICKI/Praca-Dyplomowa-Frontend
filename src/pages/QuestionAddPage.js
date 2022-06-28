@@ -26,7 +26,6 @@ export default function QuestionAddPage() {
 
     const handleSubmit = () => {
         if(!validate()) return;
-        alert(nameField);
         axios.post('http://localhost:4000/question', {
             name: nameField,
             testId: parseInt(params.testId)

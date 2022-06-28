@@ -13,6 +13,7 @@ import { AuthProvider } from './auth/Auth';
 import RequireAuth from './auth/RequireAuth';
 import TestAddPage from './pages/TestAddPage';
 import TestEditPage from './pages/TestEditPage';
+import StudentLoginPage from './pages/StudentLoginPage';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<TeacherLoginPage/>}/>
+          <Route path=':testId' element={<StudentLoginPage/>}/>
           <Route path='tests' element={<RequireAuth><TestListPage/></RequireAuth>}/>
           <Route path='tests/add' element={<RequireAuth><TestAddPage/></RequireAuth>}/>
           <Route path='tests/:testId' element={<RequireAuth><TestPage/></RequireAuth>}/>
