@@ -53,6 +53,7 @@ export default function StudentLoginPage() {
         const now = new Date();
         const start = new Date(data.loginTimeStart);
         const end = new Date(data.loginTimeEnd);
+        /*
         if(now < start){
             setLoginTimeError('Test jeszcze nie rozpoczął się');
             valid = false;
@@ -62,6 +63,7 @@ export default function StudentLoginPage() {
             valid = false;
         }
         else setLoginTimeError();
+        */
         return valid;
     }
 
@@ -137,6 +139,46 @@ export default function StudentLoginPage() {
         return dt.getFullYear() + '-' + (dt.getMonth() < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1) + '-' + dt.getDate() + 'T' + dt.getHours() + ':' + dt.getMinutes();
     }
 
+    let studentAnswer = [];
+
+    const setAnswer = (questionId, answerId) => {
+        const userId = user.id;
+        const testId = data.id;
+        for(let i = 0; i < studentAnswer.length; i++){
+            if(studentAnswer[i].questionId === questionId){
+                studentAnswer[i].answerId = answerId;
+                return;
+            }
+        }
+        const newAnswer = {
+            questionId: questionId,
+            answerId: answerId
+        }
+        studentAnswer.push(newAnswer);
+    }
+
+    const toggleAnswer = (questionId, answerId) => {
+        const userId = user.id;
+        const testId = data.id;
+        if(studentAnswer.filter(sa => sa.questionId === questionId && sa.answerId === answerId).length > 0){
+            const newStudentAnswer = [];
+            for(let i = 0; i < studentAnswer.length; i++){
+                if(studentAnswer[i].questionId === questionId && studentAnswer[i].answerId === answerId){
+                    continue;
+                }
+                newStudentAnswer.push(studentAnswer[i]);
+            }
+            studentAnswer = newStudentAnswer;
+            console.log(studentAnswer);
+            return;
+        }
+        const newAnswer = {
+            questionId: questionId,
+            answerId: answerId
+        }
+        studentAnswer.push(newAnswer);
+    }
+
     return loading ? <div>Loading</div> : (
         !data ? <div>Test nie istnieje</div> : (
             !user ? (
@@ -161,23 +203,22 @@ export default function StudentLoginPage() {
                 <div>
                     <MyTimer expiryTimestamp={testTime}/>
                     <center>
-                    <form method='POST'>
+                    <form>
                         {loadQuestions().map(q => <div key={q.id}>
                             <div><b>{q.name}</b></div>
                             {!q.type ? (
                                 q.answers.map(a => <div key={a.id}>
-                                    <input type='radio' id={a.id} name={q.id} value={a.id}/>
-                                    <label htmlFor={a.id}>{a.name}</label>
+                                    <input type='radio' id={a.id} name={q.id} value={a.id} onClick={() => setAnswer(q.id, a.id)}/>
+                                    {a.name}
                                 </div>)
                             ) : (
                                 q.answers.map(a => <div key={a.id}>
-                                    <input type='checkbox' id={a.id} name={a.id} value={a.id}/>
-                                    <label htmlFor={a.id}>{a.name}</label>
+                                    <input type='checkbox' id={a.id} name={a.id} value={a.id} onClick={() => toggleAnswer(q.id, a.id)}/>
+                                    {a.name}
                                 </div>)
                             )}
-                            
                         </div>)}
-                        <input type='submit' value='Prześlij odpowiedzi'/>
+                        <button onClick={() => alert(studentAnswer)}>Zapisz odpowiedzi</button>
                     </form>
                     </center>
                 </div>

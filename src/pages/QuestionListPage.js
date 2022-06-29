@@ -15,7 +15,17 @@ export default function QuestionListPage() {
             setQuestionList(res.data.filter(question => question.test.id === parseInt(params.testId)));
             setLoading(false);
         })
-    }, [])
+    }, []);
+
+    const remove = (questionId) => {
+        setLoading(true);
+        axios.delete('http://localhost:4000/question/' + questionId).then((res) => {
+            axios.get('http://localhost:4000/question').then((res) => {
+                setQuestionList(res.data.filter(question => question.test.id === parseInt(params.testId)));
+                setLoading(false);
+            })
+        })
+    }
 
     return loading ? <div>Loading</div> : (
         <div>
@@ -40,7 +50,7 @@ export default function QuestionListPage() {
                             <td>{question.answers.length}</td>
                             <td>{question.answers.filter(answer => answer.correct).length}</td>
                             <td><Link to={'' + question.id}><button>Edytuj</button></Link></td>
-                            <td><button>Usuń</button></td>
+                            <td><button onClick={() => remove(question.id)}>Usuń</button></td>
                         </tr>
                     )}
                 </tbody>
