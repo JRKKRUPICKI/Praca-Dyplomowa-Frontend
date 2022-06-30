@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTimer } from 'react-timer-hook';
+import { formatDatetime } from "../utils/TimeUtils";
 
 export default function StudentLoginPage() {
 
@@ -53,7 +54,6 @@ export default function StudentLoginPage() {
         const now = new Date();
         const start = new Date(data.loginTimeStart);
         const end = new Date(data.loginTimeEnd);
-        /*
         if(now < start){
             setLoginTimeError('Test jeszcze nie rozpoczął się');
             valid = false;
@@ -63,7 +63,6 @@ export default function StudentLoginPage() {
             valid = false;
         }
         else setLoginTimeError();
-        */
         return valid;
     }
 
@@ -87,12 +86,12 @@ export default function StudentLoginPage() {
             seconds,
             minutes,
             hours,
-            days,
-            isRunning,
-            start,
-            pause,
-            resume,
-            restart,
+            //days,
+            //isRunning,
+            //start,
+            //pause,
+            //resume,
+            //restart,
         } = useTimer({ expiryTimestamp, onExpire: () => {
             alert('Koniec czasu, odpowiedzi zostały automatycznie przesłane');
             setUser();
@@ -132,11 +131,6 @@ export default function StudentLoginPage() {
             list.push(b);
         });
         return list;
-    }
-
-    const toHTMLinputDatetime = (datetime) => {
-        let dt = new Date(datetime);
-        return dt.getFullYear() + '-' + (dt.getMonth() < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1) + '-' + dt.getDate() + 'T' + dt.getHours() + ':' + dt.getMinutes();
     }
 
     let studentAnswer = [];
@@ -199,7 +193,7 @@ export default function StudentLoginPage() {
         !data ? <div>Test nie istnieje</div> : (
             !user ? (
                 <div>
-                    {toHTMLinputDatetime(new Date(data.loginTimeStart)) + ' - ' + toHTMLinputDatetime(new Date(data.loginTimeEnd))}
+                    {formatDatetime(new Date(data.loginTimeStart)) + ' - ' + formatDatetime(new Date(data.loginTimeEnd))}
                     <form>
                         <label>
                             Login:

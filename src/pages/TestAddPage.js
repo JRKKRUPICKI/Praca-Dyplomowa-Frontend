@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/Auth";
+import { formatDatetime } from "../utils/TimeUtils";
 
 export default function TestAddPage() {
 
@@ -14,15 +15,10 @@ export default function TestAddPage() {
     const [timeField, setTimeField] = useState(0);
     const [timeError, setTimeError] = useState();
 
-    const toHTMLinputDatetime = (datetime) => {
-        let dt = new Date(datetime);
-        return dt.getFullYear() + '-' + (dt.getMonth() < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1) + '-' + dt.getDate() + 'T' + dt.getHours() + ':' + dt.getMinutes();
-    }
-
-    const [loginTimeStartField, setLoginTimeStartField] = useState(toHTMLinputDatetime(Date.now()));
+    const [loginTimeStartField, setLoginTimeStartField] = useState(formatDatetime(Date.now()));
     const [loginTimeStartError, setLoginTimeStartError] = useState();
 
-    const [loginTimeEndField, setLoginTimeEndField] = useState(toHTMLinputDatetime(Date.now()));
+    const [loginTimeEndField, setLoginTimeEndField] = useState(formatDatetime(Date.now()));
     const [loginTimeEndError, setLoginTimeEndError] = useState();
 
     const validate = () => {

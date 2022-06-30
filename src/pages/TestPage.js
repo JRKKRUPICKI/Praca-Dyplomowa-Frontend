@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { formatDatetime } from "../utils/TimeUtils";
 
 export default function TestPage() {
 
@@ -17,14 +18,10 @@ export default function TestPage() {
         })
     }, [params])
 
-    const toHTMLinputDatetime = (datetime) => {
-        let dt = new Date(datetime);
-        return dt.getFullYear() + '-' + (dt.getMonth() < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1) + '-' + dt.getDate() + 'T' + dt.getHours() + ':' + dt.getMinutes();
-    }
-
     return loading ? <div>Loading</div> : (
         <div>
             <Link to='/tests'><button>Powrót</button></Link>
+            <Link to={'/tests/' + params.testId + '/edit'}><button>Edytuj</button></Link>
             <table>
                 <tbody>
                     <tr>
@@ -40,7 +37,7 @@ export default function TestPage() {
                         <td>Czas trwania</td><td>{data.time} min</td>
                     </tr>
                     <tr>
-                        <td>Czas logowania</td><td>{toHTMLinputDatetime(new Date(data.loginTimeStart)) + ' - ' + toHTMLinputDatetime(new Date(data.loginTimeEnd))}</td>
+                        <td>Czas logowania</td><td>{formatDatetime(new Date(data.loginTimeStart)) + ' - ' + formatDatetime(new Date(data.loginTimeEnd))}</td>
                     </tr>
                 </tbody>
             </table>

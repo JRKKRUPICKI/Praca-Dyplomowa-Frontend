@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { formatDatetime } from "../utils/TimeUtils";
 
 export default function StudentListPage() {
 
@@ -39,11 +40,6 @@ export default function StudentListPage() {
                 <td><button onClick={() => deletee(student.id)}>Usuń</button></td>
             </tr>
         )
-    }
-
-    const formatDatetime = (datetime) => {
-        let dt = new Date(datetime);
-        return dt.getDate() + '.' + (dt.getMonth() < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1) + '.' + dt.getFullYear() + ' ' + dt.getHours() + ':' + dt.getMinutes();
     }
 
     return loading ? <div>Loading</div> : (
