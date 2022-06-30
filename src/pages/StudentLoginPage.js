@@ -142,8 +142,6 @@ export default function StudentLoginPage() {
     let studentAnswer = [];
 
     const setAnswer = (questionId, answerId) => {
-        const userId = user.id;
-        const testId = data.id;
         for(let i = 0; i < studentAnswer.length; i++){
             if(studentAnswer[i].questionId === questionId){
                 studentAnswer[i].answerId = answerId;
@@ -158,8 +156,6 @@ export default function StudentLoginPage() {
     }
 
     const toggleAnswer = (questionId, answerId) => {
-        const userId = user.id;
-        const testId = data.id;
         if(studentAnswer.filter(sa => sa.questionId === questionId && sa.answerId === answerId).length > 0){
             const newStudentAnswer = [];
             for(let i = 0; i < studentAnswer.length; i++){
@@ -169,7 +165,6 @@ export default function StudentLoginPage() {
                 newStudentAnswer.push(studentAnswer[i]);
             }
             studentAnswer = newStudentAnswer;
-            console.log(studentAnswer);
             return;
         }
         const newAnswer = {
@@ -177,6 +172,27 @@ export default function StudentLoginPage() {
             answerId: answerId
         }
         studentAnswer.push(newAnswer);
+    }
+
+    const saveAnswers = (e) => {
+        e.preventDefault();
+        const studentId = user.id;
+        const testId = data.id;
+        console.log(studentAnswer);
+        studentAnswer.forEach(a => {
+            axios.post('http://localhost:4000/studentanswer', {
+                studentId: studentId,
+                testId: testId,
+                questionId: a.questionId,
+                answerId: a.answerId
+            }).then((res) => {
+                console.log(a + ' OK');
+            }).catch((err) => {
+                console.log(a + ' NOT OK');
+            })
+            console.log(a)
+        });
+        setUser();
     }
 
     return loading ? <div>Loading</div> : (
@@ -218,7 +234,7 @@ export default function StudentLoginPage() {
                                 </div>)
                             )}
                         </div>)}
-                        <button onClick={() => alert(studentAnswer)}>Zapisz odpowiedzi</button>
+                        <button onClick={(e) => saveAnswers(e)}>Zapisz odpowiedzi</button>
                     </form>
                     </center>
                 </div>

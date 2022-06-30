@@ -33,10 +33,17 @@ export default function StudentListPage() {
             <tr key={student.id}>
                 <td>{student.login}</td>
                 <td>{student.password}</td>
+                <td>{student.active ? 'aktywne' : 'nieaktywne'}</td>
+                <td>{student.status === 0 ? 'nieprzesłane' : 'przesłane (' + formatDatetime(student.status) + ')'}</td>
                 <td><Link to={'' + student.id}><button>Edytuj</button></Link></td>
                 <td><button onClick={() => deletee(student.id)}>Usuń</button></td>
             </tr>
         )
+    }
+
+    const formatDatetime = (datetime) => {
+        let dt = new Date(datetime);
+        return dt.getDate() + '.' + (dt.getMonth() < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1) + '.' + dt.getFullYear() + ' ' + dt.getHours() + ':' + dt.getMinutes();
     }
 
     return loading ? <div>Loading</div> : (
@@ -48,6 +55,8 @@ export default function StudentListPage() {
                     <tr>
                         <td>Login</td>
                         <td>Hasło</td>
+                        <td>Konto</td>
+                        <td>Odpowiedzi</td>
                         <td></td>
                         <td></td>
                     </tr>
