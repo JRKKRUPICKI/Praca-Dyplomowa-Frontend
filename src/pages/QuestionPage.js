@@ -37,10 +37,10 @@ export default function QuestionPage() {
             setNameError('Nieprawidłowe pytanie');
             valid = false;
         }
-        else if(nameField === question.name){
-            setNameError('Pytanie jest takie samo');
-            valid = false;
-        }
+        //else if(nameField === question.name){
+            //setNameError('Pytanie jest takie samo');
+            //valid = false;
+        //}
         else setNameError('');
         return valid;
     }
