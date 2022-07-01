@@ -38,6 +38,7 @@ export default function StudentListPage() {
                 <td>{student.status === 0 ? 'nieprzesłane' : 'przesłane (' + formatDatetime(student.status) + ')'}</td>
                 <td><Link to={'' + student.id}><button>Edytuj</button></Link></td>
                 <td><button onClick={() => deletee(student.id)}>Usuń</button></td>
+                <td><Link to={'' + student.id + '/test'}><button disabled={student.status === 0}>Pokaż test</button></Link></td>
             </tr>
         )
     }
@@ -53,6 +54,7 @@ export default function StudentListPage() {
                         <td>Hasło</td>
                         <td>Konto</td>
                         <td>Odpowiedzi</td>
+                        <td></td>
                         <td></td>
                         <td></td>
                     </tr>
