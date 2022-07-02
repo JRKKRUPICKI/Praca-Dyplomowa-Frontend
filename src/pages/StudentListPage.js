@@ -39,6 +39,7 @@ export default function StudentListPage() {
                 <td><Link to={'' + student.id}><button>Edytuj</button></Link></td>
                 <td><button onClick={() => deletee(student.id)}>Usuń</button></td>
                 <td><Link to={'' + student.id + '/test'}><button disabled={student.status === 0}>Pokaż test</button></Link></td>
+                <td><Link to={'' + student.id + '/logs'}><button disabled={student.status === 0}>Pokaż logi</button></Link></td>
             </tr>
         )
     }

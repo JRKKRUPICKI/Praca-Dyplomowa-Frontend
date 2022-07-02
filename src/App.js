@@ -15,6 +15,7 @@ import TestAddPage from './pages/TestAddPage';
 import TestEditPage from './pages/TestEditPage';
 import StudentLoginPage from './pages/StudentLoginPage';
 import StudentTestPage from './pages/StudentTestPage';
+import LogsPage from './pages/LogsPage';
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
           <Route path='tests/:testId/students' element={<RequireAuth><StudentListPage/></RequireAuth>}/>
           <Route path='tests/:testId/students/:studentId' element={<RequireAuth><StudentPage/></RequireAuth>}/>
           <Route path='tests/:testId/students/:studentId/test' element={<RequireAuth><StudentTestPage/></RequireAuth>}/>
+          <Route path='tests/:testId/students/:studentId/logs' element={<RequireAuth><LogsPage/></RequireAuth>}/>
           <Route path='tests/:testId/students/add' element={<RequireAuth><StudentAddPage/></RequireAuth>}/>
           <Route path='*' element={<>404</>}/>
         </Routes>

@@ -136,6 +136,16 @@ export default function StudentLoginPage() {
     let studentAnswer = [];
 
     const setAnswer = (questionId, answerId) => {
+        axios.post('http://localhost:4000/logs', {
+            studentId: user.id,
+            testId: parseInt(params.testId),
+            questionId: questionId,
+            answerId: answerId,
+            datetime: Date.now(),
+            actionType: 0
+        }).catch((err) => {
+            alert('Problem z zapisem logów');
+        })
         for(let i = 0; i < studentAnswer.length; i++){
             if(studentAnswer[i].questionId === questionId){
                 studentAnswer[i].answerId = answerId;
@@ -159,6 +169,16 @@ export default function StudentLoginPage() {
                 newStudentAnswer.push(studentAnswer[i]);
             }
             studentAnswer = newStudentAnswer;
+            axios.post('http://localhost:4000/logs', {
+                studentId: user.id,
+                testId: parseInt(params.testId),
+                questionId: questionId,
+                answerId: answerId,
+                datetime: Date.now(),
+                actionType: 2
+            }).catch((err) => {
+                alert('Problem z zapisem logów');
+            })
             return;
         }
         const newAnswer = {
@@ -166,13 +186,22 @@ export default function StudentLoginPage() {
             answerId: answerId
         }
         studentAnswer.push(newAnswer);
+        axios.post('http://localhost:4000/logs', {
+            studentId: user.id,
+            testId: parseInt(params.testId),
+            questionId: questionId,
+            answerId: answerId,
+            datetime: Date.now(),
+            actionType: 1
+        }).catch((err) => {
+            alert('Problem z zapisem logów');
+        })
     }
 
     const saveAnswers = (e) => {
         e.preventDefault();
         const studentId = user.id;
         const testId = data.id;
-        console.log(studentAnswer);
         studentAnswer.forEach(a => {
             axios.post('http://localhost:4000/studentanswer', {
                 studentId: studentId,
@@ -180,11 +209,10 @@ export default function StudentLoginPage() {
                 questionId: a.questionId,
                 answerId: a.answerId
             }).then((res) => {
-                console.log(a + ' OK');
+                alert('Odpowiedzi zapisane');
             }).catch((err) => {
-                console.log(a + ' NOT OK');
+                alert('Problem z zapisem odpowiedzi');
             })
-            console.log(a)
         });
         setUser();
     }
