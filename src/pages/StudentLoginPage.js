@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTimer } from 'react-timer-hook';
 import { formatDatetime } from "../utils/TimeUtils";
+import './StudentLoginPage.scss'
 
 export default function StudentLoginPage() {
 
@@ -99,9 +100,9 @@ export default function StudentLoginPage() {
 
 
         return (
-            <div style={{textAlign: 'center'}}>
-                <h1>Czas na przesłanie odpowiedzi</h1>
-                <div style={{fontSize: '70px'}}>
+            <div style={{textAlign: 'center'}} className='timer'>
+                <div className='header'>Czas na przesłanie odpowiedzi</div>
+                <div className='time'>
                     <span>{hours < 10 ? '0' + hours : hours}</span>:<span>{minutes < 10 ? '0' + minutes : minutes}</span>:<span>{seconds < 10 ? '0' + seconds : seconds}</span>
                 </div>
             </div>
@@ -240,25 +241,21 @@ export default function StudentLoginPage() {
             ) : (
                 <div>
                     <MyTimer expiryTimestamp={testTime}/>
-                    <center>
-                    <form>
-                        {loadQuestions().map(q => <div key={q.id}>
-                            <div><b>{q.name}</b></div>
-                            {!q.type ? (
-                                q.answers.map(a => <div key={a.id}>
-                                    <input type='radio' id={a.id} name={q.id} value={a.id} onClick={() => setAnswer(q.id, a.id)}/>
-                                    {a.name}
-                                </div>)
-                            ) : (
-                                q.answers.map(a => <div key={a.id}>
-                                    <input type='checkbox' id={a.id} name={a.id} value={a.id} onClick={() => toggleAnswer(q.id, a.id)}/>
-                                    {a.name}
-                                </div>)
-                            )}
-                        </div>)}
-                        <button onClick={(e) => saveAnswers(e)}>Zapisz odpowiedzi</button>
-                    </form>
-                    </center>
+                    {loadQuestions().map(q => <div key={q.id} className='questionBox'>
+                        <div className='question'>{q.name}</div>
+                        {!q.type ? (
+                            q.answers.map(a => <div key={a.id} className='answer'>
+                                <input type='radio' id={a.id} name={q.id} value={a.id} onClick={() => setAnswer(q.id, a.id)}/>
+                                {a.name}
+                            </div>)
+                        ) : (
+                            q.answers.map(a => <div key={a.id} className='answer'>
+                                <input type='checkbox' id={a.id} name={a.id} value={a.id} onClick={() => toggleAnswer(q.id, a.id)}/>
+                                {a.name}
+                            </div>)
+                        )}
+                    </div>)}
+                    <button onClick={(e) => saveAnswers(e)} className='save'>Zapisz odpowiedzi</button>
                 </div>
             )
         )
