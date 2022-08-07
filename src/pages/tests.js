@@ -160,7 +160,7 @@ export default function Tests(){
                     <div onClick={() => navigate('/students')}>
                         <i className='gg-user-list'></i>Studenci
                     </div>
-                    <div>
+                    <div onClick={() => navigate('/questions')}>
                         <i className='gg-edit-unmask'></i>Pytania
                     </div>
                     <div>

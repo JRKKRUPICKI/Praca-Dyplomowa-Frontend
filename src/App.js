@@ -1,8 +1,5 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import QuestionListPage from './pages/QuestionListPage';
-import QuestionPage from './pages/QuestionPage';
-import QuestionAddPage from './pages/QuestionAddPage';
 import { AuthProvider } from './auth/Auth';
 import RequireAuth from './auth/RequireAuth';
 import StudentLoginPage from './pages/StudentLoginPage';
@@ -11,6 +8,7 @@ import LogsPage from './pages/LogsPage';
 import Tests from './pages/tests';
 import Students from './pages/students';
 import TeacherLoginPage from './pages/teacher-login.page';
+import Questions from './pages/questions';
 
 function App() {
   return (
@@ -21,9 +19,7 @@ function App() {
               <Route path=':testId' element={<StudentLoginPage/>}/>
               <Route path='tests' element={<RequireAuth><Tests/></RequireAuth>}/>
               <Route path='students' element={<RequireAuth><Students/></RequireAuth>}/>
-              <Route path='tests/:testId/questions' element={<RequireAuth><QuestionListPage/></RequireAuth>}/>
-              <Route path='tests/:testId/questions/:questionId' element={<RequireAuth><QuestionPage/></RequireAuth>}/>
-              <Route path='tests/:testId/questions/add' element={<RequireAuth><QuestionAddPage/></RequireAuth>}/>
+              <Route path='questions' element={<RequireAuth><Questions/></RequireAuth>}/>
               <Route path='tests/:testId/students/:studentId/test' element={<RequireAuth><StudentTestPage/></RequireAuth>}/>
               <Route path='tests/:testId/students/:studentId/logs' element={<RequireAuth><LogsPage/></RequireAuth>}/>
               <Route path='*' element={<>404</>}/>

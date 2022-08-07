@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { StudentsProvider } from "../providers/students.provider";
 import { useAuth } from "../auth/Auth";
+import { QuestionsProvider } from "../providers/questions.provider";
 
 const Container = styled.div`
     display: grid;
@@ -85,7 +86,7 @@ const Content = styled.div`
             padding: 8px 16px;
             text-align: center;
 
-            &:nth-child(1), &:nth-child(2){
+            &:nth-child(1){
                 text-align: left;
             }
 
@@ -138,7 +139,7 @@ const User = styled.div`
     }
 `;
 
-export default function Students(){
+export default function Questions(){
 
     const navigate = useNavigate();
 
@@ -157,10 +158,10 @@ export default function Students(){
                     <div onClick={() => navigate('/tests')}>
                         <i className='gg-notes'></i>Testy
                     </div>
-                    <div className="active" onClick={() => navigate('/students')}>
+                    <div onClick={() => navigate('/students')}>
                         <i className='gg-user-list'></i>Studenci
                     </div>
-                    <div onClick={() => navigate('/questions')}>
+                    <div className="active" onClick={() => navigate('/questions')}>
                         <i className='gg-edit-unmask'></i>Pytania
                     </div>
                     <div>
@@ -188,7 +189,7 @@ export default function Students(){
                         <div>teacher@gmail.com</div>
                     </User>
                 </Header>
-                <StudentsProvider/>
+                <QuestionsProvider/>
             </Content>
         </Container>
     )
