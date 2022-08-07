@@ -31,7 +31,7 @@ export default function TestsList(){
             setTests(res.data.filter(t => t.teacher.id === auth.user.id));
             setLoading(false);
         });
-    }, [])
+    }, [auth.user.id])
 
     const page = usePage();
 

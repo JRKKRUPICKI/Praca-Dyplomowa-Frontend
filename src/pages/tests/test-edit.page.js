@@ -38,7 +38,7 @@ export default function TestEdit(){
             setLoginTimeEndField(new Date(new Date(res.data.loginTimeEnd) - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, -1));
             setLoading(false);
         })
-    }, [])
+    }, [page.testId])
 
     const [nameField, setNameField] = useState();
     const [nameError, setNameError] = useState();

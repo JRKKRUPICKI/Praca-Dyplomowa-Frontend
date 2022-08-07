@@ -35,7 +35,7 @@ export default function StudentDetails(){
             setData(res.data);
             setLoading(false);
         })
-    }, [])
+    }, [page.studentId])
 
     const deleteStudent = () => {
         setLoading(true);

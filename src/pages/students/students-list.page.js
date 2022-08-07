@@ -39,7 +39,7 @@ export default function StudentsList(){
             setLoading(false);
         });
         if(page.testId) loadStudents();
-    }, [])
+    }, [auth.user.id])
 
     const page = usePage();
 

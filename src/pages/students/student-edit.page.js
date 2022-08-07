@@ -37,7 +37,7 @@ export default function StudentEdit(){
             setData(res.data);
             setLoading(false);
         })
-    }, [])
+    }, [page.studentId])
 
     const [loginField, setLoginField] = useState(data.login);
     const [loginError, setLoginError] = useState('');
