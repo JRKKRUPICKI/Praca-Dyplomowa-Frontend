@@ -3,6 +3,9 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../auth/Auth";
+import { Button } from "../ui/button";
+import { Input, InputLabel } from "../ui/input";
+import { Error, Title } from "../ui/typography";
 
 const FlexContainer = styled.div`
     display: flex;
@@ -14,53 +17,26 @@ const Container = styled.div`
     background: #1e1f24;
     border-radius: 10px;
     padding: 50px;
-    width: fit-content;
+    width: 500px;
     height: fit-content;
     margin: 0 auto 0 auto;
-    color: #7d8093;
-`;
+    display: flex;
+    flex-direction: column;
 
-const Title = styled.div`
-    font-weight: bold;
-    font-size: 24px;
-    text-align: center;
-    margin-bottom: 20px;
-`;
-
-const Label = styled.div`
-    font-size: 18px;
-    margin: 14px 0 8px 0;
-`;
-
-const Input = styled.input`
-    width: 500px;
-    display: block;
-    font-size: 20px;
-    padding: 14px;
-    background: #F2F2F2;
-    border-radius: 10px;
-    border: none;
-    background: #7d8093;
-    &:active{
-        border: none;
+    & ${Error}{
+        text-align: center;
+        margin-top: 8px;
     }
-`;
 
-const Button = styled.button`
-    background: #1363DF;
-    width: 500px;
-    border-radius: 10px;
-    margin-top: 20px;
-    padding: 14px;
-    border: none;
-    color: #FFFFFF;
-    font-size: 20px;
-    cursor: pointer;
-`;
+    & ${Title}{
+        font-size: 20px;
+        text-align: center;
+    }
 
-const Error = styled.div`
-    color: #FF0000;
-    margin-top: 10px;
+    ${Button}{
+        font-size: 16px;
+        margin-top: 16px;
+    }
 `;
 
 export default function TeacherLoginPage() {
@@ -117,13 +93,13 @@ export default function TeacherLoginPage() {
         <FlexContainer>
             <Container>
                 <Title>Logowanie na istniejące konto</Title>
-                <Label>Adres e-mail:</Label>
-                <Input type='text' value={emailField} onChange={(e) => setEmailField(e.target.value)}/>
+                <InputLabel>Adres e-mail:</InputLabel>
+                <Input value={emailField} onChange={(e) => setEmailField(e.target.value)}/>
                 {emailError && <Error>{emailError}</Error>}
-                <Label>Hasło:</Label>
+                <InputLabel>Hasło:</InputLabel>
                 <Input type='password' value={passwordField} onChange={(e) => setPasswordField(e.target.value)}/>
                 {passwordError && <Error>{passwordError}</Error>}
-                <Button type='button' onClick={() => handleSubmit()}>Zaloguj</Button>
+                <Button onClick={() => handleSubmit()}>Zaloguj</Button>
             </Container>
         </FlexContainer>
     );

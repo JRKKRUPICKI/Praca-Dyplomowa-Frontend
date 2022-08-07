@@ -50,8 +50,6 @@ const Links = styled.div`
 
 const Content = styled.div`
     margin: 20px;
-    display: grid;
-    grid-template-rows: 40px auto;
 
     table{
         width: 100%;

@@ -6,43 +6,9 @@ import axios from "axios";
 import { PAGES, usePage } from "../../providers/students.provider";
 import { formatDatetime } from "../../utils/TimeUtils";
 import { Description, Title } from "../../ui/typography";
-
-const Tile = styled.div`
-    background: #1E1F24;
-    border-radius: 16px;
-    padding: 20px;
-
-    &:not(:first-child){
-        margin-top: 16px;
-    }
-`;
-
-const Button = styled.button`
-    padding: 10px;
-    border-radius: 8px;
-    color: #FFFFFF;
-    border: none;
-    cursor: pointer;
-    background: #000000;
-
-    &.details{
-        background: #307AF3;
-    }
-
-    &.delete{
-        background: #EF233C;
-    }
-
-    &.show{
-        margin-left: 16px;
-        background: #307AF3;
-    }
-
-    &.add{
-        background: #29bc88;
-        margin-top: 16px;
-    }
-`;
+import { Tile } from "../../ui/tile";
+import { Footer } from "../../ui/footer";
+import { Button } from "../../ui/button";
 
 const Select = styled.select`
     background: #1e1f24;
@@ -53,6 +19,7 @@ const Select = styled.select`
     color: #FFFFFF;
     width: 400px;
     cursor: pointer;
+    margin-right: 16px;
 
     &:focus{
         outline: none;
@@ -84,9 +51,9 @@ export default function StudentsList(){
                 <td>{student.active ? 'aktywne' : 'nieaktywne'}</td>
                 <td>{student.status === 0 ? 'nieprzesłane' : 'przesłane (' + formatDatetime(student.status) + ')'}</td>
                 <td>
-                    <Button className="details" onClick={() => {page.setStudentId(student.id); page.setPage(PAGES.DETAILS)}}>Otwórz</Button>
-                    <Button className="details" onClick={() => {page.setStudentId(student.id); page.setPage(PAGES.EDIT)}}>Edytuj</Button>
-                    <Button className="delete" onClick={() => removeStudent(student.id)}>Usuń</Button>
+                    <Button onClick={() => {page.setStudentId(student.id); page.setPage(PAGES.DETAILS)}}>Otwórz</Button>
+                    <Button onClick={() => {page.setStudentId(student.id); page.setPage(PAGES.EDIT)}}>Edytuj</Button>
+                    <Button className="danger" onClick={() => removeStudent(student.id)}>Usuń</Button>
                 </td>
             </tr>
         )
@@ -117,7 +84,7 @@ export default function StudentsList(){
                     <option value='0'>Wybierz test</option>
                     {data.map(test => <option value={test.id} key={test.id}>{test.name}</option>)}
                 </Select>
-                <Button onClick={() => loadStudents()} className='show'>Pokaż studentów</Button>
+                <Button onClick={() => loadStudents()}>Pokaż studentów</Button>
             </Tile>
             {students && (
                 loading ? <div>Loading</div> : (
@@ -139,7 +106,9 @@ export default function StudentsList(){
                                 </tbody>
                             </table>
                         )}
-                        <Button className='add' onClick={() => page.setPage(PAGES.ADD)}>Dodaj konto studenta</Button>
+                        <Footer>
+                            <Button className='success' onClick={() => page.setPage(PAGES.ADD)}>Dodaj konto studenta</Button>
+                        </Footer>
                     </Tile>
                 )
             )}

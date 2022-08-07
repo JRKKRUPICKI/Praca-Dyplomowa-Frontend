@@ -5,43 +5,9 @@ import { useAuth } from "../../auth/Auth";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/tests.provider";
 import { Title } from "../../ui/typography";
-
-const Tile = styled.div`
-    background: #1E1F24;
-    border-radius: 16px;
-    padding: 20px;
-
-    &:not(:first-child){
-        margin-top: 16px;
-    }
-`;
-
-const Button = styled.button`
-    padding: 10px;
-    border-radius: 8px;
-    color: #FFFFFF;
-    border: none;
-    cursor: pointer;
-    background: #000000;
-
-    &.details{
-        background: #307AF3;
-    }
-
-    &.delete{
-        background: #EF233C;
-    }
-
-    &.show{
-        margin-left: 16px;
-        background: #307AF3;
-    }
-
-    &.add{
-        background: #29bc88;
-        margin-top: 16px;
-    }
-`;
+import { Tile } from "../../ui/tile";
+import { Footer } from "../../ui/footer";
+import { Button } from "../../ui/button";
 
 const Description = styled.div`
     font-size: 14px;
@@ -80,9 +46,9 @@ export default function TestsList(){
                 <td>{test.students.length}</td>
                 <td>{now < start || now >= end ? <Label inactive>nieaktywny</Label> : <Label>aktywny</Label>}</td>
                 <td>
-                    <Button className="details" onClick={() => {page.setTestId(test.id); page.setPage(PAGES.DETAILS)}}>Otwórz</Button>
-                    <Button className="details" onClick={() => {page.setTestId(test.id); page.setPage(PAGES.EDIT)}}>Edytuj</Button>
-                    <Button className="delete" onClick={() => removeTest(test.id)}>Usuń</Button>
+                    <Button onClick={() => {page.setTestId(test.id); page.setPage(PAGES.DETAILS)}}>Otwórz</Button>
+                    <Button onClick={() => {page.setTestId(test.id); page.setPage(PAGES.EDIT)}}>Edytuj</Button>
+                    <Button className="danger" onClick={() => removeTest(test.id)}>Usuń</Button>
                 </td>
             </tr>
         )
@@ -118,7 +84,9 @@ export default function TestsList(){
                         </tbody>
                     </table>
                 )}
-                <Button className='add' onClick={() => page.setPage(PAGES.ADD)}>Stworz nowy test</Button>
+                <Footer>
+                    <Button className='success' onClick={() => page.setPage(PAGES.ADD)}>Stworz nowy test</Button>
+                </Footer>
             </Tile>
         )
     )

@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import QuestionListPage from './pages/QuestionListPage';
 import QuestionPage from './pages/QuestionPage';
 import QuestionAddPage from './pages/QuestionAddPage';
-import TeacherLoginPage from './pages/TeacherLoginPage';
 import { AuthProvider } from './auth/Auth';
 import RequireAuth from './auth/RequireAuth';
 import StudentLoginPage from './pages/StudentLoginPage';
@@ -11,6 +10,7 @@ import StudentTestPage from './pages/StudentTestPage';
 import LogsPage from './pages/LogsPage';
 import Tests from './pages/tests';
 import Students from './pages/students';
+import TeacherLoginPage from './pages/teacher-login.page';
 
 function App() {
   return (
@@ -19,7 +19,6 @@ function App() {
             <Routes>
               <Route path='/' element={<TeacherLoginPage/>}/>
               <Route path=':testId' element={<StudentLoginPage/>}/>
-              {/* <Route path='tests' element={<RequireAuth><HomePage/></RequireAuth>}/> */}
               <Route path='tests' element={<RequireAuth><Tests/></RequireAuth>}/>
               <Route path='students' element={<RequireAuth><Students/></RequireAuth>}/>
               <Route path='tests/:testId/questions' element={<RequireAuth><QuestionListPage/></RequireAuth>}/>

@@ -5,6 +5,8 @@ import { PAGES, usePage } from "../../providers/tests.provider";
 import { useAuth } from "../../auth/Auth";
 import { formatDatetime } from "../../utils/TimeUtils";
 import { Error, Title } from "../../ui/typography";
+import { Footer } from "../../ui/footer";
+import { Button } from "../../ui/button";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -19,35 +21,6 @@ const Item = styled.div`
 
     &:not(:first-child){
         margin-top: 10px;
-    }
-`;
-
-const Footer = styled.div`
-    margin-top: 16px;
-`;
-
-const Button = styled.button`
-    padding: 10px;
-    border-radius: 8px;
-    color: #FFFFFF;
-    border: none;
-    cursor: pointer;
-    background: #000000;
-
-    &.edit{
-        background: #307AF3;
-    }
-
-    &.delete{
-        background: #EF233C;
-    }
-
-    &.back{
-        background: #8a817c;
-    }
-
-    &:not(:first-child){
-        margin-left: 8px;
     }
 `;
 
@@ -156,8 +129,8 @@ export default function TestAdd(){
                 {loginTimeEndError && <Error>{loginTimeEndError}</Error>}
             </Item>
             <Footer>
-                <Button className='back' onClick={() => page.setPage(PAGES.LIST)}>Anuluj</Button>
-                <Button className='edit' onClick={() => saveTest()}>Zapisz</Button>
+                <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Anuluj</Button>
+                <Button onClick={() => saveTest()}>Zapisz</Button>
             </Footer>
         </Container>
     )

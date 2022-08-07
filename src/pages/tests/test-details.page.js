@@ -5,6 +5,8 @@ import axios from "axios";
 import { PAGES, usePage } from "../../providers/tests.provider";
 import { formatDatetime } from "../../utils/TimeUtils";
 import { Title } from "../../ui/typography";
+import { Footer } from "../../ui/footer";
+import { Button } from "../../ui/button";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -21,35 +23,6 @@ const Item = styled.div`
     }
 `;
 
-const Footer = styled.div`
-    margin-top: 16px;
-`;
-
-const Button = styled.button`
-    padding: 10px;
-    border-radius: 8px;
-    color: #FFFFFF;
-    border: none;
-    cursor: pointer;
-    background: #000000;
-
-    &.edit{
-        background: #307AF3;
-    }
-
-    &.delete{
-        background: #EF233C;
-    }
-
-    &.back{
-        background: #8a817c;
-    }
-
-    &:not(:first-child){
-        margin-left: 8px;
-    }
-`;
-
 export default function TestDetails(){
 
     const [data, setData] = useState([]);
@@ -63,7 +36,7 @@ export default function TestDetails(){
             setData(res.data);
             setLoading(false);
         })
-    }, [])
+    }, [page.testId])
 
     const deleteTest = () => {
         setLoading(true);
@@ -72,8 +45,6 @@ export default function TestDetails(){
             page.setPage(PAGES.LIST);
         })
     }
-
-    
 
     const getStatus = () => {
         const now = new Date();
@@ -110,9 +81,9 @@ export default function TestDetails(){
                 <div>{data.students.length}</div>
             </Item>
             <Footer>
-                <Button className='back' onClick={() => page.setPage(PAGES.LIST)}>Wróc</Button>
-                <Button className='edit' onClick={() => page.setPage(PAGES.EDIT)}>Edytuj</Button>
-                <Button className='delete' onClick={() => deleteTest()}>Usuń</Button>
+                <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Wróc</Button>
+                <Button onClick={() => page.setPage(PAGES.EDIT)}>Edytuj</Button>
+                <Button className='danger' onClick={() => deleteTest()}>Usuń</Button>
             </Footer>
         </Container>
     )

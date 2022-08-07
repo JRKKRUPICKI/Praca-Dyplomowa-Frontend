@@ -1,30 +1,22 @@
-import styled, { css } from "styled-components"
+import styled from "styled-components"
 
-const Style = css`
+export const Button = styled.button`
     padding: 10px;
     border-radius: 8px;
     color: #FFFFFF;
     border: none;
     cursor: pointer;
-    background: #000000;
-`;
-
-const Default = styled.button`
-    ${Style}
-`;
-
-const Delete = styled.button`
-    ${Style}
-    background: #EF233C;
-`;
-
-const Details = styled.button`
-    ${Style}
     background: #307AF3;
-`;
 
-export default function Button(props){
-    if(props.type === 'DELETE') return <Delete>{props.children}</Delete>
-    if(props.type === 'DETAILS') return <Details>{props.children}</Details>
-    return <Default>{props.children}</Default>
-}
+    &.danger{
+        background: #EF233C;
+    }
+
+    &.secondary{
+        background: #8a817c;
+    }
+
+    &.success{
+        background: #29bc88;
+    }
+`;

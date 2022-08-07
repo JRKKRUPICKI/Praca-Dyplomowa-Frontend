@@ -3,6 +3,9 @@ import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/students.provider";
+import { Title } from "../../ui/typography";
+import { Footer } from "../../ui/footer";
+import { Button } from "../../ui/button";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -17,42 +20,6 @@ const Item = styled.div`
     &:not(:first-child){
         margin-top: 10px;
     }
-`;
-
-const Footer = styled.div`
-    margin-top: 16px;
-`;
-
-const Button = styled.button`
-    padding: 10px;
-    border-radius: 8px;
-    color: #FFFFFF;
-    border: none;
-    cursor: pointer;
-    background: #000000;
-
-    &.edit{
-        background: #307AF3;
-    }
-
-    &.delete{
-        background: #EF233C;
-    }
-
-    &.back{
-        background: #8a817c;
-    }
-
-    &:not(:first-child){
-        margin-left: 8px;
-    }
-`;
-
-const Title = styled.div`
-    font-weight: bold;
-    font-size: 16px;
-    margin-bottom: 16px;
-    color: #FFFFFF;
 `;
 
 export default function StudentDetails(){
@@ -90,9 +57,9 @@ export default function StudentDetails(){
                 <div>{data.password}</div>
             </Item>
             <Footer>
-                <Button className='back' onClick={() => page.setPage(PAGES.LIST)}>Wróc</Button>
-                <Button className='edit' onClick={() => page.setPage(PAGES.EDIT)}>Edytuj</Button>
-                <Button className='delete' onClick={() => deleteStudent()}>Usuń</Button>
+                <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Wróc</Button>
+                <Button onClick={() => page.setPage(PAGES.EDIT)}>Edytuj</Button>
+                <Button className='danger' onClick={() => deleteStudent()}>Usuń</Button>
             </Footer>
         </Container>
     )
