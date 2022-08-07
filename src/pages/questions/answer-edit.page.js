@@ -39,7 +39,7 @@ export default function AnswerEdit(){
             setCorrectField(res.data.correct);
             setLoading(false);
         })
-    }, [])
+    }, [page.answerId])
 
     const [answerField, setAnswerField] = useState();
     const [answerError, setAnswerError] = useState();

@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { useAuth } from "../../auth/Auth";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/questions.provider";
-import { formatDatetime } from "../../utils/TimeUtils";
 import { Description, Title } from "../../ui/typography";
 import { Tile } from "../../ui/tile";
 import { Footer } from "../../ui/footer";
@@ -39,7 +38,7 @@ export default function QuestionList(){
             setLoading(false);
         });
         if(page.testId) loadQuestions();
-    }, [])
+    }, [auth.user.id])
 
     const page = usePage();
 

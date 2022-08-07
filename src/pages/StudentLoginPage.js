@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTimer } from 'react-timer-hook';
-import { formatDatetime } from "../utils/TimeUtils";
 import './StudentLoginPage.scss'
 
 export default function StudentLoginPage() {
@@ -218,11 +217,29 @@ export default function StudentLoginPage() {
         setUser();
     }
 
+    const loadTimer = () => {
+        if(data.loginTimeStart > Date.now()) return (
+            <div>
+                <div>Logowanie możliwe za:</div>
+                <MyTimer expiryTimestamp={data.loginTimeStart}/>
+            </div>
+        );
+        if(data.loginTimeEnd > Date.now()) return (
+            <div>
+                <div>Logowanie możliwe przez:</div>
+                <MyTimer expiryTimestamp={data.loginTimeEnd}/>
+            </div>
+        );
+        return (
+            <div>Czas na logowanie minął</div>
+        );
+    }
+
     return loading ? <div>Loading</div> : (
         !data ? <div>Test nie istnieje</div> : (
             !user ? (
                 <div>
-                    {formatDatetime(new Date(data.loginTimeStart)) + ' - ' + formatDatetime(new Date(data.loginTimeEnd))}
+                    {loadTimer()}
                     <form>
                         <label>
                             Login:

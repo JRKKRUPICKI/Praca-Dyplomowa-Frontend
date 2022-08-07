@@ -35,7 +35,7 @@ export default function QuestionDetails(){
             setQuestion(res.data);
             setLoading(false);
         })
-    }, [])
+    }, [page.questionId])
 
     const deleteQuestion = () => {
         setLoading(true);

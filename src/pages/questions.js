@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { StudentsProvider } from "../providers/students.provider";
 import { useAuth } from "../auth/Auth";
 import { QuestionsProvider } from "../providers/questions.provider";
 

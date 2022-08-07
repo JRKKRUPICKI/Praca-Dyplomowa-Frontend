@@ -39,7 +39,7 @@ export default function QuestionEdit(){
             setTypeField(res.data.type);
             setLoading(false);
         })
-    }, [])
+    }, [page.questionId])
 
     const [questionField, setQuestionField] = useState();
     const [questionError, setQuestionError] = useState();
