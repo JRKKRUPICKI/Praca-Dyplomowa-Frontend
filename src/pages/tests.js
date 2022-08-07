@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { TestsProvider } from "../providers/tests.provider";
+import { useAuth } from "../auth/Auth";
 
 const Container = styled.div`
     display: grid;
@@ -141,6 +142,8 @@ export default function Tests(){
 
     const navigate = useNavigate();
 
+    const auth = useAuth();
+
     return (
         <Container>
             <Navigation>
@@ -172,7 +175,7 @@ export default function Tests(){
                     <div>
                         <i className='gg-record'></i>W trakcie wypełniania
                     </div>
-                    <div>
+                    <div onClick={() => auth.logout()}>
                         <i className='gg-log-off'></i>Wyloguj się
                     </div>
                 </Links>
