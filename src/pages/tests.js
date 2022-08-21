@@ -163,7 +163,7 @@ export default function Tests(){
                     <div onClick={() => navigate('/questions')}>
                         <i className='gg-edit-unmask'></i>Pytania
                     </div>
-                    <div>
+                    <div onClick={() => navigate('/results')}>
                         <i className='gg-list'></i>Wyniki
                     </div>
                     <div>

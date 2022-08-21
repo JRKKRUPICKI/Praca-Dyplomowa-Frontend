@@ -1,8 +1,8 @@
 .questionBox{
-    padding: 5px;
-    background: #343434;
+    padding: 20px;
+    background: #1E1F24;
     width: 500px;
-    border-radius: 30px;
+    border-radius: 16px;
     margin: 0 auto 20px auto;
 }
 
@@ -14,10 +14,10 @@
 }
 
 .answer{
-    background: #ffc533;
+    background: #141517;
     padding: 10px;
-    border-radius: 30px;
-    margin: 10px;
+    border-radius: 16px;
+    margin-top: 10px;
 
     input[type='radio']:after {
         width: 15px;
@@ -37,7 +37,7 @@
         border-radius: 15px;
         left: -1px;
         position: relative;
-        background-color: #343434;
+        background-color: #307af3;
         content: '';
         display: inline-block;
         visibility: visible;
@@ -66,15 +66,24 @@
     }
 }
 
+.badMark{
+    border: 1px solid #FF0000;
+}
+
+.goodMark{
+    border: 1px solid #00FF00;
+}
+
 .save{
     width: 300px;
     margin: auto;
     display: block;
     padding: 6px;
-    background: #ffc533;
+    background: #307af3;
     font-weight: bold;
     cursor: pointer;
     border-radius: 10px;
+    color: #FFFFFF;
 
     &:hover{
         background: #ffe91f;
@@ -86,6 +95,7 @@
 
     .header{
         font-size: 25px;
+        margin-top: 30px;
     }
 
     .time{
