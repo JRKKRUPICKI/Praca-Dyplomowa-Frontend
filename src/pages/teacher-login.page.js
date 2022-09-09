@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../auth/Auth";
 import { Button } from "../ui/button";
@@ -52,6 +52,10 @@ export default function TeacherLoginPage() {
 
     const [emailError, setEmailError] = useState();
     const [passwordError, setPasswordError] = useState();
+
+    if(auth.user){
+        return <Navigate to='/dashboard' state={{path: location.pathname}}/>;
+    }
 
     const validate = () => {
         let valid = true;

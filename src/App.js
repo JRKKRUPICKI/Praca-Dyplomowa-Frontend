@@ -10,6 +10,7 @@ import TeacherLoginPage from './pages/teacher-login.page';
 import Questions from './pages/questions';
 import Main from './refill-test/main';
 import Results from './pages/results';
+import Dashboard from './pages/dashboard';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Routes>
               <Route path='/' element={<TeacherLoginPage/>}/>
               <Route path=':testId' element={<Main/>}/>
+              <Route path='dashboard' element={<RequireAuth><Dashboard/></RequireAuth>}/>
               <Route path='tests' element={<RequireAuth><Tests/></RequireAuth>}/>
               <Route path='students' element={<RequireAuth><Students/></RequireAuth>}/>
               <Route path='questions' element={<RequireAuth><Questions/></RequireAuth>}/>

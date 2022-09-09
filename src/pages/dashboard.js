@@ -1,7 +1,9 @@
-import styled from "styled-components";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TestsProvider } from "../providers/tests.provider";
+import styled from "styled-components";
 import { useAuth } from "../auth/Auth";
+import { Number, Title } from "../ui/typography";
 
 const Container = styled.div`
     display: grid;
@@ -82,10 +84,10 @@ const Content = styled.div`
         }
 
         td{
-            padding: 6px;
+            padding: 8px 16px;
             text-align: center;
 
-            &:nth-child(1){
+            &:nth-child(1), &:nth-child(2){
                 text-align: left;
             }
 
@@ -138,11 +140,44 @@ const User = styled.div`
     }
 `;
 
-export default function Tests(){
+const Tiles = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+`;
+
+const Tile = styled.div`
+    background: #1E1F24;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    display: inline-block;
+`;
+
+export default function Dashboard(){
+
+    const auth = useAuth();
+
+    const [data, setData] = useState({tests: 0, students: 0, questions: 0});
+
+    const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
 
-    const auth = useAuth();
+    useEffect(() => {
+        let tests = 0;
+        let students = 0;
+        let questions = 0;
+        axios.get('http://localhost:4000/test').then((res) => {
+            const data = res.data.filter(t => t.teacher.id === auth.user.id);
+            tests = data.length;
+            data.map(test => {
+                students += test.students.length;
+                questions += test.questions.length;
+            });
+            setData({tests: tests, students: students, questions: questions})
+        });
+    }, [auth.user.id])
 
     return (
         <Container>
@@ -151,10 +186,10 @@ export default function Tests(){
                     Inżynierka
                 </Logo>
                 <Links>
-                    <div onClick={() => navigate('/dashboard')}>
+                    <div className="active" onClick={() => navigate('/dashboard')}>
                         <i className='gg-album'></i>Dashboard
                     </div>
-                    <div className="active" onClick={() => navigate('/tests')}>
+                    <div onClick={() => navigate('/tests')}>
                         <i className='gg-notes'></i>Testy
                     </div>
                     <div onClick={() => navigate('/students')}>
@@ -188,7 +223,20 @@ export default function Tests(){
                         <div>teacher@gmail.com</div>
                     </User>
                 </Header>
-                <TestsProvider/>
+                <Tiles>
+                    <Tile>
+                        <Title>Testy</Title>
+                        <Number>{data.tests}</Number>
+                    </Tile>
+                    <Tile>
+                        <Title>Studenci</Title>
+                        <Number>{data.students}</Number>
+                    </Tile>
+                    <Tile>
+                        <Title>Pytania</Title>
+                        <Number>{data.questions}</Number>
+                    </Tile>
+                </Tiles>
             </Content>
         </Container>
     )

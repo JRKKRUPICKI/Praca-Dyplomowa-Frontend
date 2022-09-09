@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useAuth } from "../../auth/Auth";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/students.provider";
@@ -26,6 +26,11 @@ const Select = styled.select`
     }
 `;
 
+const Label = styled.div`
+    ${props => props.active && css`color: #80b918;`}
+    ${props => props.inactive && css`color: #ba181b;`}
+`;
+
 export default function StudentsList(){
     const auth = useAuth();
 
@@ -48,8 +53,8 @@ export default function StudentsList(){
             <tr key={student.id}>
                 <td>{student.login}</td>
                 <td>{student.password}</td>
-                <td>{student.active ? 'aktywne' : 'nieaktywne'}</td>
-                <td>{student.status === 0 ? 'nieprzesłane' : 'przesłane (' + formatDatetime(student.status) + ')'}</td>
+                <td>{student.active ? <Label active>aktywne</Label> : <Label inactive>nieaktywne</Label>}</td>
+                <td>{student.status === 0 ? <Label inactive>nieprzesłane</Label> : <Label active>przesłane ({formatDatetime(student.status)})</Label>}</td>
                 <td>
                     <Button onClick={() => {page.setStudentId(student.id); page.setPage(PAGES.DETAILS)}}>Otwórz</Button>
                     <Button onClick={() => {page.setStudentId(student.id); page.setPage(PAGES.EDIT)}}>Edytuj</Button>

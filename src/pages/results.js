@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../auth/Auth";
+import Answer from "../ui/answer";
 import { Button } from "../ui/button";
 import { Tile } from "../ui/tile";
-import { Description, Title } from "../ui/typography";
+import { Title } from "../ui/typography";
 
 const Container = styled.div`
     display: grid;
@@ -203,25 +204,6 @@ export default function Results(){
 
     const [questionData, setQuestionData] = useState();
 
-    const loadQuestions = () => {
-        let list = [];
-        questionData.forEach(q => {
-            let b = [];
-            b.id = q.id;
-            b.name = q.name;
-            b.type = q.type;
-            b.answers = [];
-            q.answers.forEach(a => {
-                let c = [];
-                c.id = a.id;
-                c.name = a.name;
-                b.answers.push(c);
-            });
-            list.push(b);
-        });
-        return list;
-    }
-
     const isCorrectAnswer = (answer) => {
         const result = results.find(result => result.answer.id === answer.id);
         return (result && answer.correct) || (!result && !answer.correct);
@@ -232,21 +214,9 @@ export default function Results(){
         return questionData.map(question => (
             <div key={question.id} className='questionBox'>
                 <div className='question'>{question.name}</div>
-                {!question.type ? (
-                    question.answers.map(a => (
-                        <div key={a.id} className={`answer ${isCorrectAnswer(a) ? 'goodMark' : 'badMark'}`}>
-                            <input type='radio' id={a.id} name={question.id} value={a.id} defaultChecked={results.find(result => result.answer.id === a.id)}/>
-                            {a.name}
-                        </div>
-                    ))
-                ) : (
-                    question.answers.map(a => (
-                        <div key={a.id} className='answer'>
-                            <input type='checkbox' id={a.id} name={a.id} value={a.id}/>
-                            {a.name}
-                        </div>
-                    ))
-                )}
+                {question.answers.map(a => (
+                    <Answer key={a.id} multiCheck={question.type} type={isCorrectAnswer(a) ? 'correct' : 'incorrect'} checked={results.find(result => result.answer.id === a.id)}>{a.name}</Answer>
+                ))}
             </div>
         ))
     }
@@ -258,7 +228,7 @@ export default function Results(){
                     Inżynierka
                 </Logo>
                 <Links>
-                    <div onClick={() => navigate('/')}>
+                    <div onClick={() => navigate('/dashboard')}>
                         <i className='gg-album'></i>Dashboard
                     </div>
                     <div onClick={() => navigate('/tests')}>
@@ -290,14 +260,14 @@ export default function Results(){
             <Content>
                 <Header>
                     <input type='text' placeholder="Wyszukiwanie..."/>
-                    <User>
+                    <User onClick={() => auth.logout()}>
                         <div></div>
                         <div>teacher@gmail.com</div>
                     </User>
                 </Header>
                 <Tile>
                     <Title>Wybierz test</Title>
-                    <Select onChange={e => setTestId(e.target.value)} value={testId}>
+                    <Select onChange={e => {setTestId(e.target.value);setStudentId()}} value={testId}>
                         <option value='0'>Wybierz test</option>
                         {data.map(test => <option value={test.id} key={test.id}>{test.name}</option>)}
                     </Select>
@@ -318,20 +288,6 @@ export default function Results(){
                         <Tile>
                             <Title>Zapisane odpowiedzi</Title>
                             {loadMarkedAnswers()}
-                            {/* {loadQuestions().map(q => <div key={q.id} className='questionBox'>
-                                <div className='question'>{q.name}</div>
-                                {!q.type ? (
-                                    q.answers.map(a => <div key={a.id} className={`answer ${isCorrectAnswer('')}`}>
-                                        <input type='radio' id={a.id} name={q.id} value={a.id}/>
-                                        {a.name}
-                                    </div>)
-                                ) : (
-                                    q.answers.map(a => <div key={a.id} className='answer'>
-                                        <input type='checkbox' id={a.id} name={a.id} value={a.id}/>
-                                        {a.name}
-                                    </div>)
-                                )}
-                            </div>)} */}
                         </Tile>
                     )
                 )}

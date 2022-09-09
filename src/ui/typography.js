@@ -15,3 +15,9 @@ export const Description = styled.div`
     font-size: 14px;
     color: #7d8093;
 `;
+
+export const Number = styled.div`
+    font-weight: bold;
+    font-size: 50px;
+    color: #FFFFFF;
+`;

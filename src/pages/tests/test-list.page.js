@@ -8,6 +8,7 @@ import { Title } from "../../ui/typography";
 import { Tile } from "../../ui/tile";
 import { Footer } from "../../ui/footer";
 import { Button } from "../../ui/button";
+import { useNavigate } from "react-router-dom";
 
 const Description = styled.div`
     font-size: 14px;
@@ -35,6 +36,8 @@ export default function TestsList(){
 
     const page = usePage();
 
+    const navigate = useNavigate();
+
     const getTest = (test) => {
         const now = new Date();
         const start = new Date(test.loginTimeStart);
@@ -44,8 +47,9 @@ export default function TestsList(){
                 <td>{test.name}</td>
                 <td>{test.questions.length}</td>
                 <td>{test.students.length}</td>
-                <td>{now < start || now >= end ? <Label inactive>nieaktywny</Label> : <Label>aktywny</Label>}</td>
+                <td>{now < start || now >= end ? <Label inactive>nieaktywny</Label> : <Label active>aktywny</Label>}</td>
                 <td>
+                    <Button onClick={() => navigate('/' + test.id)}>Link</Button>
                     <Button onClick={() => {page.setTestId(test.id); page.setPage(PAGES.DETAILS)}}>Otwórz</Button>
                     <Button onClick={() => {page.setTestId(test.id); page.setPage(PAGES.EDIT)}}>Edytuj</Button>
                     <Button className="danger" onClick={() => removeTest(test.id)}>Usuń</Button>

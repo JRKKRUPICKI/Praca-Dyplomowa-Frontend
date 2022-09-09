@@ -7,6 +7,7 @@ import { formatDatetime } from "../../utils/TimeUtils";
 import { Title } from "../../ui/typography";
 import { Footer } from "../../ui/footer";
 import { Button } from "../../ui/button";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -46,6 +47,8 @@ export default function TestDetails(){
         })
     }
 
+    const navigate = useNavigate();
+
     const getStatus = () => {
         const now = new Date();
         const start = new Date(data.loginTimeStart);
@@ -82,6 +85,7 @@ export default function TestDetails(){
             </Item>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Wróc</Button>
+                <Button onClick={() => navigate('/' + page.testId)}>Link</Button>
                 <Button onClick={() => page.setPage(PAGES.EDIT)}>Edytuj</Button>
                 <Button className='danger' onClick={() => deleteTest()}>Usuń</Button>
             </Footer>

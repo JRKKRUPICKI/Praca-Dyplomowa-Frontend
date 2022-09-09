@@ -151,7 +151,7 @@ export default function Questions(){
                     Inżynierka
                 </Logo>
                 <Links>
-                    <div onClick={() => navigate('/')}>
+                    <div onClick={() => navigate('/dashboard')}>
                         <i className='gg-album'></i>Dashboard
                     </div>
                     <div onClick={() => navigate('/tests')}>
@@ -183,7 +183,7 @@ export default function Questions(){
             <Content>
                 <Header>
                     <input type='text' placeholder="Wyszukiwanie..."/>
-                    <User>
+                    <User onClick={() => auth.logout()}>
                         <div></div>
                         <div>teacher@gmail.com</div>
                     </User>

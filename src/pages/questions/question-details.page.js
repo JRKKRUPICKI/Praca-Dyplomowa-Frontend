@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/questions.provider";
 import { Title } from "../../ui/typography";
@@ -20,6 +20,13 @@ const Item = styled.div`
     &:not(:first-child){
         margin-top: 10px;
     }
+`;
+
+const Label = styled.div`
+    display: inline-block;
+    margin-right: 15px;
+    ${props => props.active && css`color: #80b918;`}
+    ${props => props.inactive && css`color: #ba181b;`}
 `;
 
 export default function QuestionDetails(){
@@ -76,7 +83,7 @@ export default function QuestionDetails(){
             {question.answers.map(answer => (
                 <Item key={answer.id}>
                     <div>{answer.name}</div>
-                    <div>{answer.correct ? '+' : '-'}
+                    <div>{answer.correct ? <Label active>odpowiedź poprawna</Label> : <Label inactive>odpowiedź niepoprawna</Label>}
                     <Button onClick={() => {page.setAnswerId(answer.id); page.setPage(PAGES.EDIT_ANSWER)}}>Edytuj odpowiedź</Button>
                     <Button className='danger' onClick={() => deleteAnswer(answer.id)}>Usuń odpowiedź</Button>
                     </div>
