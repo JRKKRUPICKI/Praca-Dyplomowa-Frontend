@@ -11,6 +11,7 @@ import Questions from './pages/questions';
 import Main from './refill-test/main';
 import Results from './pages/results';
 import Dashboard from './pages/dashboard';
+import NotFoundPage from './pages/not-found.page';
 
 function App() {
   return (
@@ -26,7 +27,7 @@ function App() {
               <Route path='results' element={<RequireAuth><Results/></RequireAuth>}/>
               <Route path='tests/:testId/students/:studentId/test' element={<RequireAuth><StudentTestPage/></RequireAuth>}/>
               <Route path='tests/:testId/students/:studentId/logs' element={<RequireAuth><LogsPage/></RequireAuth>}/>
-              <Route path='*' element={<>404</>}/>
+              <Route path='*' element={<NotFoundPage/>}/>
             </Routes>
           </BrowserRouter>
     </AuthProvider>
