@@ -260,7 +260,7 @@ export default function Results(){
             <Content>
                 <Header>
                     <input type='text' placeholder="Wyszukiwanie..."/>
-                    <User onClick={() => auth.logout()}>
+                    <User>
                         <div></div>
                         <div>teacher@gmail.com</div>
                     </User>
