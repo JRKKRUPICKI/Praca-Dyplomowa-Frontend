@@ -96,7 +96,7 @@ export default function TeacherLoginPage() {
     return (
         <FlexContainer>
             <Container>
-                <Title>Logowanie na istniejące konto - test</Title>
+                <Title>Logowanie na istniejące konto</Title>
                 <InputLabel>Adres e-mail:</InputLabel>
                 <Input value={emailField} onChange={(e) => setEmailField(e.target.value)}/>
                 {emailError && <Error>{emailError}</Error>}
