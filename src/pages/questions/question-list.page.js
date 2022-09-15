@@ -33,7 +33,7 @@ export default function QuestionList(){
     const [tests, setTests] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:4000/test').then((res) => {
+        axios.get('http://54.37.232.57/api/test').then((res) => {
             setTests(res.data.filter(t => t.teacher.id === auth.user.id));
             setLoading(false);
         });
@@ -59,7 +59,7 @@ export default function QuestionList(){
 
     const removeQuestion = (questionId) => {
         setLoading(true);
-        axios.delete('http://localhost:4000/question/' + questionId).then((res) => {
+        axios.delete('http://54.37.232.57/api/question/' + questionId).then((res) => {
             loadQuestions()
         })
     }
@@ -68,7 +68,7 @@ export default function QuestionList(){
 
     const loadQuestions = () => {
         setLoading(true);
-        axios.get('http://localhost:4000/question').then((res) => {
+        axios.get('http://54.37.232.57/api/question').then((res) => {
             setQuestions(res.data.filter(question => question.test.id === parseInt(page.testId)));
             setLoading(false);
         })

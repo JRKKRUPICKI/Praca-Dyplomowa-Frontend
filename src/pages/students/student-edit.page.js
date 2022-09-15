@@ -33,7 +33,7 @@ export default function StudentEdit(){
     const page = usePage();
 
     useEffect(() => {
-        axios.get('http://localhost:4000/student/' + page.studentId).then((res) => {
+        axios.get('http://54.37.232.57/api/student/' + page.studentId).then((res) => {
             setData(res.data);
             setLoading(false);
         })
@@ -78,7 +78,7 @@ export default function StudentEdit(){
     const saveStudent = () => {
         if(!validate()) return;
         setLoading(true);
-        axios.patch('http://localhost:4000/student/' + page.studentId, {
+        axios.patch('http://54.37.232.57/api/student/' + page.studentId, {
             login: loginField,
             password: passwordField,
         }).then((res) => {

@@ -169,7 +169,7 @@ export default function Results(){
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('http://localhost:4000/test').then((res) => {
+        axios.get('http://54.37.232.57/api/test').then((res) => {
             setData(res.data.filter(t => t.teacher.id === auth.user.id));
             setLoading(false);
         });
@@ -182,7 +182,7 @@ export default function Results(){
 
     const loadStudents = () => {
         setLoading(true);
-        axios.get('http://localhost:4000/test/' + testId).then((res) => {
+        axios.get('http://54.37.232.57/api/test/' + testId).then((res) => {
             setStudents(res.data.students);
             setQuestionData(res.data.questions);
             setLoading(false);
@@ -193,9 +193,9 @@ export default function Results(){
 
     const loadResults = () => {
         setLoading(true);
-        axios.get('http://localhost:4000/studentanswer/' + studentId).then((res) => {
+        axios.get('http://54.37.232.57/api/studentanswer/' + studentId).then((res) => {
             setResults(res.data);
-            axios.get('http://localhost:4000/question/test/' + testId).then((res) => {
+            axios.get('http://54.37.232.57/api/question/test/' + testId).then((res) => {
                 setQuestionData(res.data);
                 setLoading(false);
             })

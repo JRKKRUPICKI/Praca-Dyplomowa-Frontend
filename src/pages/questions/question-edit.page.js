@@ -33,7 +33,7 @@ export default function QuestionEdit(){
     const [question, setQuestion] = useState();
 
     useEffect(() => {
-        axios.get('http://localhost:4000/question/' + page.questionId).then((res) => {
+        axios.get('http://54.37.232.57/api/question/' + page.questionId).then((res) => {
             setQuestion(res.data);
             setQuestionField(res.data.name);
             setTypeField(res.data.type);
@@ -63,7 +63,7 @@ export default function QuestionEdit(){
     const saveQuestion = () => {
         if(!validate()) return;
         setLoading(true);
-        axios.patch('http://localhost:4000/question/' + page.questionId, {
+        axios.patch('http://54.37.232.57/api/question/' + page.questionId, {
             name: questionField,
             type: typeField
         }).then((res) => {

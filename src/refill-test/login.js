@@ -56,9 +56,9 @@ export default function Login({ setUser }){
     const params = useParams();
 
     useEffect(() => {
-        axios.get('http://localhost:4000/test/' + params.testId).then((res) => {
+        axios.get('http://54.37.232.57/api/test/' + params.testId).then((res) => {
             setData(res.data);
-            axios.get('http://localhost:4000/question/test/' + params.testId).then((res) => {
+            axios.get('http://54.37.232.57/api/question/test/' + params.testId).then((res) => {
                 setQuestionData(res.data);
                 setLoading(false);
             });
@@ -102,7 +102,7 @@ export default function Login({ setUser }){
 
     const handleSubmit = () => {
         if(!validate()) return;
-        axios.post('http://localhost:4000/student/login', {
+        axios.post('http://54.37.232.57/api/student/login', {
             login: loginField,
             password: passwordField,
             testId: parseInt(params.testId)

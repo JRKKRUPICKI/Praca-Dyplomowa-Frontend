@@ -168,7 +168,7 @@ export default function Dashboard(){
         let tests = 0;
         let students = 0;
         let questions = 0;
-        axios.get('http://localhost:4000/test').then((res) => {
+        axios.get('http://54.37.232.57/api/test').then((res) => {
             const data = res.data.filter(t => t.teacher.id === auth.user.id);
             tests = data.length;
             data.map(test => {

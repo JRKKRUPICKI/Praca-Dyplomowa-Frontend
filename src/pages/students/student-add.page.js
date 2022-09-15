@@ -73,7 +73,7 @@ export default function StudentAdd(){
     const saveStudent = () => {
         if(!validate()) return;
         setLoading(true);
-        axios.post('http://localhost:4000/student', {
+        axios.post('http://54.37.232.57/api/student', {
             login: loginField,
             password: passwordField,
             testId: parseInt(page.testId)

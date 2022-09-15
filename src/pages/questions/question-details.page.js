@@ -38,7 +38,7 @@ export default function QuestionDetails(){
     const [question, setQuestion] = useState();
 
     useEffect(() => {
-        axios.get('http://localhost:4000/question/' + page.questionId).then((res) => {
+        axios.get('http://54.37.232.57/api/question/' + page.questionId).then((res) => {
             setQuestion(res.data);
             setLoading(false);
         })
@@ -46,7 +46,7 @@ export default function QuestionDetails(){
 
     const deleteQuestion = () => {
         setLoading(true);
-        axios.delete('http://localhost:4000/question/' + page.questionId).then((res) => {
+        axios.delete('http://54.37.232.57/api/question/' + page.questionId).then((res) => {
             page.setQuestionId()
             page.setPage(PAGES.LIST);
         })
@@ -54,7 +54,7 @@ export default function QuestionDetails(){
 
     const loadQuestion = () => {
         setLoading(true);
-        axios.get('http://localhost:4000/question/' + page.questionId).then((res) => {
+        axios.get('http://54.37.232.57/api/question/' + page.questionId).then((res) => {
             setQuestion(res.data);
             setLoading(false);
         })
@@ -62,7 +62,7 @@ export default function QuestionDetails(){
 
     const deleteAnswer = (answerId) => {
         setLoading(true);
-        axios.delete('http://localhost:4000/answer/' + answerId).then((res) => {
+        axios.delete('http://54.37.232.57/api/answer/' + answerId).then((res) => {
             loadQuestion();
         })
     }

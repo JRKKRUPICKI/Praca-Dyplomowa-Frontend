@@ -28,7 +28,7 @@ export default function TestsList(){
     const [tests, setTests] = useState();
 
     useEffect(() => {
-        axios.get('http://localhost:4000/test').then((res) => {
+        axios.get('http://54.37.232.57/api/test').then((res) => {
             setTests(res.data.filter(t => t.teacher.id === auth.user.id));
             setLoading(false);
         });
@@ -60,8 +60,8 @@ export default function TestsList(){
 
     const removeTest = (testId) => {
         setLoading(true);
-        axios.delete('http://localhost:4000/test/' + testId).then((res) => {
-            axios.get('http://localhost:4000/test').then((res) => {
+        axios.delete('http://54.37.232.57/api/test/' + testId).then((res) => {
+            axios.get('http://54.37.232.57/api/test').then((res) => {
                 setTests(res.data.filter(t => t.teacher.id === auth.user.id));
                 setLoading(false);
             });

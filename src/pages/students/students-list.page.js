@@ -39,7 +39,7 @@ export default function StudentsList(){
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get('http://localhost:4000/test').then((res) => {
+        axios.get('http://54.37.232.57/api/test').then((res) => {
             setData(res.data.filter(t => t.teacher.id === auth.user.id));
             setLoading(false);
         });
@@ -66,7 +66,7 @@ export default function StudentsList(){
 
     const removeStudent = (studentId) => {
         setLoading(true);
-        axios.delete('http://localhost:4000/student/' + studentId).then((res) => {
+        axios.delete('http://54.37.232.57/api/student/' + studentId).then((res) => {
             loadStudents()
         })
     }
@@ -75,7 +75,7 @@ export default function StudentsList(){
 
     const loadStudents = () => {
         setLoading(true);
-        axios.get('http://localhost:4000/test/' + page.testId).then((res) => {
+        axios.get('http://54.37.232.57/api/test/' + page.testId).then((res) => {
             setStudents(res.data.students);
             setLoading(false);
         })

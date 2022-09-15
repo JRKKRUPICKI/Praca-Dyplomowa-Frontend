@@ -14,9 +14,9 @@ export default function StudentLoginPage() {
     const [user, setUser] = useState();
 
     useEffect(() => {
-        axios.get('http://localhost:4000/test/' + params.testId).then((res) => {
+        axios.get('http://54.37.232.57/api/test/' + params.testId).then((res) => {
             setData(res.data);
-            axios.get('http://localhost:4000/question/test/' + params.testId).then((res) => {
+            axios.get('http://54.37.232.57/api/question/test/' + params.testId).then((res) => {
                 setQuestionData(res.data);
                 setLoading(false);
             });
@@ -68,7 +68,7 @@ export default function StudentLoginPage() {
 
     const handleSubmit = () => {
         if(!validate()) return;
-        axios.post('http://localhost:4000/student/login', {
+        axios.post('http://54.37.232.57/api/student/login', {
             login: loginField,
             password: passwordField,
             testId: parseInt(params.testId)
@@ -136,7 +136,7 @@ export default function StudentLoginPage() {
     let studentAnswer = [];
 
     const setAnswer = (questionId, answerId) => {
-        axios.post('http://localhost:4000/logs', {
+        axios.post('http://54.37.232.57/api/logs', {
             studentId: user.id,
             testId: parseInt(params.testId),
             questionId: questionId,
@@ -169,7 +169,7 @@ export default function StudentLoginPage() {
                 newStudentAnswer.push(studentAnswer[i]);
             }
             studentAnswer = newStudentAnswer;
-            axios.post('http://localhost:4000/logs', {
+            axios.post('http://54.37.232.57/api/logs', {
                 studentId: user.id,
                 testId: parseInt(params.testId),
                 questionId: questionId,
@@ -186,7 +186,7 @@ export default function StudentLoginPage() {
             answerId: answerId
         }
         studentAnswer.push(newAnswer);
-        axios.post('http://localhost:4000/logs', {
+        axios.post('http://54.37.232.57/api/logs', {
             studentId: user.id,
             testId: parseInt(params.testId),
             questionId: questionId,
@@ -203,7 +203,7 @@ export default function StudentLoginPage() {
         const studentId = user.id;
         const testId = data.id;
         studentAnswer.forEach(a => {
-            axios.post('http://localhost:4000/studentanswer', {
+            axios.post('http://54.37.232.57/api/studentanswer', {
                 studentId: studentId,
                 testId: testId,
                 questionId: a.questionId,

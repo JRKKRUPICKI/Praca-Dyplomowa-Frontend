@@ -82,7 +82,7 @@ export default function TeacherLoginPage() {
 
     const handleSubmit = () => {
         if(!validate()) return;
-        axios.post('http://localhost:4000/teacher/login', {
+        axios.post('http://54.37.232.57/api/teacher/login', {
             email: emailField,
             password: passwordField
         }).then((res) => {

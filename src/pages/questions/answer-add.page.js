@@ -64,7 +64,7 @@ export default function AnswerAdd(){
     const saveAnswer = () => {
         if(!validate()) return;
         setLoading(true);
-        axios.post('http://localhost:4000/answer', {
+        axios.post('http://54.37.232.57/api/answer', {
             name: answerField,
             correct: correctField,
             questionId: page.questionId

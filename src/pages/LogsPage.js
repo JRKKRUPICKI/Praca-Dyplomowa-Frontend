@@ -12,7 +12,7 @@ export default function LogsPage() {
     const params = useParams();
 
     useEffect(() => {
-        axios.get('http://localhost:4000/logs/' + params.studentId).then((res) => {
+        axios.get('http://54.37.232.57/api/logs/' + params.studentId).then((res) => {
             setLogs(res.data);
         }).then(res => {
             setLoading(false);

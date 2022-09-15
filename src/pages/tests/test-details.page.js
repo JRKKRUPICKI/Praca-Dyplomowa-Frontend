@@ -33,7 +33,7 @@ export default function TestDetails(){
     const page = usePage();
 
     useEffect(() => {
-        axios.get('http://localhost:4000/test/' + page.testId).then((res) => {
+        axios.get('http://54.37.232.57/api/test/' + page.testId).then((res) => {
             setData(res.data);
             setLoading(false);
         })
@@ -41,7 +41,7 @@ export default function TestDetails(){
 
     const deleteTest = () => {
         setLoading(true);
-        axios.delete('http://localhost:4000/test/' + page.testId).then((res) => {
+        axios.delete('http://54.37.232.57/api/test/' + page.testId).then((res) => {
             page.setTestId()
             page.setPage(PAGES.LIST);
         })

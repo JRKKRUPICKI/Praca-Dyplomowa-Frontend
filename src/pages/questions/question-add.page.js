@@ -62,7 +62,7 @@ export default function QuestionAdd(){
     const saveQuestion = () => {
         if(!validate()) return;
         setLoading(true);
-        axios.post('http://localhost:4000/question', {
+        axios.post('http://54.37.232.57/api/question', {
             name: questionField,
             testId: parseInt(page.testId)
         }).then((res) => {

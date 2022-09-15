@@ -33,7 +33,7 @@ export default function AnswerEdit(){
     const [answer, setAnswer] = useState();
 
     useEffect(() => {
-        axios.get('http://localhost:4000/answer/' + page.answerId).then((res) => {
+        axios.get('http://54.37.232.57/api/answer/' + page.answerId).then((res) => {
             setAnswer(res.data);
             setAnswerField(res.data.name);
             setCorrectField(res.data.correct);
@@ -63,7 +63,7 @@ export default function AnswerEdit(){
     const saveAnswer = () => {
         if(!validate()) return;
         setLoading(true);
-        axios.patch('http://localhost:4000/answer/' + page.answerId, {
+        axios.patch('http://54.37.232.57/api/answer/' + page.answerId, {
             name: answerField,
             correct: correctField
         }).then((res) => {

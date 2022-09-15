@@ -31,7 +31,7 @@ export default function StudentDetails(){
     const page = usePage();
 
     useEffect(() => {
-        axios.get('http://localhost:4000/student/' + page.studentId).then((res) => {
+        axios.get('http://54.37.232.57/api/student/' + page.studentId).then((res) => {
             setData(res.data);
             setLoading(false);
         })
@@ -39,7 +39,7 @@ export default function StudentDetails(){
 
     const deleteStudent = () => {
         setLoading(true);
-        axios.delete('http://localhost:4000/student/' + page.studentId).then((res) => {
+        axios.delete('http://54.37.232.57/api/student/' + page.studentId).then((res) => {
             page.setStudentId()
             page.setPage(PAGES.LIST);
         })

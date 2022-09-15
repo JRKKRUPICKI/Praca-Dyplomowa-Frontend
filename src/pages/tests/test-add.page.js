@@ -90,7 +90,7 @@ export default function TestAdd(){
     const saveTest = () => {
         if(!validate()) return;
         setLoading(true);
-        axios.post('http://localhost:4000/test', {
+        axios.post('http://54.37.232.57/api/test', {
             name: nameField,
             teacherId: auth.user.id,
             time: timeField,

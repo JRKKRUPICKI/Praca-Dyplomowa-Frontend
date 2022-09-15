@@ -31,7 +31,7 @@ export default function TestEdit(){
     const page = usePage();
 
     useEffect(() => {
-        axios.get('http://localhost:4000/test/' + page.testId).then((res) => {
+        axios.get('http://54.37.232.57/api/test/' + page.testId).then((res) => {
             setNameField(res.data.name);
             setTimeField(res.data.time);
             setLoginTimeStartField(new Date(new Date(res.data.loginTimeStart) - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, -1));
@@ -84,7 +84,7 @@ export default function TestEdit(){
     const saveTest = () => {
         if(!validate()) return;
         setLoading(true);
-        axios.patch('http://localhost:4000/test/' + page.testId, {
+        axios.patch('http://54.37.232.57/api/test/' + page.testId, {
             name: nameField,
             time: timeField,
             loginTimeStart: Date.parse(loginTimeStartField),
