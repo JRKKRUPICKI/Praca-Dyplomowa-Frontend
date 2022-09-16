@@ -3,9 +3,10 @@ import { useState } from "react";
 import styled, { css } from "styled-components";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/questions.provider";
-import { Title } from "../../ui/typography";
-import { Footer } from "../../ui/footer";
-import { Button } from "../../ui/button";
+import { Title } from "../../components/typography";
+import { Footer } from "../../components/footer";
+import { Button } from "../../components/button";
+import { API } from "../../App";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -38,7 +39,7 @@ export default function QuestionDetails(){
     const [question, setQuestion] = useState();
 
     useEffect(() => {
-        axios.get('http://54.37.232.57/api/question/' + page.questionId).then((res) => {
+        axios.get(API + 'question/' + page.questionId).then((res) => {
             setQuestion(res.data);
             setLoading(false);
         })
@@ -46,7 +47,7 @@ export default function QuestionDetails(){
 
     const deleteQuestion = () => {
         setLoading(true);
-        axios.delete('http://54.37.232.57/api/question/' + page.questionId).then((res) => {
+        axios.delete(API + 'question/' + page.questionId).then((res) => {
             page.setQuestionId()
             page.setPage(PAGES.LIST);
         })
@@ -54,7 +55,7 @@ export default function QuestionDetails(){
 
     const loadQuestion = () => {
         setLoading(true);
-        axios.get('http://54.37.232.57/api/question/' + page.questionId).then((res) => {
+        axios.get(API + 'question/' + page.questionId).then((res) => {
             setQuestion(res.data);
             setLoading(false);
         })
@@ -62,7 +63,7 @@ export default function QuestionDetails(){
 
     const deleteAnswer = (answerId) => {
         setLoading(true);
-        axios.delete('http://54.37.232.57/api/answer/' + answerId).then((res) => {
+        axios.delete(API + 'answer/' + answerId).then((res) => {
             loadQuestion();
         })
     }

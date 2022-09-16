@@ -5,10 +5,11 @@ import { useAuth } from "../../auth/Auth";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/students.provider";
 import { formatDatetime } from "../../utils/TimeUtils";
-import { Description, Title } from "../../ui/typography";
-import { Tile } from "../../ui/tile";
-import { Footer } from "../../ui/footer";
-import { Button } from "../../ui/button";
+import { Description, Title } from "../../components/typography";
+import { Tile } from "../../components/tile";
+import { Footer } from "../../components/footer";
+import { Button } from "../../components/button";
+import { API } from "../../App";
 
 const Select = styled.select`
     background: #1e1f24;
@@ -39,7 +40,7 @@ export default function StudentsList(){
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get('http://54.37.232.57/api/test').then((res) => {
+        axios.get(API + 'test').then((res) => {
             setData(res.data.filter(t => t.teacher.id === auth.user.id));
             setLoading(false);
         });
@@ -66,7 +67,7 @@ export default function StudentsList(){
 
     const removeStudent = (studentId) => {
         setLoading(true);
-        axios.delete('http://54.37.232.57/api/student/' + studentId).then((res) => {
+        axios.delete(API + 'student/' + studentId).then((res) => {
             loadStudents()
         })
     }
@@ -75,7 +76,7 @@ export default function StudentsList(){
 
     const loadStudents = () => {
         setLoading(true);
-        axios.get('http://54.37.232.57/api/test/' + page.testId).then((res) => {
+        axios.get(API + 'test/' + page.testId).then((res) => {
             setStudents(res.data.students);
             setLoading(false);
         })

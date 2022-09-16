@@ -3,10 +3,11 @@ import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/questions.provider";
-import { Error, Title } from "../../ui/typography";
-import { Footer } from "../../ui/footer";
-import { Button } from "../../ui/button";
-import { Input } from "../../ui/input";
+import { Error, Title } from "../../components/typography";
+import { Footer } from "../../components/footer";
+import { Button } from "../../components/button";
+import { Input } from "../../components/input";
+import { API } from "../../App";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -33,7 +34,7 @@ export default function QuestionEdit(){
     const [question, setQuestion] = useState();
 
     useEffect(() => {
-        axios.get('http://54.37.232.57/api/question/' + page.questionId).then((res) => {
+        axios.get(API + 'question/' + page.questionId).then((res) => {
             setQuestion(res.data);
             setQuestionField(res.data.name);
             setTypeField(res.data.type);
@@ -63,7 +64,7 @@ export default function QuestionEdit(){
     const saveQuestion = () => {
         if(!validate()) return;
         setLoading(true);
-        axios.patch('http://54.37.232.57/api/question/' + page.questionId, {
+        axios.patch(API + 'question/' + page.questionId, {
             name: questionField,
             type: typeField
         }).then((res) => {

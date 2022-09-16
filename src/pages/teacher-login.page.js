@@ -2,10 +2,11 @@ import axios from "axios";
 import { useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { API } from "../App";
 import { useAuth } from "../auth/Auth";
-import { Button } from "../ui/button";
-import { Input, InputLabel } from "../ui/input";
-import { Error, Title } from "../ui/typography";
+import { Button } from "../components/button";
+import { Input, InputLabel } from "../components/input";
+import { Error, Title } from "../components/typography";
 
 const FlexContainer = styled.div`
     display: flex;
@@ -82,7 +83,7 @@ export default function TeacherLoginPage() {
 
     const handleSubmit = () => {
         if(!validate()) return;
-        axios.post('http://54.37.232.57/api/teacher/login', {
+        axios.post(API + 'teacher/login', {
             email: emailField,
             password: passwordField
         }).then((res) => {

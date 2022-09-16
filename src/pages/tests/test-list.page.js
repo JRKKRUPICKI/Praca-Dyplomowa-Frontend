@@ -4,11 +4,12 @@ import styled, { css } from "styled-components";
 import { useAuth } from "../../auth/Auth";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/tests.provider";
-import { Title } from "../../ui/typography";
-import { Tile } from "../../ui/tile";
-import { Footer } from "../../ui/footer";
-import { Button } from "../../ui/button";
+import { Title } from "../../components/typography";
+import { Tile } from "../../components/tile";
+import { Footer } from "../../components/footer";
+import { Button } from "../../components/button";
 import { useNavigate } from "react-router-dom";
+import { API } from "../../App";
 
 const Description = styled.div`
     font-size: 14px;
@@ -28,7 +29,7 @@ export default function TestsList(){
     const [tests, setTests] = useState();
 
     useEffect(() => {
-        axios.get('http://54.37.232.57/api/test').then((res) => {
+        axios.get(API + 'test').then((res) => {
             setTests(res.data.filter(t => t.teacher.id === auth.user.id));
             setLoading(false);
         });
@@ -60,8 +61,8 @@ export default function TestsList(){
 
     const removeTest = (testId) => {
         setLoading(true);
-        axios.delete('http://54.37.232.57/api/test/' + testId).then((res) => {
-            axios.get('http://54.37.232.57/api/test').then((res) => {
+        axios.delete(API + 'test/' + testId).then((res) => {
+            axios.get(API + 'test').then((res) => {
                 setTests(res.data.filter(t => t.teacher.id === auth.user.id));
                 setLoading(false);
             });

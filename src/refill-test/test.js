@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTimer } from "react-timer-hook";
+import { API } from "../App";
 
 export default function Test({ user, setUser }){
 
@@ -12,9 +13,9 @@ export default function Test({ user, setUser }){
     const params = useParams();
 
     useEffect(() => {
-        axios.get('http://54.37.232.57/api/test/' + params.testId).then((res) => {
+        axios.get(API + 'test/' + params.testId).then((res) => {
             setData(res.data);
-            axios.get('http://54.37.232.57/api/question/test/' + params.testId).then((res) => {
+            axios.get(API + 'question/test/' + params.testId).then((res) => {
                 setQuestionData(res.data);
                 setLoading(false);
             });
@@ -75,7 +76,7 @@ export default function Test({ user, setUser }){
     let studentAnswer = [];
 
     const setAnswer = (questionId, answerId) => {
-        axios.post('http://54.37.232.57/api/logs', {
+        axios.post(API + 'logs', {
             studentId: user.id,
             testId: parseInt(params.testId),
             questionId: questionId,
@@ -108,7 +109,7 @@ export default function Test({ user, setUser }){
                 newStudentAnswer.push(studentAnswer[i]);
             }
             studentAnswer = newStudentAnswer;
-            axios.post('http://54.37.232.57/api/logs', {
+            axios.post(API + 'logs', {
                 studentId: user.id,
                 testId: parseInt(params.testId),
                 questionId: questionId,
@@ -125,7 +126,7 @@ export default function Test({ user, setUser }){
             answerId: answerId
         }
         studentAnswer.push(newAnswer);
-        axios.post('http://54.37.232.57/api/logs', {
+        axios.post(API + 'logs', {
             studentId: user.id,
             testId: parseInt(params.testId),
             questionId: questionId,
@@ -142,7 +143,7 @@ export default function Test({ user, setUser }){
         const studentId = user.id;
         const testId = data.id;
         studentAnswer.forEach(a => {
-            axios.post('http://54.37.232.57/api/studentanswer', {
+            axios.post(API + 'studentanswer', {
                 studentId: studentId,
                 testId: testId,
                 questionId: a.questionId,

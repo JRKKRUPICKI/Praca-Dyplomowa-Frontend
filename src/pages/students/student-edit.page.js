@@ -3,10 +3,11 @@ import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/students.provider";
-import { Error, Title } from "../../ui/typography";
-import { Footer } from "../../ui/footer";
-import { Button } from "../../ui/button";
-import { Input } from "../../ui/input";
+import { Error, Title } from "../../components/typography";
+import { Footer } from "../../components/footer";
+import { Button } from "../../components/button";
+import { Input } from "../../components/input";
+import { API } from "../../App";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -33,7 +34,7 @@ export default function StudentEdit(){
     const page = usePage();
 
     useEffect(() => {
-        axios.get('http://54.37.232.57/api/student/' + page.studentId).then((res) => {
+        axios.get(API + 'student/' + page.studentId).then((res) => {
             setData(res.data);
             setLoading(false);
         })
@@ -78,7 +79,7 @@ export default function StudentEdit(){
     const saveStudent = () => {
         if(!validate()) return;
         setLoading(true);
-        axios.patch('http://54.37.232.57/api/student/' + page.studentId, {
+        axios.patch(API + 'student/' + page.studentId, {
             login: loginField,
             password: passwordField,
         }).then((res) => {

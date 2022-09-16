@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Title } from "../ui/typography";
+import { Title } from "../components/typography";
 
 const Container = styled.div`
     display: flex;

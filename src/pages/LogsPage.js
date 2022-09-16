@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { API } from "../App";
 import { formatDatetime } from "../utils/TimeUtils";
 
 export default function LogsPage() {
@@ -12,7 +13,7 @@ export default function LogsPage() {
     const params = useParams();
 
     useEffect(() => {
-        axios.get('http://54.37.232.57/api/logs/' + params.studentId).then((res) => {
+        axios.get(API + 'logs/' + params.studentId).then((res) => {
             setLogs(res.data);
         }).then(res => {
             setLoading(false);

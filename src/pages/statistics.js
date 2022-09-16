@@ -1,10 +1,12 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { API } from "../App";
 import { useAuth } from "../auth/Auth";
-import { LINKS, Navigation } from "../components/navigation";
+import { useEffect } from "react";
+import { useState } from "react";
+import axios from "axios";
 import { Number, Title } from "../components/typography";
+import { API } from "../App";
+import { Button } from "../components/button";
+import { LINKS, Navigation } from "../components/navigation";
 
 const Container = styled.div`
     display: grid;
@@ -47,7 +49,7 @@ const Content = styled.div`
             padding: 8px 16px;
             text-align: center;
 
-            &:nth-child(1), &:nth-child(2){
+            &:nth-child(1){
                 text-align: left;
             }
 
@@ -104,6 +106,7 @@ const Tiles = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 16px;
+    margin-top: 16px;
 `;
 
 const Tile = styled.div`
@@ -114,32 +117,56 @@ const Tile = styled.div`
     display: inline-block;
 `;
 
-export default function Dashboard(){
+const Select = styled.select`
+    background: #1e1f24;
+    border: 1px solid #7d8093;
+    border-radius: 10px;
+    padding: 8px;
+    font-size: 14px;
+    color: #FFFFFF;
+    width: 400px;
+    cursor: pointer;
+    margin-right: 16px;
+
+    &:focus{
+        outline: none;
+    }
+`;
+
+export default function Statistics(){
 
     const auth = useAuth();
 
-    const [data, setData] = useState({tests: 0, students: 0, questions: 0});
+    const [data, setData] = useState({
+        questions: 0,
+        answers: 0,
+        students: 0
+    });
 
     const [loading, setLoading] = useState(true);
 
+    const [tests, setTests] = useState([]);
+
+    const [test, setTest] = useState();
+
     useEffect(() => {
-        let tests = 0;
-        let students = 0;
-        let questions = 0;
         axios.get(API + 'test').then((res) => {
-            const data = res.data.filter(t => t.teacher.id === auth.user.id);
-            tests = data.length;
-            data.map(test => {
-                students += test.students.length;
-                questions += test.questions.length;
-            });
-            setData({tests: tests, students: students, questions: questions})
+            setTests(res.data.filter(t => t.teacher.id === auth.user.id));
+            setLoading(false);
         });
     }, [auth.user.id])
 
+    const loadStatistics = () => {
+        setLoading(true);
+        axios.get(API + 'statistics/' + test).then((res) => {
+            setData(res.data);
+            setLoading(false);
+        });
+    }
+
     return (
         <Container>
-            <Navigation activeLink={LINKS.DASHBOARD}/>
+            <Navigation activeLink={LINKS.STATISTICS}/>
             <Content>
                 <Header>
                     <input type='text' placeholder="Wyszukiwanie..."/>
@@ -148,20 +175,32 @@ export default function Dashboard(){
                         <div>teacher@gmail.com</div>
                     </User>
                 </Header>
-                <Tiles>
-                    <Tile>
-                        <Title>Testy</Title>
-                        <Number>{data.tests}</Number>
-                    </Tile>
-                    <Tile>
-                        <Title>Studenci</Title>
-                        <Number>{data.students}</Number>
-                    </Tile>
-                    <Tile>
-                        <Title>Pytania</Title>
-                        <Number>{data.questions}</Number>
-                    </Tile>
-                </Tiles>
+                <Tile>
+                    <Title>Wybierz test</Title>
+                    <Select onChange={e => setTest(e.target.value)} value={test}>
+                        <option value='0'>Wybierz test</option>
+                        {tests.map(test => <option value={test.id} key={test.id}>{test.name}</option>)}
+                    </Select>
+                    <Button onClick={() => loadStatistics()}>Pokaż statystyki</Button>
+                </Tile>
+                {data && (
+                    loading ? <div>Loading</div> : (
+                        <Tiles>
+                        <Tile>
+                            <Title>Pytań w teście</Title>
+                            <Number>{data.questions}</Number>
+                        </Tile>
+                        <Tile>
+                            <Title>Odpowiedzi w pytaniach</Title>
+                            <Number>{data.answers}</Number>
+                        </Tile>
+                        <Tile>
+                            <Title>Studenci w teście</Title>
+                            <Number>{data.students}</Number>
+                        </Tile>
+                    </Tiles>
+                    )
+                )}
             </Content>
         </Container>
     )

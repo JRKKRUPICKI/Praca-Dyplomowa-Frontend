@@ -1,57 +1,17 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { API } from "../App";
 import { useAuth } from "../auth/Auth";
-import Answer from "../ui/answer";
-import { Button } from "../ui/button";
-import { Tile } from "../ui/tile";
-import { Title } from "../ui/typography";
+import { LINKS, Navigation } from "../components/navigation";
+import Answer from "../components/answer";
+import { Button } from "../components/button";
+import { Tile } from "../components/tile";
+import { Title } from "../components/typography";
 
 const Container = styled.div`
     display: grid;
     grid-template-columns: 270px auto;
-`;
-
-const Navigation = styled.div`
-    background: #1e1f24;
-    min-height: 100vh;
-    display: grid;
-    grid-template-rows: 80px auto;
-`;
-
-const Logo = styled.div`
-    font-size: 24px;
-    text-align: center;
-    font-weight: bold;
-    letter-spacing: 2px;
-    line-height: 80px;
-`;
-
-const Links = styled.div`
-    & > div{
-        display: grid;
-        grid-template-columns: 30px auto;
-        padding: 10px 20px;
-        cursor: pointer;
-        margin: 10px 14px;
-        gap: 10px;
-        border-radius: 8px;
-        align-items: center;
-        color: #e6effc;
-
-        &.active{
-            background: #307af3;
-        }
-    
-        &:hover{
-            background: #307af3;
-        }
-    
-        & > i{
-            color: #e6effc;
-        }
-    }
 `;
 
 const Content = styled.div`
@@ -166,10 +126,8 @@ export default function Results(){
 
     const [loading, setLoading] = useState(true);
 
-    const navigate = useNavigate();
-
     useEffect(() => {
-        axios.get('http://54.37.232.57/api/test').then((res) => {
+        axios.get(API + 'test').then((res) => {
             setData(res.data.filter(t => t.teacher.id === auth.user.id));
             setLoading(false);
         });
@@ -182,7 +140,7 @@ export default function Results(){
 
     const loadStudents = () => {
         setLoading(true);
-        axios.get('http://54.37.232.57/api/test/' + testId).then((res) => {
+        axios.get(API + 'test/' + testId).then((res) => {
             setStudents(res.data.students);
             setQuestionData(res.data.questions);
             setLoading(false);
@@ -193,9 +151,9 @@ export default function Results(){
 
     const loadResults = () => {
         setLoading(true);
-        axios.get('http://54.37.232.57/api/studentanswer/' + studentId).then((res) => {
+        axios.get(API + 'studentanswer/' + studentId).then((res) => {
             setResults(res.data);
-            axios.get('http://54.37.232.57/api/question/test/' + testId).then((res) => {
+            axios.get(API + 'question/test/' + testId).then((res) => {
                 setQuestionData(res.data);
                 setLoading(false);
             })
@@ -223,40 +181,7 @@ export default function Results(){
 
     return (
         <Container>
-            <Navigation>
-                <Logo>
-                    Inżynierka
-                </Logo>
-                <Links>
-                    <div onClick={() => navigate('/dashboard')}>
-                        <i className='gg-album'></i>Dashboard
-                    </div>
-                    <div onClick={() => navigate('/tests')}>
-                        <i className='gg-notes'></i>Testy
-                    </div>
-                    <div onClick={() => navigate('/students')}>
-                        <i className='gg-user-list'></i>Studenci
-                    </div>
-                    <div onClick={() => navigate('/questions')}>
-                        <i className='gg-edit-unmask'></i>Pytania
-                    </div>
-                    <div className="active" onClick={() => navigate('/results')}>
-                        <i className='gg-list'></i>Wyniki
-                    </div>
-                    <div>
-                        <i className='gg-calculator'></i>Statystyki
-                    </div>
-                    <div>
-                        <i className='gg-camera'></i>Dziennik interakcji
-                    </div>
-                    <div>
-                        <i className='gg-record'></i>W trakcie wypełniania
-                    </div>
-                    <div onClick={() => auth.logout()}>
-                        <i className='gg-log-off'></i>Wyloguj się
-                    </div>
-                </Links>
-            </Navigation>
+            <Navigation activeLink={LINKS.RESULTS}/>
             <Content>
                 <Header>
                     <input type='text' placeholder="Wyszukiwanie..."/>

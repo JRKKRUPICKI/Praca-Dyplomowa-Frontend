@@ -12,6 +12,9 @@ import Main from './refill-test/main';
 import Results from './pages/results';
 import Dashboard from './pages/dashboard';
 import NotFoundPage from './pages/not-found.page';
+import Statistics from './pages/statistics';
+
+export const API = 'http://54.37.232.57/api/';
 
 function App() {
   return (
@@ -25,6 +28,7 @@ function App() {
               <Route path='students' element={<RequireAuth><Students/></RequireAuth>}/>
               <Route path='questions' element={<RequireAuth><Questions/></RequireAuth>}/>
               <Route path='results' element={<RequireAuth><Results/></RequireAuth>}/>
+              <Route path='statistics' element={<RequireAuth><Statistics/></RequireAuth>}/>
               <Route path='tests/:testId/students/:studentId/test' element={<RequireAuth><StudentTestPage/></RequireAuth>}/>
               <Route path='tests/:testId/students/:studentId/logs' element={<RequireAuth><LogsPage/></RequireAuth>}/>
               <Route path='*' element={<NotFoundPage/>}/>

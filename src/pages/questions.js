@@ -1,52 +1,10 @@
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../auth/Auth";
+import { LINKS, Navigation } from "../components/navigation";
 import { QuestionsProvider } from "../providers/questions.provider";
 
 const Container = styled.div`
     display: grid;
     grid-template-columns: 270px auto;
-`;
-
-const Navigation = styled.div`
-    background: #1e1f24;
-    min-height: 100vh;
-    display: grid;
-    grid-template-rows: 80px auto;
-`;
-
-const Logo = styled.div`
-    font-size: 24px;
-    text-align: center;
-    font-weight: bold;
-    letter-spacing: 2px;
-    line-height: 80px;
-`;
-
-const Links = styled.div`
-    & > div{
-        display: grid;
-        grid-template-columns: 30px auto;
-        padding: 10px 20px;
-        cursor: pointer;
-        margin: 10px 14px;
-        gap: 10px;
-        border-radius: 8px;
-        align-items: center;
-        color: #e6effc;
-
-        &.active{
-            background: #307af3;
-        }
-    
-        &:hover{
-            background: #307af3;
-        }
-    
-        & > i{
-            color: #e6effc;
-        }
-    }
 `;
 
 const Content = styled.div`
@@ -140,46 +98,9 @@ const User = styled.div`
 
 export default function Questions(){
 
-    const navigate = useNavigate();
-
-    const auth = useAuth();
-
     return (
         <Container>
-            <Navigation>
-                <Logo>
-                    Inżynierka
-                </Logo>
-                <Links>
-                    <div onClick={() => navigate('/dashboard')}>
-                        <i className='gg-album'></i>Dashboard
-                    </div>
-                    <div onClick={() => navigate('/tests')}>
-                        <i className='gg-notes'></i>Testy
-                    </div>
-                    <div onClick={() => navigate('/students')}>
-                        <i className='gg-user-list'></i>Studenci
-                    </div>
-                    <div className="active" onClick={() => navigate('/questions')}>
-                        <i className='gg-edit-unmask'></i>Pytania
-                    </div>
-                    <div onClick={() => navigate('/results')}>
-                        <i className='gg-list'></i>Wyniki
-                    </div>
-                    <div>
-                        <i className='gg-calculator'></i>Statystyki
-                    </div>
-                    <div>
-                        <i className='gg-camera'></i>Dziennik interakcji
-                    </div>
-                    <div>
-                        <i className='gg-record'></i>W trakcie wypełniania
-                    </div>
-                    <div onClick={() => auth.logout()}>
-                        <i className='gg-log-off'></i>Wyloguj się
-                    </div>
-                </Links>
-            </Navigation>
+            <Navigation activeLink={LINKS.QUESTIONS}/>
             <Content>
                 <Header>
                     <input type='text' placeholder="Wyszukiwanie..."/>

@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTimer } from "react-timer-hook";
 import styled from "styled-components";
-import { Button } from "../ui/button";
-import { Input, InputLabel } from "../ui/input";
-import { Error, Title } from "../ui/typography";
+import { API } from "../App";
+import { Button } from "../components/button";
+import { Input, InputLabel } from "../components/input";
+import { Error, Title } from "../components/typography";
 
 const FlexContainer = styled.div`
     display: flex;
@@ -56,9 +57,9 @@ export default function Login({ setUser }){
     const params = useParams();
 
     useEffect(() => {
-        axios.get('http://54.37.232.57/api/test/' + params.testId).then((res) => {
+        axios.get(API + 'test/' + params.testId).then((res) => {
             setData(res.data);
-            axios.get('http://54.37.232.57/api/question/test/' + params.testId).then((res) => {
+            axios.get(API + 'question/test/' + params.testId).then((res) => {
                 setQuestionData(res.data);
                 setLoading(false);
             });
@@ -102,7 +103,7 @@ export default function Login({ setUser }){
 
     const handleSubmit = () => {
         if(!validate()) return;
-        axios.post('http://54.37.232.57/api/student/login', {
+        axios.post(API + 'student/login', {
             login: loginField,
             password: passwordField,
             testId: parseInt(params.testId)

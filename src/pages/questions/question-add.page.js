@@ -2,9 +2,10 @@ import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/questions.provider";
-import { Error, Title } from "../../ui/typography";
-import { Footer } from "../../ui/footer";
-import { Button } from "../../ui/button";
+import { Error, Title } from "../../components/typography";
+import { Footer } from "../../components/footer";
+import { Button } from "../../components/button";
+import { API } from "../../App";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -62,7 +63,7 @@ export default function QuestionAdd(){
     const saveQuestion = () => {
         if(!validate()) return;
         setLoading(true);
-        axios.post('http://54.37.232.57/api/question', {
+        axios.post(API + 'question', {
             name: questionField,
             testId: parseInt(page.testId)
         }).then((res) => {

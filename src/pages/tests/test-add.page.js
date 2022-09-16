@@ -4,9 +4,10 @@ import axios from "axios";
 import { PAGES, usePage } from "../../providers/tests.provider";
 import { useAuth } from "../../auth/Auth";
 import { formatDatetime } from "../../utils/TimeUtils";
-import { Error, Title } from "../../ui/typography";
-import { Footer } from "../../ui/footer";
-import { Button } from "../../ui/button";
+import { Error, Title } from "../../components/typography";
+import { Footer } from "../../components/footer";
+import { Button } from "../../components/button";
+import { API } from "../../App";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -90,7 +91,7 @@ export default function TestAdd(){
     const saveTest = () => {
         if(!validate()) return;
         setLoading(true);
-        axios.post('http://54.37.232.57/api/test', {
+        axios.post(API + 'test', {
             name: nameField,
             teacherId: auth.user.id,
             time: timeField,
@@ -107,7 +108,7 @@ export default function TestAdd(){
 
     return loading ? <div>Loading</div> : (
         <Container>
-            <Title>Tworzenie nowego konta studenta</Title>
+            <Title>Tworzenie nowego testu</Title>
             <Item>
                 <div>Nazwa testu:</div>
                 <Input onChange={(e) => setNameField(e.target.value)}/>

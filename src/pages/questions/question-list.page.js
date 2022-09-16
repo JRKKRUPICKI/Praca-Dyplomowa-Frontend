@@ -4,10 +4,11 @@ import styled from "styled-components";
 import { useAuth } from "../../auth/Auth";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/questions.provider";
-import { Description, Title } from "../../ui/typography";
-import { Tile } from "../../ui/tile";
-import { Footer } from "../../ui/footer";
-import { Button } from "../../ui/button";
+import { Description, Title } from "../../components/typography";
+import { Tile } from "../../components/tile";
+import { Footer } from "../../components/footer";
+import { Button } from "../../components/button";
+import { API } from "../../App";
 
 const Select = styled.select`
     background: #1e1f24;
@@ -33,7 +34,7 @@ export default function QuestionList(){
     const [tests, setTests] = useState([]);
 
     useEffect(() => {
-        axios.get('http://54.37.232.57/api/test').then((res) => {
+        axios.get(API + 'test').then((res) => {
             setTests(res.data.filter(t => t.teacher.id === auth.user.id));
             setLoading(false);
         });
@@ -59,7 +60,7 @@ export default function QuestionList(){
 
     const removeQuestion = (questionId) => {
         setLoading(true);
-        axios.delete('http://54.37.232.57/api/question/' + questionId).then((res) => {
+        axios.delete(API + 'question/' + questionId).then((res) => {
             loadQuestions()
         })
     }
@@ -68,7 +69,7 @@ export default function QuestionList(){
 
     const loadQuestions = () => {
         setLoading(true);
-        axios.get('http://54.37.232.57/api/question').then((res) => {
+        axios.get(API + 'question').then((res) => {
             setQuestions(res.data.filter(question => question.test.id === parseInt(page.testId)));
             setLoading(false);
         })

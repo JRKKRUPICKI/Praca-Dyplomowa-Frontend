@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { API } from "../App";
 
 export default function StudentTestPage() {
 
@@ -14,13 +15,13 @@ export default function StudentTestPage() {
         let q;
         let a;
         Promise.all([
-            axios.get('http://54.37.232.57/api/test/' + params.testId).then((res) => {
+            axios.get(API + 'test/' + params.testId).then((res) => {
                 setTest(res.data);
             }),
-            axios.get('http://54.37.232.57/api/question/test/' + params.testId).then((res) => {
+            axios.get(API + 'question/test/' + params.testId).then((res) => {
                 q = res.data;
             }),
-            axios.get('http://54.37.232.57/api/studentanswer/' + params.studentId).then((res) => {
+            axios.get(API + 'studentanswer/' + params.studentId).then((res) => {
                 a = res.data;
             })
         ]).then(res => {

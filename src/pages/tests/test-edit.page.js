@@ -3,10 +3,11 @@ import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/tests.provider";
-import { Error, Title } from "../../ui/typography";
-import { Footer } from "../../ui/footer";
-import { Button } from "../../ui/button";
-import { Input } from "../../ui/input";
+import { Error, Title } from "../../components/typography";
+import { Footer } from "../../components/footer";
+import { Button } from "../../components/button";
+import { Input } from "../../components/input";
+import { API } from "../../App";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -31,7 +32,7 @@ export default function TestEdit(){
     const page = usePage();
 
     useEffect(() => {
-        axios.get('http://54.37.232.57/api/test/' + page.testId).then((res) => {
+        axios.get(API + 'test/' + page.testId).then((res) => {
             setNameField(res.data.name);
             setTimeField(res.data.time);
             setLoginTimeStartField(new Date(new Date(res.data.loginTimeStart) - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, -1));
@@ -84,7 +85,7 @@ export default function TestEdit(){
     const saveTest = () => {
         if(!validate()) return;
         setLoading(true);
-        axios.patch('http://54.37.232.57/api/test/' + page.testId, {
+        axios.patch(API + 'test/' + page.testId, {
             name: nameField,
             time: timeField,
             loginTimeStart: Date.parse(loginTimeStartField),
