@@ -8,6 +8,7 @@ import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { Input } from "../../components/input";
 import { API } from "../../App";
+import { Student } from "../../models";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -25,9 +26,9 @@ const Item = styled.div`
     }
 `;
 
-export default function StudentEdit(){
+export default function StudentEdit() {
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState<Student>();
 
     const [loading, setLoading] = useState(true);
 
@@ -40,35 +41,40 @@ export default function StudentEdit(){
         })
     }, [page.studentId])
 
-    const [loginField, setLoginField] = useState(data.login);
+
+    const [loginField, setLoginField] = useState(data?.login);
     const [loginError, setLoginError] = useState('');
-    const [passwordField, setPasswordField] = useState(data.password);
+    const [passwordField, setPasswordField] = useState(data?.password);
     const [passwordError, setPasswordError] = useState('');
+
+    if (loading || !data) {
+        return <div>Loading</div>;
+    }
 
     const validate = () => {
         let valid = true;
-        if(!loginField){
+        if (!loginField) {
             setLoginError('Nieprawidłowy login');
             valid = false;
         }
-        else if(loginField !== loginField.trim()){
+        else if (loginField !== loginField.trim()) {
             setLoginError('Nieprawidłowy login');
             valid = false;
         }
-        else if(loginField === data.login){
+        else if (loginField === data.login) {
             setLoginError('Nowy login jest taki sam jak poprzedni');
             valid = false;
         }
-        else if(!loginField.match(/^[0-9a-zA-Z]+$/)){
+        else if (!loginField.match(/^[0-9a-zA-Z]+$/)) {
             setLoginError('Nieprawidłowy login');
             return true;
         }
         else setLoginError('');
-        if(!passwordField){
+        if (!passwordField) {
             setPasswordError('Nieprawidłowe hasło');
             valid = false;
         }
-        else if(passwordField === data.password){
+        else if (passwordField === data.password) {
             setPasswordError('Nowe hasło jest takie samo jak poprzednie');
             valid = false;
         }
@@ -77,7 +83,7 @@ export default function StudentEdit(){
     }
 
     const saveStudent = () => {
-        if(!validate()) return;
+        if (!validate()) return;
         setLoading(true);
         axios.patch(API + 'student/' + page.studentId, {
             login: loginField,
@@ -89,17 +95,17 @@ export default function StudentEdit(){
         })
     }
 
-    return loading ? <div>Loading</div> : (
+    return (
         <Container>
             <Title>Edycja konta studenta: {data.login}</Title>
             <Item>
                 <div>Login:</div>
-                <Input defaultValue={data.login} onChange={(e) => setLoginField(e.target.value)}/>
+                <Input defaultValue={data.login} onChange={(e) => setLoginField(e.target.value)} />
                 {loginError && <Error>{loginError}</Error>}
             </Item>
             <Item>
                 <div>Hasło:</div>
-                <Input defaultValue={data.password} onChange={(e) => setPasswordField(e.target.value)}/>
+                <Input defaultValue={data.password} onChange={(e) => setPasswordField(e.target.value)} />
                 {passwordError && <Error>{passwordError}</Error>}
             </Item>
             <Footer>

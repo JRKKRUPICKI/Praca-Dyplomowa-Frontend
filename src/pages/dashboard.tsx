@@ -114,35 +114,33 @@ const Tile = styled.div`
     display: inline-block;
 `;
 
-export default function Dashboard(){
+export default function Dashboard() {
 
     const auth = useAuth();
 
-    const [data, setData] = useState({tests: 0, students: 0, questions: 0});
-
-    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState({ tests: 0, students: 0, questions: 0 });
 
     useEffect(() => {
         let tests = 0;
         let students = 0;
         let questions = 0;
         axios.get(API + 'test').then((res) => {
-            const data = res.data.filter(t => t.teacher.id === auth.user.id);
+            const data = res.data.filter((t: any) => t.teacher.id === auth?.user?.id);
             tests = data.length;
-            data.map(test => {
+            data.forEach((test: any) => {
                 students += test.students.length;
                 questions += test.questions.length;
             });
-            setData({tests: tests, students: students, questions: questions})
+            setData({ tests: tests, students: students, questions: questions })
         });
-    }, [auth.user.id])
+    }, [auth?.user?.id])
 
     return (
         <Container>
-            <Navigation activeLink={LINKS.DASHBOARD}/>
+            <Navigation activeLink={LINKS.DASHBOARD} />
             <Content>
                 <Header>
-                    <input type='text' placeholder="Wyszukiwanie..."/>
+                    <input type='text' placeholder="Wyszukiwanie..." />
                     <User>
                         <div></div>
                         <div>teacher@gmail.com</div>

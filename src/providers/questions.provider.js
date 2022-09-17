@@ -9,12 +9,12 @@ import QuestionList from "../pages/questions/question-list.page";
 const QuestionsContext = createContext();
 
 export const PAGES = {
-    LIST: <QuestionList/>,
-    DETAILS: <QuestionDetails/>,
-    EDIT: <QuestionEdit/>,
-    ADD: <QuestionAdd/>,
-    EDIT_ANSWER: <AnswerEdit/>,
-    ADD_ANSWER: <AnswerAdd/>
+    LIST: <QuestionList />,
+    DETAILS: <QuestionDetails />,
+    EDIT: <QuestionEdit />,
+    ADD: <QuestionAdd />,
+    EDIT_ANSWER: <AnswerEdit />,
+    ADD_ANSWER: <AnswerAdd />
 }
 
 export const QuestionsProvider = () => {

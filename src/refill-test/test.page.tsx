@@ -3,26 +3,33 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTimer } from "react-timer-hook";
 import { API } from "../App";
+import { AnswerNoCorrect, QuestionNoCorrect, StudentAnswer, Test } from "../models";
 
-export default function Test({ user, setUser }){
+export default function TestPage({ user, setUser }: any) {
 
-    const [data, setData] = useState();
-    const [questionData, setQuestionData] = useState();
+    const [data, setData] = useState<Test>();
     const [loading, setLoading] = useState(true);
 
     const params = useParams();
 
-    useEffect(() => {
-        axios.get(API + 'test/' + params.testId).then((res) => {
-            setData(res.data);
-            axios.get(API + 'question/test/' + params.testId).then((res) => {
-                setQuestionData(res.data);
-                setLoading(false);
-            });
-        })
-    }, [params.testId])
+    const testId = params.testId;
 
-    function MyTimer({ expiryTimestamp }) {
+    useEffect(() => {
+        axios.get(API + 'question/test/' + testId).then((res) => {
+            setData(res.data);
+            setLoading(false);
+        });
+    }, [testId])
+
+    if (!testId) {
+        return <div>'ERROR'</div>
+    }
+
+    if (loading || !data) {
+        return <div>Loading</div>
+    }
+
+    function MyTimer({ expiryTimestamp }: any) {
         const {
             seconds,
             minutes,
@@ -33,13 +40,15 @@ export default function Test({ user, setUser }){
             //pause,
             //resume,
             //restart,
-        } = useTimer({ expiryTimestamp, onExpire: () => {
-            alert('Koniec czasu, odpowiedzi zostały automatycznie przesłane');
-            setUser();
-        }});
+        } = useTimer({
+            expiryTimestamp, onExpire: () => {
+                alert('Koniec czasu, odpowiedzi zostały automatycznie przesłane');
+                setUser();
+            }
+        });
 
         return (
-            <div style={{textAlign: 'center'}} className='timer'>
+            <div style={{ textAlign: 'center' }} className='timer'>
                 <div className='header'>Czas na przesłanie odpowiedzi</div>
                 <div className='time'>
                     <span>{hours < 10 ? '0' + hours : hours}</span>:<span>{minutes < 10 ? '0' + minutes : minutes}</span>:<span>{seconds < 10 ? '0' + seconds : seconds}</span>
@@ -54,31 +63,12 @@ export default function Test({ user, setUser }){
         return time;
     }
 
-    const loadQuestions = () => {
-        let list = [];
-        questionData.forEach(q => {
-            let b = [];
-            b.id = q.id;
-            b.name = q.name;
-            b.type = q.type;
-            b.answers = [];
-            q.answers.forEach(a => {
-                let c = [];
-                c.id = a.id;
-                c.name = a.name;
-                b.answers.push(c);
-            });
-            list.push(b);
-        });
-        return list;
-    }
+    let studentAnswer: StudentAnswer[] = [];
 
-    let studentAnswer = [];
-
-    const setAnswer = (questionId, answerId) => {
+    const setAnswer = (questionId: number, answerId: number) => {
         axios.post(API + 'logs', {
             studentId: user.id,
-            testId: parseInt(params.testId),
+            testId: parseInt(testId),
             questionId: questionId,
             answerId: answerId,
             datetime: Date.now(),
@@ -86,8 +76,8 @@ export default function Test({ user, setUser }){
         }).catch((err) => {
             alert('Problem z zapisem logów');
         })
-        for(let i = 0; i < studentAnswer.length; i++){
-            if(studentAnswer[i].questionId === questionId){
+        for (let i = 0; i < studentAnswer.length; i++) {
+            if (studentAnswer[i].questionId === questionId) {
                 studentAnswer[i].answerId = answerId;
                 return;
             }
@@ -99,11 +89,11 @@ export default function Test({ user, setUser }){
         studentAnswer.push(newAnswer);
     }
 
-    const toggleAnswer = (questionId, answerId) => {
-        if(studentAnswer.filter(sa => sa.questionId === questionId && sa.answerId === answerId).length > 0){
+    const toggleAnswer = (questionId: number, answerId: number) => {
+        if (studentAnswer.filter(sa => sa.questionId === questionId && sa.answerId === answerId).length > 0) {
             const newStudentAnswer = [];
-            for(let i = 0; i < studentAnswer.length; i++){
-                if(studentAnswer[i].questionId === questionId && studentAnswer[i].answerId === answerId){
+            for (let i = 0; i < studentAnswer.length; i++) {
+                if (studentAnswer[i].questionId === questionId && studentAnswer[i].answerId === answerId) {
                     continue;
                 }
                 newStudentAnswer.push(studentAnswer[i]);
@@ -111,7 +101,7 @@ export default function Test({ user, setUser }){
             studentAnswer = newStudentAnswer;
             axios.post(API + 'logs', {
                 studentId: user.id,
-                testId: parseInt(params.testId),
+                testId: parseInt(testId),
                 questionId: questionId,
                 answerId: answerId,
                 datetime: Date.now(),
@@ -128,7 +118,7 @@ export default function Test({ user, setUser }){
         studentAnswer.push(newAnswer);
         axios.post(API + 'logs', {
             studentId: user.id,
-            testId: parseInt(params.testId),
+            testId: parseInt(testId),
             questionId: questionId,
             answerId: answerId,
             datetime: Date.now(),
@@ -138,7 +128,7 @@ export default function Test({ user, setUser }){
         })
     }
 
-    const saveAnswers = (e) => {
+    const saveAnswers = (e: any) => {
         e.preventDefault();
         const studentId = user.id;
         const testId = data.id;
@@ -157,19 +147,19 @@ export default function Test({ user, setUser }){
         setUser();
     }
 
-    return loading ? <div>Loading</div> : (
+    return (
         <div>
-            <MyTimer expiryTimestamp={testTime}/>
-            {loadQuestions().map(q => <div key={q.id} className='questionBox'>
+            <MyTimer expiryTimestamp={testTime} />
+            {data.questions.map((q: QuestionNoCorrect) => <div key={q.id} className='questionBox'>
                 <div className='question'>{q.name}</div>
                 {!q.type ? (
-                    q.answers.map(a => <div key={a.id} className='answer'>
-                        <input type='radio' id={a.id} name={q.id} value={a.id} onClick={() => setAnswer(q.id, a.id)}/>
+                    q.answers.map((a: AnswerNoCorrect) => <div key={a.id} className='answer'>
+                        <input type='radio' id={'a-' + a.id} name={'q-' + q.id} value={a.id} onClick={() => setAnswer(q.id, a.id)} />
                         {a.name}
                     </div>)
                 ) : (
                     q.answers.map(a => <div key={a.id} className='answer'>
-                        <input type='checkbox' id={a.id} name={a.id} value={a.id} onClick={() => toggleAnswer(q.id, a.id)}/>
+                        <input type='checkbox' id={'a-' + a.id} name={'a-' + a.id} value={a.id} onClick={() => toggleAnswer(q.id, a.id)} />
                         {a.name}
                     </div>)
                 )}

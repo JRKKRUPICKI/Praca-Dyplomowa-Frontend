@@ -9,6 +9,7 @@ import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { useNavigate } from "react-router-dom";
 import { API } from "../../App";
+import { Test } from "../../models";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -25,30 +26,32 @@ const Item = styled.div`
     }
 `;
 
-export default function TestDetails(){
+export default function TestDetails() {
 
-    const [data, setData] = useState([]);
-
-    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState<Test>();
+    const [isLoading, setIsLoading] = useState(true);
 
     const page = usePage();
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(API + 'test/' + page.testId).then((res) => {
             setData(res.data);
-            setLoading(false);
+            setIsLoading(false);
         })
     }, [page.testId])
 
     const deleteTest = () => {
-        setLoading(true);
+        setIsLoading(true);
         axios.delete(API + 'test/' + page.testId).then((res) => {
             page.setTestId()
             page.setPage(PAGES.LIST);
         })
     }
 
-    const navigate = useNavigate();
+    if (!data || isLoading) {
+        return <div>Loading</div>;
+    }
 
     const getStatus = () => {
         const now = new Date();
@@ -57,7 +60,7 @@ export default function TestDetails(){
         return now < start || now >= end ? 'nieaktywny' : 'aktywny';
     }
 
-    return loading ? <div>Loading</div> : (
+    return (
         <Container>
             <Title>Informacje o teście</Title>
             <Item>

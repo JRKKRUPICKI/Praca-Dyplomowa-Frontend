@@ -9,7 +9,11 @@ const Container = styled.div`
     grid-template-rows: 80px auto;
 `;
 
-const Link = styled.div`
+interface LinkProps {
+    activeLink: boolean
+}
+
+const Link = styled.div<LinkProps>`
     display: grid;
     grid-template-columns: 30px auto;
     padding: 10px 20px;
@@ -48,9 +52,15 @@ export const LINKS = {
     QUESTIONS: 'QUESTIONS',
     RESULTS: 'RESULTS',
     STATISTICS: 'STATISTICS',
+    LOGS: 'LOGS',
+    LIVE: 'LIVE',
 };
 
-export const Navigation = (props) => {
+interface NavigationProps {
+    activeLink: string
+}
+
+export const Navigation = (props: NavigationProps) => {
 
     const navigate = useNavigate();
 
@@ -80,13 +90,13 @@ export const Navigation = (props) => {
                 <Link onClick={() => navigate('/statistics')} activeLink={props.activeLink === LINKS.STATISTICS}>
                     <i className='gg-calculator'></i>Statystyki
                 </Link>
-                <Link>
+                <Link onClick={() => navigate('/logs')} activeLink={props.activeLink === LINKS.LOGS}>
                     <i className='gg-camera'></i>Dziennik interakcji
                 </Link>
-                <Link>
+                <Link onClick={() => navigate('/live')} activeLink={props.activeLink === LINKS.LIVE}>
                     <i className='gg-record'></i>W trakcie wypełniania
                 </Link>
-                <Link onClick={() => auth.logout()}>
+                <Link onClick={() => auth?.logout()} activeLink={false}>
                     <i className='gg-log-off'></i>Wyloguj się
                 </Link>
             </div>

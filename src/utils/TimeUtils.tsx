@@ -1,4 +1,4 @@
-export function formatDatetime(datetime, seconds = false, milliseconds = false){
+export function formatDatetime(datetime: any, seconds = false, milliseconds = false) {
     let dt = new Date(datetime);
     const d = dt.getDate() < 10 ? '0' + dt.getDate() : dt.getDate();
     const m = dt.getMonth() + 1 < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1;

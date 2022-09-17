@@ -8,6 +8,7 @@ import Answer from "../components/answer";
 import { Button } from "../components/button";
 import { Tile } from "../components/tile";
 import { Title } from "../components/typography";
+import { Test } from "../models";
 
 const Container = styled.div`
     display: grid;
@@ -119,72 +120,57 @@ const Select = styled.select`
     }
 `;
 
-export default function Results(){
+export default function Results() {
+
     const auth = useAuth();
-
-    const [data, setData] = useState([]);
-
     const [loading, setLoading] = useState(true);
+
+    const [testList, setTestList] = useState([]);
+    const [testId, setTestId] = useState('');
+    const [studentList, setStudentList] = useState([]);
+    const [studentId, setStudentId] = useState('');
 
     useEffect(() => {
         axios.get(API + 'test').then((res) => {
-            setData(res.data.filter(t => t.teacher.id === auth.user.id));
+            setTestList(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
             setLoading(false);
         });
-    }, [auth.user.id])
-
-    const [testId, setTestId] = useState();
-    const [studentId, setStudentId] = useState();
-
-    const [students, setStudents] = useState();
+    }, [auth?.user?.id])
 
     const loadStudents = () => {
+        if (!testId) return;
         setLoading(true);
         axios.get(API + 'test/' + testId).then((res) => {
-            setStudents(res.data.students);
-            setQuestionData(res.data.questions);
+            setStudentList(res.data.students);
             setLoading(false);
         })
     }
 
-    const [results, setResults] = useState();
+    const [results, setResults] = useState([]);
 
     const loadResults = () => {
+        if (!testId || !studentId) return;
         setLoading(true);
-        axios.get(API + 'studentanswer/' + studentId).then((res) => {
+        axios.get(API + 'results/' + studentId).then((res) => {
             setResults(res.data);
-            axios.get(API + 'question/test/' + testId).then((res) => {
-                setQuestionData(res.data);
-                setLoading(false);
-            })
+            setLoading(false);
         })
     }
 
-    const [questionData, setQuestionData] = useState();
 
-    const isCorrectAnswer = (answer) => {
-        const result = results.find(result => result.answer.id === answer.id);
-        return (result && answer.correct) || (!result && !answer.correct);
-
-    }
-
-    const loadMarkedAnswers = () => {
-        return questionData.map(question => (
-            <div key={question.id} className='questionBox'>
-                <div className='question'>{question.name}</div>
-                {question.answers.map(a => (
-                    <Answer key={a.id} multiCheck={question.type} type={isCorrectAnswer(a) ? 'correct' : 'incorrect'} checked={results.find(result => result.answer.id === a.id)}>{a.name}</Answer>
-                ))}
-            </div>
-        ))
+    const chooseTest = (testId: string) => {
+        setTestId(testId);
+        setStudentId('');
+        setStudentList([]);
+        setResults([]);
     }
 
     return (
         <Container>
-            <Navigation activeLink={LINKS.RESULTS}/>
+            <Navigation activeLink={LINKS.RESULTS} />
             <Content>
                 <Header>
-                    <input type='text' placeholder="Wyszukiwanie..."/>
+                    <input type='text' placeholder="Wyszukiwanie..." />
                     <User>
                         <div></div>
                         <div>teacher@gmail.com</div>
@@ -192,29 +178,33 @@ export default function Results(){
                 </Header>
                 <Tile>
                     <Title>Wybierz test</Title>
-                    <Select onChange={e => {setTestId(e.target.value);setStudentId()}} value={testId}>
-                        <option value='0'>Wybierz test</option>
-                        {data.map(test => <option value={test.id} key={test.id}>{test.name}</option>)}
+                    <Select onChange={e => chooseTest(e.target.value)} value={testId}>
+                        <option value=''>Wybierz test</option>
+                        {testList.map((test: Test) => <option value={test.id} key={test.id}>{test.name}</option>)}
                     </Select>
                     <Button onClick={() => loadStudents()}>Pokaż studentów</Button>
                 </Tile>
-                {students && (
+                <Tile>
+                    <Title>Wybierz studenta</Title>
+                    <Select onChange={e => setStudentId(e.target.value)} value={studentId}>
+                        <option value=''>Wybierz studenta</option>
+                        {studentList.map((student: any) => <option value={student.id} key={student.id}>{student.login}</option>)}
+                    </Select>
+                    <Button onClick={() => loadResults()}>Pokaż wyniki</Button>
+                </Tile>
+                {loading ? <>Loading</> : (
                     <Tile>
-                        <Title>Wybierz studenta</Title>
-                        <Select onChange={e => setStudentId(e.target.value)} value={studentId}>
-                            <option value='0'>Wybierz studenta</option>
-                            {students.map(student => <option value={student.id} key={student.id}>{student.login}</option>)}
-                        </Select>
-                        <Button onClick={() => loadResults()}>Pokaż wyniki</Button>
-                    </Tile>  
-                )}
-                {results && (
-                    loading ? <div>Loading</div> : (
-                        <Tile>
-                            <Title>Zapisane odpowiedzi</Title>
-                            {loadMarkedAnswers()}
-                        </Tile>
-                    )
+                        <Title>Zapisane odpowiedzi</Title>
+                        {results.length > 0 && (
+                            results.map((result: any, i) => (
+                                <div key={i} className='questionBox'>
+                                    <div className='question'>{result.question.name}</div>
+                                    {result.answers.map((answer: any, i: number) => (
+                                        <Answer key={i} multiCheck={result.question.type} type={answer.checked === answer.correct ? 'correct' : 'incorrect'} checked={answer.checked}>{answer.name}</Answer>
+                                    ))}
+                                </div>
+                            )))}
+                    </Tile>
                 )}
             </Content>
         </Container>

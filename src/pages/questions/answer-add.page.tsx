@@ -37,33 +37,33 @@ const Input = styled.input`
     }
 `;
 
-export default function AnswerAdd(){
+export default function AnswerAdd() {
 
     const [loading, setLoading] = useState(false);
 
     const page = usePage();
 
-    const [answerField, setAnswerField] = useState();
-    const [answerError, setAnswerError] = useState();
+    const [answerField, setAnswerField] = useState('');
+    const [answerError, setAnswerError] = useState('');
 
     const [correctField, setCorrectField] = useState(false);
 
     const validate = () => {
         let valid = true;
-        if(!answerField){
+        if (!answerField) {
             setAnswerError('Nieprawidłowa treść odpowiedzi');
             valid = false;
         }
-        else if(answerField !== answerField.trim()){
+        else if (answerField !== answerField.trim()) {
             setAnswerError('Nieprawidłowa treść odpowiedzi');
             valid = false;
         }
-        else setAnswerError();
+        else setAnswerError('');
         return valid;
     }
 
     const saveAnswer = () => {
-        if(!validate()) return;
+        if (!validate()) return;
         setLoading(true);
         axios.post(API + 'answer', {
             name: answerField,
@@ -73,9 +73,7 @@ export default function AnswerAdd(){
             page.setPage(PAGES.DETAILS);
         }).catch((err) => {
             alert(err.response.data.message)
-        }).finally(
-            setLoading(false)
-        )
+        }).finally(() => setLoading(false))
     }
 
     return loading ? <div>Loading</div> : (
@@ -83,12 +81,12 @@ export default function AnswerAdd(){
             <Title>Dodawanie odpowiedzi</Title>
             <Item>
                 <div>Treść odpowiedzi:</div>
-                <Input onChange={(e) => setAnswerField(e.target.value)}/>
+                <Input onChange={(e) => setAnswerField(e.target.value)} />
                 {answerError && <Error>{answerError}</Error>}
             </Item>
             <Item>
                 <div>Odpowiedź poprawna?</div>
-                <Input type='checkbox' onChange={(e) => setCorrectField(e.target.checked)}/>
+                <Input type='checkbox' onChange={(e) => setCorrectField(e.target.checked)} />
             </Item>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.DETAILS)}>Anuluj</Button>

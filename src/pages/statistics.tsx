@@ -7,6 +7,7 @@ import { Number, Title } from "../components/typography";
 import { API } from "../App";
 import { Button } from "../components/button";
 import { LINKS, Navigation } from "../components/navigation";
+import { Test } from "../models";
 
 const Container = styled.div`
     display: grid;
@@ -133,7 +134,7 @@ const Select = styled.select`
     }
 `;
 
-export default function Statistics(){
+export default function Statistics() {
 
     const auth = useAuth();
 
@@ -145,18 +146,19 @@ export default function Statistics(){
 
     const [loading, setLoading] = useState(true);
 
-    const [tests, setTests] = useState([]);
+    const [tests, setTests] = useState<Test[]>([]);
 
-    const [test, setTest] = useState();
+    const [test, setTest] = useState('');
 
     useEffect(() => {
         axios.get(API + 'test').then((res) => {
-            setTests(res.data.filter(t => t.teacher.id === auth.user.id));
+            setTests(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
             setLoading(false);
         });
-    }, [auth.user.id])
+    }, [auth?.user?.id])
 
     const loadStatistics = () => {
+        if (!test) return;
         setLoading(true);
         axios.get(API + 'statistics/' + test).then((res) => {
             setData(res.data);
@@ -166,10 +168,10 @@ export default function Statistics(){
 
     return (
         <Container>
-            <Navigation activeLink={LINKS.STATISTICS}/>
+            <Navigation activeLink={LINKS.STATISTICS} />
             <Content>
                 <Header>
-                    <input type='text' placeholder="Wyszukiwanie..."/>
+                    <input type='text' placeholder="Wyszukiwanie..." />
                     <User>
                         <div></div>
                         <div>teacher@gmail.com</div>
@@ -186,19 +188,19 @@ export default function Statistics(){
                 {data && (
                     loading ? <div>Loading</div> : (
                         <Tiles>
-                        <Tile>
-                            <Title>Pytań w teście</Title>
-                            <Number>{data.questions}</Number>
-                        </Tile>
-                        <Tile>
-                            <Title>Odpowiedzi w pytaniach</Title>
-                            <Number>{data.answers}</Number>
-                        </Tile>
-                        <Tile>
-                            <Title>Studenci w teście</Title>
-                            <Number>{data.students}</Number>
-                        </Tile>
-                    </Tiles>
+                            <Tile>
+                                <Title>Pytań w teście</Title>
+                                <Number>{data.questions}</Number>
+                            </Tile>
+                            <Tile>
+                                <Title>Odpowiedzi w pytaniach</Title>
+                                <Number>{data.answers}</Number>
+                            </Tile>
+                            <Tile>
+                                <Title>Studenci w teście</Title>
+                                <Number>{data.students}</Number>
+                            </Tile>
+                        </Tiles>
                     )
                 )}
             </Content>

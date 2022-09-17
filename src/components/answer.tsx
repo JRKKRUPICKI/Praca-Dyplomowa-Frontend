@@ -1,3 +1,4 @@
+import { ReactElement } from "react";
 import styled, { css } from "styled-components"
 
 const Style = css`
@@ -31,7 +32,12 @@ const Green = styled.div`
     border: 1px solid #80b918;
 `;
 
-const CheckBox = styled.div`
+interface CheckBoxProps {
+    checked: boolean,
+    multiCheck: boolean
+}
+
+const CheckBox = styled.div<CheckBoxProps>`
     width: 16px;
     height: 16px;
     display: inline-block;
@@ -47,8 +53,15 @@ const CheckBox = styled.div`
     `}
 `;
 
-export default function Answer(props){
-    if(props.type === 'correct') return <Green><CheckBox checked={props.checked} multiCheck={props.multiCheck}/>{props.children}</Green>
-    if(props.type === 'incorrect') return <Red><CheckBox checked={props.checked} multiCheck={props.multiCheck}/>{props.children}</Red>
+interface AnswerProps {
+    type: string,
+    checked: boolean,
+    multiCheck: boolean,
+    children?: JSX.Element
+}
+
+export default function Answer(props: AnswerProps) {
+    if (props.type === 'correct') return <Green><CheckBox checked={props.checked} multiCheck={props.multiCheck} />{props.children}</Green>
+    if (props.type === 'incorrect') return <Red><CheckBox checked={props.checked} multiCheck={props.multiCheck} />{props.children}</Red>
     return <Default>{props.children}</Default>
 }

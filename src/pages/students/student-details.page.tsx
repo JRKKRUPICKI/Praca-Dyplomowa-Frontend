@@ -7,6 +7,7 @@ import { Title } from "../../components/typography";
 import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { API } from "../../App";
+import { Student } from "../../models";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -23,9 +24,9 @@ const Item = styled.div`
     }
 `;
 
-export default function StudentDetails(){
+export default function StudentDetails() {
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState<Student>();
 
     const [loading, setLoading] = useState(true);
 
@@ -38,6 +39,10 @@ export default function StudentDetails(){
         })
     }, [page.studentId])
 
+    if (loading || !data) {
+        return <div>Loading</div>;
+    }
+
     const deleteStudent = () => {
         setLoading(true);
         axios.delete(API + 'student/' + page.studentId).then((res) => {
@@ -46,7 +51,7 @@ export default function StudentDetails(){
         })
     }
 
-    return loading ? <div>Loading</div> : (
+    return (
         <Container>
             <Title>Informacje o koncie studenta</Title>
             <Item>

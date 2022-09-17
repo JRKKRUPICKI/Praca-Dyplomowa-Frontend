@@ -37,22 +37,22 @@ const Input = styled.input`
     }
 `;
 
-export default function QuestionAdd(){
+export default function QuestionAdd() {
 
     const [loading, setLoading] = useState(false);
 
     const page = usePage();
 
-    const [questionField, setQuestionField] = useState();
+    const [questionField, setQuestionField] = useState('');
     const [questionError, setQuestionError] = useState('');
 
     const validate = () => {
         let valid = true;
-        if(!questionField){
+        if (!questionField) {
             setQuestionError('Nieprawidłowa treść pytania');
             valid = false;
         }
-        else if(questionField !== questionField.trim()){
+        else if (questionField !== questionField.trim()) {
             setQuestionError('Nieprawidłowa treść pytania');
             valid = false;
         }
@@ -61,7 +61,7 @@ export default function QuestionAdd(){
     }
 
     const saveQuestion = () => {
-        if(!validate()) return;
+        if (!validate()) return;
         setLoading(true);
         axios.post(API + 'question', {
             name: questionField,
@@ -71,9 +71,7 @@ export default function QuestionAdd(){
             page.setPage(PAGES.DETAILS);
         }).catch((err) => {
             alert(err.response.data.message)
-        }).finally(
-            setLoading(false)
-        )
+        }).finally(() => setLoading(false))
     }
 
     return loading ? <div>Loading</div> : (
@@ -81,7 +79,7 @@ export default function QuestionAdd(){
             <Title>Dodawanie pytania</Title>
             <Item>
                 <div>Treść pytania:</div>
-                <Input onChange={(e) => setQuestionField(e.target.value)}/>
+                <Input onChange={(e) => setQuestionField(e.target.value)} />
                 {questionError && <Error>{questionError}</Error>}
             </Item>
             <Footer>

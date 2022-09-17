@@ -1,12 +1,12 @@
+import { useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/tests.provider";
-import { useAuth } from "../../auth/Auth";
-import { formatDatetime } from "../../utils/TimeUtils";
 import { Error, Title } from "../../components/typography";
 import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
+import { Input } from "../../components/input";
 import { API } from "../../App";
 
 const Container = styled.div`
@@ -25,62 +25,56 @@ const Item = styled.div`
     }
 `;
 
-const Input = styled.input`
-    background: #1e1f24;
-    border: 1px solid #7d8093;
-    border-radius: 10px;
-    padding: 14px;
-    font-size: 14px;
-    color: #FFFFFF;
-    height: 40px;
+export default function TestEdit() {
 
-    &:focus{
-        outline: none;
-    }
-`;
-
-export default function TestAdd(){
-
-    const auth = useAuth();
-
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const page = usePage();
 
+    useEffect(() => {
+        axios.get(API + 'test/' + page.testId).then((res) => {
+            setNameField(res.data.name);
+            setTimeField(res.data.time);
+            setLoginTimeStartField(new Date(new Date(res.data.loginTimeStart).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, -1));
+            setLoginTimeEndField(new Date(new Date(res.data.loginTimeEnd).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, -1));
+            setLoading(false);
+        })
+    }, [page.testId])
+
     const [nameField, setNameField] = useState('');
-    const [nameError, setNameError] = useState();
+    const [nameError, setNameError] = useState('');
 
     const [timeField, setTimeField] = useState(0);
-    const [timeError, setTimeError] = useState();
+    const [timeError, setTimeError] = useState('');
 
-    const [loginTimeStartField, setLoginTimeStartField] = useState(formatDatetime(Date.now()));
-    const [loginTimeStartError, setLoginTimeStartError] = useState();
+    const [loginTimeStartField, setLoginTimeStartField] = useState('');
+    const [loginTimeStartError, setLoginTimeStartError] = useState('');
 
-    const [loginTimeEndField, setLoginTimeEndField] = useState(formatDatetime(Date.now()));
-    const [loginTimeEndError, setLoginTimeEndError] = useState();
+    const [loginTimeEndField, setLoginTimeEndField] = useState('');
+    const [loginTimeEndError, setLoginTimeEndError] = useState('');
 
     const validate = () => {
         let valid = true;
-        if(!nameField){
+        if (!nameField) {
             setNameError('Brak nazwy testu');
             valid = false;
         }
-        else if(nameField !== nameField.trim()){
+        else if (nameField !== nameField.trim()) {
             setNameError('Nieprawidłowa nazwa testu');
             valid = false;
         }
         else setNameError('');
-        if(timeField <= 0){
+        if (timeField <= 0) {
             setTimeError('Za krótki czas trwania testu');
             valid = false;
         }
         else setTimeError('');
-        if(Date.parse(loginTimeStartField) <= Date.now()){
-            setLoginTimeStartError('Wybierz późniejszą datę');
-            valid = false;
-        }
-        else setLoginTimeStartError('');
-        if(Date.parse(loginTimeEndField) <= Date.parse(loginTimeStartField)){
+        // if(Date.parse(loginTimeStartField) <= Date.now()){
+        //     setLoginTimeStartError('Wybierz późniejszą datę');
+        //     valid = false;
+        // }
+        // else setLoginTimeStartError('');
+        if (Date.parse(loginTimeEndField) <= Date.parse(loginTimeStartField)) {
             setLoginTimeEndError('Wybierz późniejszą datę');
             valid = false;
         }
@@ -89,48 +83,45 @@ export default function TestAdd(){
     }
 
     const saveTest = () => {
-        if(!validate()) return;
+        if (!validate()) return;
         setLoading(true);
-        axios.post(API + 'test', {
+        axios.patch(API + 'test/' + page.testId, {
             name: nameField,
-            teacherId: auth.user.id,
             time: timeField,
             loginTimeStart: Date.parse(loginTimeStartField),
             loginTimeEnd: Date.parse(loginTimeEndField)
         }).then((res) => {
-            page.setPage(PAGES.LIST);
+            page.setPage(PAGES.DETAILS);
         }).catch((err) => {
             alert(err.response.data.message)
-        }).finally(
-            setLoading(false)
-        )
+        })
     }
 
     return loading ? <div>Loading</div> : (
         <Container>
-            <Title>Tworzenie nowego testu</Title>
+            <Title>Edytowanie testu</Title>
             <Item>
                 <div>Nazwa testu:</div>
-                <Input onChange={(e) => setNameField(e.target.value)}/>
+                <Input defaultValue={nameField} onChange={(e) => setNameField(e.target.value)} />
                 {nameError && <Error>{nameError}</Error>}
             </Item>
             <Item>
                 <div>Czas trwania testu w minutach:</div>
-                <Input onChange={(e) => setTimeField(parseInt(e.target.value))}/>
+                <Input defaultValue={timeField} onChange={(e) => setTimeField(parseInt(e.target.value))} />
                 {timeError && <Error>{timeError}</Error>}
             </Item>
             <Item>
                 <div>Czas od kiedy można się zalogować do testu:</div>
-                <Input type='datetime-local' onChange={(e) => setLoginTimeStartField(e.target.value)}/>
+                <Input defaultValue={loginTimeStartField} type='datetime-local' onChange={(e) => setLoginTimeStartField(e.target.value)} />
                 {loginTimeStartError && <Error>{loginTimeStartError}</Error>}
             </Item>
             <Item>
                 <div>Czas do kiedy można się zalogować do testu:</div>
-                <Input type='datetime-local' onChange={(e) => setLoginTimeEndField(e.target.value)}/>
+                <Input defaultValue={loginTimeEndField} type='datetime-local' onChange={(e) => setLoginTimeEndField(e.target.value)} />
                 {loginTimeEndError && <Error>{loginTimeEndError}</Error>}
             </Item>
             <Footer>
-                <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Anuluj</Button>
+                <Button className='secondary' onClick={() => page.setPage(PAGES.DETAILS)}>Anuluj</Button>
                 <Button onClick={() => saveTest()}>Zapisz</Button>
             </Footer>
         </Container>

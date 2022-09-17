@@ -7,6 +7,7 @@ import { API } from "../App";
 import { Button } from "../components/button";
 import { Input, InputLabel } from "../components/input";
 import { Error, Title } from "../components/typography";
+import { Test } from "../models";
 
 const FlexContainer = styled.div`
     display: flex;
@@ -40,17 +41,17 @@ const Container = styled.div`
     }
 `;
 
-export default function Login({ setUser }){
+export default function Login({ setUser }: any) {
 
     const [loginField, setLoginField] = useState('');
     const [passwordField, setPasswordField] = useState('');
 
-    const [loginError, setLoginError] = useState();
-    const [passwordError, setPasswordError] = useState();
+    const [loginError, setLoginError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
-    const [loginTimeError, setLoginTimeError] = useState();
+    const [loginTimeError, setLoginTimeError] = useState('');
 
-    const [data, setData] = useState();
+    const [data, setData] = useState<Test>();
     const [questionData, setQuestionData] = useState();
     const [loading, setLoading] = useState(true);
 
@@ -66,22 +67,26 @@ export default function Login({ setUser }){
         })
     }, [params.testId])
 
+    if (loading || !data) {
+        return <div>Loading</div>;
+    }
+
     const validate = () => {
         let valid = true;
-        if(!loginField){
+        if (!loginField) {
             setLoginError('Podaj login');
             valid = false;
         }
-        else if(loginField !== loginField.trim()){
+        else if (loginField !== loginField.trim()) {
             setLoginError('Podaj prawidłowy login');
             valid = false;
         }
         else setLoginError('');
-        if(!passwordField){
+        if (!passwordField) {
             setPasswordError('Podaj hasło');
             valid = false;
         }
-        else if(passwordField !== passwordField.trim()){
+        else if (passwordField !== passwordField.trim()) {
             setPasswordError('Podaj prawidłowe hasło');
             valid = false;
         }
@@ -89,24 +94,24 @@ export default function Login({ setUser }){
         const now = new Date();
         const start = new Date(data.loginTimeStart);
         const end = new Date(data.loginTimeEnd);
-        if(now < start){
+        if (now < start) {
             setLoginTimeError('Test jeszcze nie rozpoczął się');
             valid = false;
         }
-        else if(now >= end){
+        else if (now >= end) {
             setLoginTimeError('Czas za zalogowanie się minął');
             valid = false;
         }
-        else setLoginTimeError();
+        else setLoginTimeError('');
         return valid;
     }
 
     const handleSubmit = () => {
-        if(!validate()) return;
+        if (!validate()) return;
         axios.post(API + 'student/login', {
             login: loginField,
             password: passwordField,
-            testId: parseInt(params.testId)
+            testId: params.testId ? parseInt(params.testId) : '0'
         }).then((res) => {
             setUser(res.data);
             setLoginField('');
@@ -116,7 +121,7 @@ export default function Login({ setUser }){
         })
     }
 
-    function MyTimer({ expiryTimestamp }) {
+    function MyTimer({ expiryTimestamp }: any) {
         const {
             seconds,
             minutes,
@@ -127,13 +132,15 @@ export default function Login({ setUser }){
             //pause,
             //resume,
             //restart,
-        } = useTimer({ expiryTimestamp, onExpire: () => {
-            alert('Koniec czasu, odpowiedzi zostały automatycznie przesłane');
-            setUser();
-        }});
+        } = useTimer({
+            expiryTimestamp, onExpire: () => {
+                alert('Koniec czasu, odpowiedzi zostały automatycznie przesłane');
+                setUser();
+            }
+        });
 
         return (
-            <div style={{textAlign: 'center'}} className='timer'>
+            <div style={{ textAlign: 'center' }} className='timer'>
                 <div className='time'>
                     <span>{days < 10 ? '0' + days : days}</span>:<span>{hours < 10 ? '0' + hours : hours}</span>:<span>{minutes < 10 ? '0' + minutes : minutes}</span>:<span>{seconds < 10 ? '0' + seconds : seconds}</span>
                 </div>
@@ -142,16 +149,16 @@ export default function Login({ setUser }){
     }
 
     const loadTimer = () => {
-        if(data.loginTimeStart > Date.now()) return (
+        if (data.loginTimeStart > Date.now()) return (
             <div>
                 <div>Logowanie możliwe za:</div>
-                <MyTimer expiryTimestamp={data.loginTimeStart}/>
+                <MyTimer expiryTimestamp={data.loginTimeStart} />
             </div>
         );
-        if(data.loginTimeEnd > Date.now()) return (
+        if (data.loginTimeEnd > Date.now()) return (
             <div>
                 <div>Logowanie możliwe przez:</div>
-                <MyTimer expiryTimestamp={data.loginTimeEnd}/>
+                <MyTimer expiryTimestamp={data.loginTimeEnd} />
             </div>
         );
         return (
@@ -159,15 +166,15 @@ export default function Login({ setUser }){
         );
     }
 
-    return loading ? <div>Loading</div> : (
+    return (
         <FlexContainer>
             <Container>
                 <Title>{loadTimer()}</Title>
                 <InputLabel>Login:</InputLabel>
-                <Input value={loginField} onChange={(e) => setLoginField(e.target.value)}/>
+                <Input value={loginField} onChange={(e) => setLoginField(e.target.value)} />
                 {loginError && <Error>{loginError}</Error>}
                 <InputLabel>Hasło:</InputLabel>
-                <Input type='password' value={passwordField} onChange={(e) => setPasswordField(e.target.value)}/>
+                <Input type='password' value={passwordField} onChange={(e) => setPasswordField(e.target.value)} />
                 {passwordError && <Error>{passwordError}</Error>}
                 <Button onClick={() => handleSubmit()}>Zaloguj</Button>
                 {loginTimeError && <Error>{loginTimeError}</Error>}

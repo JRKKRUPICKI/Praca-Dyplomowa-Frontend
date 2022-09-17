@@ -1,13 +1,24 @@
 import { createContext, useContext, useState } from "react";
 import Cookies from 'universal-cookie';
 
-const AuthContext = createContext(null);
+const AuthContext = createContext<AuthType | null>(null);
 
-export const AuthProvider = ({children}) => {
+type User = {
+    id: number,
+    email: string
+}
+
+type AuthType = {
+    user: User | null,
+    login: (user: User) => void,
+    logout: () => void
+}
+
+export const AuthProvider = ({children}: any) => {
     const cookies = new Cookies();
     const [user, setUser] = useState(cookies.get('user'));
 
-    const login = user => {
+    const login = (user: User) => {
         setUser(user);
         cookies.set('user', user);
     }

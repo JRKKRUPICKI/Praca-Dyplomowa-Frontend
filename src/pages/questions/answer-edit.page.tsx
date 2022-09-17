@@ -8,6 +8,7 @@ import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { Input } from "../../components/input";
 import { API } from "../../App";
+import { Answer } from "../../models";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -25,13 +26,13 @@ const Item = styled.div`
     }
 `;
 
-export default function AnswerEdit(){
+export default function AnswerEdit() {
 
     const [loading, setLoading] = useState(true);
 
     const page = usePage();
 
-    const [answer, setAnswer] = useState();
+    const [answer, setAnswer] = useState<Answer>();
 
     useEffect(() => {
         axios.get(API + 'answer/' + page.answerId).then((res) => {
@@ -42,27 +43,32 @@ export default function AnswerEdit(){
         })
     }, [page.answerId])
 
-    const [answerField, setAnswerField] = useState();
-    const [answerError, setAnswerError] = useState();
 
-    const [correctField, setCorrectField] = useState();
+    const [answerField, setAnswerField] = useState('');
+    const [answerError, setAnswerError] = useState('');
+
+    const [correctField, setCorrectField] = useState(false);
+
+    if (loading || !answer) {
+        return <div>Loading</div>
+    }
 
     const validate = () => {
         let valid = true;
-        if(!answerField){
+        if (!answerField) {
             setAnswerError('Nieprawidłowa treść odpowiedzi');
             valid = false;
         }
-        else if(answerField !== answerField.trim()){
+        else if (answerField !== answerField.trim()) {
             setAnswerError('Nieprawidłowa treść odpowiedzi');
             valid = false;
         }
-        else setAnswerError();
+        else setAnswerError('');
         return valid;
     }
 
     const saveAnswer = () => {
-        if(!validate()) return;
+        if (!validate()) return;
         setLoading(true);
         axios.patch(API + 'answer/' + page.answerId, {
             name: answerField,
@@ -74,17 +80,17 @@ export default function AnswerEdit(){
         })
     }
 
-    return loading ? <div>Loading</div> : (
+    return (
         <Container>
             <Title>Edycja odpowiedzi</Title>
             <Item>
                 <div>Treść odpowiedzi:</div>
-                <Input defaultValue={answer.name} onChange={(e) => setAnswerField(e.target.value)}/>
+                <Input defaultValue={answer.name} onChange={(e) => setAnswerField(e.target.value)} />
                 {answerError && <Error>{answerError}</Error>}
             </Item>
             <Item>
                 <div>Odpowiedź poprawna?</div>
-                <Input type='checkbox' checked={correctField} onChange={(e) => setCorrectField(e.target.checked)}/>
+                <Input type='checkbox' checked={correctField} onChange={(e) => setCorrectField(e.target.checked)} />
             </Item>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.DETAILS)}>Anuluj</Button>

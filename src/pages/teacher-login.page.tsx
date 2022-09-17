@@ -46,15 +46,13 @@ export default function TeacherLoginPage() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const redirectPath = location.state?.path || '/tests';
-
     const [emailField, setEmailField] = useState('');
     const [passwordField, setPasswordField] = useState('');
 
-    const [emailError, setEmailError] = useState();
-    const [passwordError, setPasswordError] = useState();
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
-    if(auth.user){
+    if(auth && auth.user){
         return <Navigate to='/dashboard' state={{path: location.pathname}}/>;
     }
 
@@ -87,8 +85,8 @@ export default function TeacherLoginPage() {
             email: emailField,
             password: passwordField
         }).then((res) => {
-            auth.login(res.data);
-            navigate(redirectPath, {replace: true});
+            auth && auth.login(res.data);
+            navigate('/dashboard', {replace: true});
         }).catch((err) => {
             alert(err.response.data.message);
         })

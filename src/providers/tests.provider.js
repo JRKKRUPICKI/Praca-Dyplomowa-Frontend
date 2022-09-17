@@ -7,10 +7,10 @@ import TestsList from "../pages/tests/test-list.page";
 const TestsContext = createContext();
 
 export const PAGES = {
-    LIST: <TestsList/>,
-    DETAILS: <TestDetails/>,
-    EDIT: <TestEdit/>,
-    ADD: <TestAdd/>
+    LIST: <TestsList />,
+    DETAILS: <TestDetails />,
+    EDIT: <TestEdit />,
+    ADD: <TestAdd />
 }
 
 export const TestsProvider = () => {
@@ -18,7 +18,7 @@ export const TestsProvider = () => {
     const [page, setPage] = useState(PAGES.LIST);
     const [testId, setTestId] = useState();
 
-    return <TestsContext.Provider value={{page, setPage, testId, setTestId}}>
+    return <TestsContext.Provider value={{ page, setPage, testId, setTestId }}>
         {page}
     </TestsContext.Provider>
 }

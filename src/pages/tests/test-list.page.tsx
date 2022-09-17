@@ -10,40 +10,36 @@ import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { useNavigate } from "react-router-dom";
 import { API } from "../../App";
+import { Label } from "../../components/label";
 
 const Description = styled.div`
     font-size: 14px;
     color: #7d8093;
 `;
 
-const Label = styled.div`
-    ${props => props.active && css`color: #80b918;`}
-    ${props => props.inactive && css`color: #ba181b;`}
-`;
-
-export default function TestsList(){
+export default function TestsList() {
     const auth = useAuth();
 
     const [loading, setLoading] = useState(true);
 
-    const [tests, setTests] = useState();
+    const [tests, setTests] = useState([]);
 
     useEffect(() => {
         axios.get(API + 'test').then((res) => {
-            setTests(res.data.filter(t => t.teacher.id === auth.user.id));
+            setTests(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
             setLoading(false);
         });
-    }, [auth.user.id])
+    }, [auth?.user?.id])
 
     const page = usePage();
 
     const navigate = useNavigate();
 
-    const getTest = (test) => {
+    const getTest = (test: any) => {
         const now = new Date();
         const start = new Date(test.loginTimeStart);
         const end = new Date(test.loginTimeEnd);
-        return(
+        return (
             <tr key={test.id}>
                 <td>{test.name}</td>
                 <td>{test.questions.length}</td>
@@ -51,19 +47,19 @@ export default function TestsList(){
                 <td>{now < start || now >= end ? <Label inactive>nieaktywny</Label> : <Label active>aktywny</Label>}</td>
                 <td>
                     <Button onClick={() => navigate('/' + test.id)}>Link</Button>
-                    <Button onClick={() => {page.setTestId(test.id); page.setPage(PAGES.DETAILS)}}>Otwórz</Button>
-                    <Button onClick={() => {page.setTestId(test.id); page.setPage(PAGES.EDIT)}}>Edytuj</Button>
+                    <Button onClick={() => { page.setTestId(test.id); page.setPage(PAGES.DETAILS) }}>Otwórz</Button>
+                    <Button onClick={() => { page.setTestId(test.id); page.setPage(PAGES.EDIT) }}>Edytuj</Button>
                     <Button className="danger" onClick={() => removeTest(test.id)}>Usuń</Button>
                 </td>
             </tr>
         )
     }
 
-    const removeTest = (testId) => {
+    const removeTest = (testId: any) => {
         setLoading(true);
         axios.delete(API + 'test/' + testId).then((res) => {
             axios.get(API + 'test').then((res) => {
-                setTests(res.data.filter(t => t.teacher.id === auth.user.id));
+                setTests(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
                 setLoading(false);
             });
         })

@@ -37,33 +37,33 @@ const Input = styled.input`
     }
 `;
 
-export default function StudentAdd(){
+export default function StudentAdd() {
 
     const [loading, setLoading] = useState(false);
 
     const page = usePage();
 
-    const [loginField, setLoginField] = useState();
+    const [loginField, setLoginField] = useState('');
     const [loginError, setLoginError] = useState('');
-    const [passwordField, setPasswordField] = useState();
+    const [passwordField, setPasswordField] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
     const validate = () => {
         let valid = true;
-        if(!loginField){
+        if (!loginField) {
             setLoginError('Nieprawidłowy login');
             valid = false;
         }
-        else if(loginField !== loginField.trim()){
+        else if (loginField !== loginField.trim()) {
             setLoginError('Nieprawidłowy login');
             valid = false;
         }
-        else if(!loginField.match(/^[0-9a-zA-Z]+$/)){
+        else if (!loginField.match(/^[0-9a-zA-Z]+$/)) {
             setLoginError('Nieprawidłowy login');
             return true;
         }
         else setLoginError('');
-        if(!passwordField){
+        if (!passwordField) {
             setPasswordError('Nieprawidłowe hasło');
             valid = false;
         }
@@ -72,7 +72,7 @@ export default function StudentAdd(){
     }
 
     const saveStudent = () => {
-        if(!validate()) return;
+        if (!validate()) return;
         setLoading(true);
         axios.post(API + 'student', {
             login: loginField,
@@ -82,9 +82,7 @@ export default function StudentAdd(){
             page.setPage(PAGES.LIST);
         }).catch((err) => {
             alert(err.response.data.message)
-        }).finally(
-            setLoading(false)
-        )
+        }).finally(() => setLoading(false))
     }
 
     return loading ? <div>Loading</div> : (
@@ -92,12 +90,12 @@ export default function StudentAdd(){
             <Title>Tworzenie nowego konta studenta</Title>
             <Item>
                 <div>Login:</div>
-                <Input onChange={(e) => setLoginField(e.target.value)}/>
+                <Input onChange={(e) => setLoginField(e.target.value)} />
                 {loginError && <Error>{loginError}</Error>}
             </Item>
             <Item>
                 <div>Hasło:</div>
-                <Input onChange={(e) => setPasswordField(e.target.value)}/>
+                <Input onChange={(e) => setPasswordField(e.target.value)} />
                 {passwordError && <Error>{passwordError}</Error>}
             </Item>
             <Footer>

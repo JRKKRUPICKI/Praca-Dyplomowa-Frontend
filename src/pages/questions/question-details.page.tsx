@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/questions.provider";
 import { Title } from "../../components/typography";
 import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { API } from "../../App";
+import { Label } from "../../components/label";
+import { Question } from "../../models";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -23,20 +25,18 @@ const Item = styled.div`
     }
 `;
 
-const Label = styled.div`
+const Label2 = styled(Label)`
     display: inline-block;
     margin-right: 15px;
-    ${props => props.active && css`color: #80b918;`}
-    ${props => props.inactive && css`color: #ba181b;`}
 `;
 
-export default function QuestionDetails(){
+export default function QuestionDetails() {
 
     const [loading, setLoading] = useState(true);
 
     const page = usePage();
 
-    const [question, setQuestion] = useState();
+    const [question, setQuestion] = useState<Question>();
 
     useEffect(() => {
         axios.get(API + 'question/' + page.questionId).then((res) => {
@@ -44,6 +44,10 @@ export default function QuestionDetails(){
             setLoading(false);
         })
     }, [page.questionId])
+
+    if (loading || !question) {
+        return <div>Loading</div>;
+    }
 
     const deleteQuestion = () => {
         setLoading(true);
@@ -61,14 +65,14 @@ export default function QuestionDetails(){
         })
     }
 
-    const deleteAnswer = (answerId) => {
+    const deleteAnswer = (answerId: number) => {
         setLoading(true);
         axios.delete(API + 'answer/' + answerId).then((res) => {
             loadQuestion();
         })
     }
 
-    return loading ? <div>Loading</div> : (
+    return (
         <Container>
             <Title>Szczegóły pytania</Title>
             <Item>
@@ -79,14 +83,14 @@ export default function QuestionDetails(){
                 <div>Typ pytania:</div>
                 <div>{question.type ? 'wielokrotnego wyboru' : 'jednokrotnego wyboru'}</div>
             </Item>
-            <br/>
+            <br />
             <Title>Odpowiedzi</Title>
             {question.answers.map(answer => (
                 <Item key={answer.id}>
                     <div>{answer.name}</div>
-                    <div>{answer.correct ? <Label active>odpowiedź poprawna</Label> : <Label inactive>odpowiedź niepoprawna</Label>}
-                    <Button onClick={() => {page.setAnswerId(answer.id); page.setPage(PAGES.EDIT_ANSWER)}}>Edytuj odpowiedź</Button>
-                    <Button className='danger' onClick={() => deleteAnswer(answer.id)}>Usuń odpowiedź</Button>
+                    <div>{answer.correct ? <Label2 active>odpowiedź poprawna</Label2> : <Label2 inactive>odpowiedź niepoprawna</Label2>}
+                        <Button onClick={() => { page.setAnswerId(answer.id); page.setPage(PAGES.EDIT_ANSWER) }}>Edytuj odpowiedź</Button>
+                        <Button className='danger' onClick={() => deleteAnswer(answer.id)}>Usuń odpowiedź</Button>
                     </div>
                 </Item>
             ))}
