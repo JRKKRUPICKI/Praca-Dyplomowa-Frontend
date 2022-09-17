@@ -13,7 +13,7 @@ import NotFoundPage from './pages/not-found.page';
 import Statistics from './pages/statistics';
 import Main from './refill-test/main';
 
-export const API = 'http://localhost:4000/';
+export const API = 'http://54.37.232.57/api/';
 
 function App() {
   return (
