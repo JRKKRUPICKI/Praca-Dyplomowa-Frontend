@@ -13,8 +13,8 @@ import Statistics from './pages/statistics';
 import Main from './refill-test/main';
 import LogsPage from './pages/logs.page';
 
-export const API = 'http://localhost:4000/';
-// export const API = 'http://54.37.232.57/api/';
+// export const API = 'http://localhost:4000/';
+export const API = 'http://54.37.232.57/api/';
 
 function App() {
   return (

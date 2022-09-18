@@ -152,7 +152,7 @@ export default function LogsPage() {
     const loadLogs = () => {
         if (!testId || !studentId) return;
         setLoading(true);
-        axios.get(API + 'logs/' + studentId).then((res) => {
+        axios.get(API + 'logs/student/' + studentId).then((res) => {
             setLogs(res.data);
             setLoading(false);
         })
@@ -192,7 +192,7 @@ export default function LogsPage() {
                     </Select>
                     <Button onClick={() => loadLogs()}>Pokaż wpisy</Button>
                 </Tile>
-                {loading ? <>Loading</> : (
+                {loading ? <div>Loading</div> : (
                     <Tile>
                         <Title>Zapisane odpowiedzi</Title>
                         {logs.length > 0 && (
