@@ -8,6 +8,8 @@ import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { API } from "../../App";
 import { Student } from "../../models";
+import { Label } from "../../components/label";
+import { formatDatetime } from "../../utils/TimeUtils";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -61,6 +63,14 @@ export default function StudentDetails() {
             <Item>
                 <div>Hasło:</div>
                 <div>{data.password}</div>
+            </Item>
+            <Item>
+                <div>Status:</div>
+                <div>{data.active ? <Label active>aktywne</Label> : <Label inactive>nieaktywne</Label>}</div>
+            </Item>
+            <Item>
+                <div>Odpowiedzi:</div>
+                <div>{data.status === 0 ? <Label inactive>nieprzesłane</Label> : <Label active>przesłane ({formatDatetime(data.status)})</Label>}</div>
             </Item>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Wróc</Button>

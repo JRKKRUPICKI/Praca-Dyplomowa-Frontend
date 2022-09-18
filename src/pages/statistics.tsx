@@ -8,6 +8,7 @@ import { API } from "../App";
 import { Button } from "../components/button";
 import { LINKS, Navigation } from "../components/navigation";
 import { Test } from "../models";
+import Chart from "../components/chart";
 
 const Container = styled.div`
     display: grid;
@@ -116,6 +117,10 @@ const Tile = styled.div`
     padding: 20px;
     text-align: center;
     display: inline-block;
+
+    & > :nth-child(3){
+        margin: auto;
+    }
 `;
 
 const Select = styled.select`
@@ -141,7 +146,10 @@ export default function Statistics() {
     const [data, setData] = useState({
         questions: 0,
         answers: 0,
-        students: 0
+        students: 0,
+        logs: 0,
+        startedStudents: 0,
+        endedStudents: 0
     });
 
     const [loading, setLoading] = useState(true);
@@ -199,6 +207,23 @@ export default function Statistics() {
                             <Tile>
                                 <Title>Studenci w teście</Title>
                                 <Number>{data.students}</Number>
+                            </Tile>
+                            <Tile>
+                                <Title>Wpisy w dzienniku interakcji</Title>
+                                <Number>{data.logs}</Number>
+                            </Tile>
+                            <Tile>
+                                <Title>Studenci z rozpoczętym testem</Title>
+                                <Number>{data.startedStudents}</Number>
+                            </Tile>
+                            <Tile>
+                                <Title>Studenci z zakończonym testem</Title>
+                                <Number>{data.endedStudents}</Number>
+                            </Tile>
+                            <Tile>
+                                <Title>Studentów z przesłanymi testami</Title>
+                                <Number>{data.endedStudents === 0 ? 0 : data.endedStudents / (data.students + data.endedStudents) * 100}%</Number>
+                                <Chart data={[data.endedStudents, data.endedStudents === 0 ? 1 : data.students]} size={100} />
                             </Tile>
                         </Tiles>
                     )

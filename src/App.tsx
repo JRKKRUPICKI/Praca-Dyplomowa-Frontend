@@ -2,7 +2,6 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './auth/Auth';
 import RequireAuth from './auth/RequireAuth';
-import LogsPage from './pages/LogsPage';
 import Tests from './pages/tests';
 import Students from './pages/students';
 import TeacherLoginPage from './pages/teacher-login.page';
@@ -12,8 +11,10 @@ import Dashboard from './pages/dashboard';
 import NotFoundPage from './pages/not-found.page';
 import Statistics from './pages/statistics';
 import Main from './refill-test/main';
+import LogsPage from './pages/logs.page';
 
-export const API = 'http://54.37.232.57/api/';
+export const API = 'http://localhost:4000/';
+// export const API = 'http://54.37.232.57/api/';
 
 function App() {
   return (
@@ -28,7 +29,8 @@ function App() {
           <Route path='questions' element={<RequireAuth><Questions /></RequireAuth>} />
           <Route path='results' element={<RequireAuth><Results /></RequireAuth>} />
           <Route path='statistics' element={<RequireAuth><Statistics /></RequireAuth>} />
-          <Route path='tests/:testId/students/:studentId/logs' element={<RequireAuth><LogsPage /></RequireAuth>} />
+          <Route path='logs' element={<RequireAuth><LogsPage /></RequireAuth>} />
+          <Route path='live' element={<RequireAuth><NotFoundPage /></RequireAuth>} />
           <Route path='*' element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>

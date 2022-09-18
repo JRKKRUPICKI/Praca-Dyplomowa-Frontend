@@ -54,13 +54,9 @@ export default function StudentAdd() {
             setLoginError('Nieprawidłowy login');
             valid = false;
         }
-        else if (loginField !== loginField.trim()) {
+        else if (!loginField.match(/^[a-zA-Z0-9_]+$/)) {
             setLoginError('Nieprawidłowy login');
             valid = false;
-        }
-        else if (!loginField.match(/^[0-9a-zA-Z]+$/)) {
-            setLoginError('Nieprawidłowy login');
-            return true;
         }
         else setLoginError('');
         if (!passwordField) {

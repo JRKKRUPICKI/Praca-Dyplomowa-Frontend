@@ -37,15 +37,19 @@ export default function StudentEdit() {
     useEffect(() => {
         axios.get(API + 'student/' + page.studentId).then((res) => {
             setData(res.data);
+            setLoginField(res.data.login);
+            setPasswordField(res.data.password);
+            setActiveField(res.data.active);
             setLoading(false);
         })
     }, [page.studentId])
 
 
-    const [loginField, setLoginField] = useState(data?.login);
+    const [loginField, setLoginField] = useState('');
     const [loginError, setLoginError] = useState('');
-    const [passwordField, setPasswordField] = useState(data?.password);
+    const [passwordField, setPasswordField] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [activeField, setActiveField] = useState(false);
 
     if (loading || !data) {
         return <div>Loading</div>;
@@ -57,25 +61,13 @@ export default function StudentEdit() {
             setLoginError('Nieprawidłowy login');
             valid = false;
         }
-        else if (loginField !== loginField.trim()) {
+        else if (!loginField.match(/^[a-zA-Z0-9_]+$/)) {
             setLoginError('Nieprawidłowy login');
             valid = false;
-        }
-        else if (loginField === data.login) {
-            setLoginError('Nowy login jest taki sam jak poprzedni');
-            valid = false;
-        }
-        else if (!loginField.match(/^[0-9a-zA-Z]+$/)) {
-            setLoginError('Nieprawidłowy login');
-            return true;
         }
         else setLoginError('');
         if (!passwordField) {
             setPasswordError('Nieprawidłowe hasło');
-            valid = false;
-        }
-        else if (passwordField === data.password) {
-            setPasswordError('Nowe hasło jest takie samo jak poprzednie');
             valid = false;
         }
         else setPasswordError('');
@@ -88,6 +80,7 @@ export default function StudentEdit() {
         axios.patch(API + 'student/' + page.studentId, {
             login: loginField,
             password: passwordField,
+            active: activeField
         }).then((res) => {
             page.setPage(PAGES.DETAILS);
         }).catch((err) => {
@@ -107,6 +100,10 @@ export default function StudentEdit() {
                 <div>Hasło:</div>
                 <Input defaultValue={data.password} onChange={(e) => setPasswordField(e.target.value)} />
                 {passwordError && <Error>{passwordError}</Error>}
+            </Item>
+            <Item>
+                <div>Status</div>
+                <Input type='checkbox' onChange={(e) => setActiveField(e.target.checked)} defaultChecked={activeField} />
             </Item>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.DETAILS)}>Anuluj</Button>
