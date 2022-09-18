@@ -12,6 +12,7 @@ import NotFoundPage from './pages/not-found.page';
 import Statistics from './pages/statistics';
 import Main from './refill-test/main';
 import LogsPage from './pages/logs.page';
+import LiveLogsPoage from './pages/live-logs.page';
 
 // export const API = 'http://localhost:4000/';
 export const API = 'http://54.37.232.57/api/';
@@ -30,7 +31,7 @@ function App() {
           <Route path='results' element={<RequireAuth><Results /></RequireAuth>} />
           <Route path='statistics' element={<RequireAuth><Statistics /></RequireAuth>} />
           <Route path='logs' element={<RequireAuth><LogsPage /></RequireAuth>} />
-          <Route path='live' element={<RequireAuth><NotFoundPage /></RequireAuth>} />
+          <Route path='live' element={<RequireAuth><LiveLogsPoage /></RequireAuth>} />
           <Route path='*' element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>

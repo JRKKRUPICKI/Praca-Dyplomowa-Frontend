@@ -121,7 +121,7 @@ const SpecialText = styled.span`
     font-weigth: bold;
 `;
 
-export default function LogsPage() {
+export default function LiveLogsPoage() {
 
     const auth = useAuth();
     const [loading, setLoading] = useState(true);
@@ -130,6 +130,7 @@ export default function LogsPage() {
     const [testId, setTestId] = useState('');
     const [studentList, setStudentList] = useState([]);
     const [studentId, setStudentId] = useState('');
+    const [logsType, setLogsType] = useState<'TEST' | 'STUDENT' | null>(null);
 
     useEffect(() => {
         axios.get(API + 'test').then((res) => {
@@ -137,6 +138,11 @@ export default function LogsPage() {
             setLoading(false);
         });
     }, [auth?.user?.id])
+
+    useEffect(() => {
+        const timer = setInterval(() => loadLogs(), 5000);
+        return () => clearInterval(timer);
+    }, [logsType, studentId, testId])
 
     const loadStudents = () => {
         if (!testId) return;
@@ -149,11 +155,43 @@ export default function LogsPage() {
 
     const [logs, setLogs] = useState([]);
 
-    const loadLogs = () => {
+    const loadLogs = (type?: LogsType) => {
+        console.log(studentId)
+        if (type) {
+            if (type === 'TEST') loadTestLogs();
+            else if (type === 'STUDENT') loadStudentLogs();
+            return;
+        }
+        if (logsType === 'TEST') loadTestLogs();
+        else if (logsType === 'STUDENT') loadStudentLogs();
+    }
+
+    const loadTestLogs = () => {
+        if (!testId) return;
+        setLoading(true);
+        axios.get(API + 'logs/test/' + testId + '/live').then((res) => {
+            let newData: any = logs;
+            for (let i = res.data.length - 1; i >= 0; i--) {
+                if (newData.filter((log: any) => log.id === res.data[i].id).length > 0) continue;
+                newData.unshift(res.data[i]);
+            }
+            newData = newData.slice(0, 10);
+            setLogs(newData);
+            setLoading(false);
+        })
+    }
+
+    const loadStudentLogs = () => {
         if (!testId || !studentId) return;
         setLoading(true);
-        axios.get(API + 'logs/student/' + studentId).then((res) => {
-            setLogs(res.data);
+        axios.get(API + 'logs/student/' + studentId + '/live').then((res) => {
+            let newData: any = logs;
+            for (let i = res.data.length - 1; i >= 0; i--) {
+                if (newData.filter((log: any) => log.id === res.data[i].id).length > 0) continue;
+                newData.unshift(res.data[i]);
+            }
+            newData = newData.slice(0, 10);
+            setLogs(newData);
             setLoading(false);
         })
     }
@@ -165,9 +203,16 @@ export default function LogsPage() {
         setLogs([]);
     }
 
+    type LogsType = 'TEST' | 'STUDENT' | null;
+
+    const chooseLogsType = (type: LogsType) => {
+        setLogsType(type);
+        loadLogs(type);
+    }
+
     return (
         <Container>
-            <Navigation activeLink={LINKS.LOGS} />
+            <Navigation activeLink={LINKS.LIVE} />
             <Content>
                 <Header>
                     <input type='text' placeholder="Wyszukiwanie..." />
@@ -183,41 +228,40 @@ export default function LogsPage() {
                         {testList.map((test: Test) => <option value={test.id} key={test.id}>{test.name}</option>)}
                     </Select>
                     <Button onClick={() => loadStudents()}>Pokaż studentów</Button>
+                    <Button onClick={() => chooseLogsType("TEST")}>Pokaż wpisy</Button>
                 </Tile>
                 <Tile>
                     <Title>Wybierz studenta</Title>
-                    <Select onChange={e => setStudentId(e.target.value)} value={studentId}>
+                    <Select onChange={e => { setStudentId(e.target.value); setLogs([]) }} value={studentId}>
                         <option value=''>Wybierz studenta</option>
                         {studentList.map((student: any) => <option value={student.id} key={student.id}>{student.login}</option>)}
                     </Select>
-                    <Button onClick={() => loadLogs()}>Pokaż wpisy</Button>
+                    <Button onClick={() => chooseLogsType("STUDENT")}>Pokaż wpisy</Button>
                 </Tile>
-                {loading ? <div>Loading</div> : (
-                    <Tile>
-                        <Title>Zapisane odpowiedzi</Title>
-                        {logs.length > 0 && (
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <td>Data i czas interakcji</td>
-                                        <td>Interakcja</td>
+                <Tile>
+                    <Title>Zapisane odpowiedzi</Title>
+                    {logs.length > 0 && (
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>Data i czas interakcji</td>
+                                    <td>Interakcja</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {logs.map((log: any, i) => (
+                                    <tr key={i}>
+                                        <td>{formatDatetime(new Date(log.datetime), true, false)}</td>
+                                        {log.actionType === 0 && <td>Student <SpecialText>{log.student.login}</SpecialText> wybrał odpowiedź <SpecialText>{log.answer.name}</SpecialText> w pytaniu <SpecialText>{log.question.name}</SpecialText></td>}
+                                        {log.actionType === 1 && <td>Student <SpecialText>{log.student.login}</SpecialText> zaznaczył odpowiedź <SpecialText>{log.answer.name}</SpecialText> w pytaniu <SpecialText>{log.question.name}</SpecialText></td>}
+                                        {log.actionType === 2 && <td>Student <SpecialText>{log.student.login}</SpecialText> odznaczył odpowiedź <SpecialText>{log.answer.name}</SpecialText> w pytaniu <SpecialText>{log.question.name}</SpecialText></td>}
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {logs.map((log: any, i) => (
-                                        <tr key={i}>
-                                            <td>{formatDatetime(new Date(log.datetime), true, false)}</td>
-                                            {log.actionType === 0 && <td>Student <SpecialText>{log.student.login}</SpecialText> wybrał odpowiedź <SpecialText>{log.answer.name}</SpecialText> w pytaniu <SpecialText>{log.question.name}</SpecialText></td>}
-                                            {log.actionType === 1 && <td>Student <SpecialText>{log.student.login}</SpecialText> zaznaczył odpowiedź <SpecialText>{log.answer.name}</SpecialText> w pytaniu <SpecialText>{log.question.name}</SpecialText></td>}
-                                            {log.actionType === 2 && <td>Student <SpecialText>{log.student.login}</SpecialText> odznaczył odpowiedź <SpecialText>{log.answer.name}</SpecialText> w pytaniu <SpecialText>{log.question.name}</SpecialText></td>}
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        )}
-                    </Tile>
-                )}
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </Tile>
             </Content>
-        </Container>
+        </Container >
     )
 }
