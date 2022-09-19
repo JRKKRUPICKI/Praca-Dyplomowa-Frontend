@@ -34,20 +34,20 @@ export default function StudentLoginPage() {
 
     const validate = () => {
         let valid = true;
-        if(!loginField){
+        if (!loginField) {
             setLoginError('Podaj login');
             valid = false;
         }
-        else if(loginField !== loginField.trim()){
+        else if (loginField !== loginField.trim()) {
             setLoginError('Podaj prawidłowy login');
             valid = false;
         }
         else setLoginError('');
-        if(!passwordField){
+        if (!passwordField) {
             setPasswordError('Podaj hasło');
             valid = false;
         }
-        else if(passwordField !== passwordField.trim()){
+        else if (passwordField !== passwordField.trim()) {
             setPasswordError('Podaj prawidłowe hasło');
             valid = false;
         }
@@ -55,11 +55,11 @@ export default function StudentLoginPage() {
         const now = new Date();
         const start = new Date(data.loginTimeStart);
         const end = new Date(data.loginTimeEnd);
-        if(now < start){
+        if (now < start) {
             setLoginTimeError('Test jeszcze nie rozpoczął się');
             valid = false;
         }
-        else if(now >= end){
+        else if (now >= end) {
             setLoginTimeError('Czas za zalogowanie się minął');
             valid = false;
         }
@@ -68,7 +68,7 @@ export default function StudentLoginPage() {
     }
 
     const handleSubmit = () => {
-        if(!validate()) return;
+        if (!validate()) return;
         axios.post(API + 'student/login', {
             login: loginField,
             password: passwordField,
@@ -93,14 +93,16 @@ export default function StudentLoginPage() {
             //pause,
             //resume,
             //restart,
-        } = useTimer({ expiryTimestamp, onExpire: () => {
-            alert('Koniec czasu, odpowiedzi zostały automatycznie przesłane');
-            setUser();
-        }});
+        } = useTimer({
+            expiryTimestamp, onExpire: () => {
+                alert('Koniec czasu, odpowiedzi zostały automatycznie przesłane');
+                setUser();
+            }
+        });
 
 
         return (
-            <div style={{textAlign: 'center'}} className='timer'>
+            <div style={{ textAlign: 'center' }} className='timer'>
                 <div className='header'>Czas na przesłanie odpowiedzi</div>
                 <div className='time'>
                     <span>{hours < 10 ? '0' + hours : hours}</span>:<span>{minutes < 10 ? '0' + minutes : minutes}</span>:<span>{seconds < 10 ? '0' + seconds : seconds}</span>
@@ -147,8 +149,8 @@ export default function StudentLoginPage() {
         }).catch((err) => {
             alert('Problem z zapisem logów');
         })
-        for(let i = 0; i < studentAnswer.length; i++){
-            if(studentAnswer[i].questionId === questionId){
+        for (let i = 0; i < studentAnswer.length; i++) {
+            if (studentAnswer[i].questionId === questionId) {
                 studentAnswer[i].answerId = answerId;
                 return;
             }
@@ -161,10 +163,10 @@ export default function StudentLoginPage() {
     }
 
     const toggleAnswer = (questionId, answerId) => {
-        if(studentAnswer.filter(sa => sa.questionId === questionId && sa.answerId === answerId).length > 0){
+        if (studentAnswer.filter(sa => sa.questionId === questionId && sa.answerId === answerId).length > 0) {
             const newStudentAnswer = [];
-            for(let i = 0; i < studentAnswer.length; i++){
-                if(studentAnswer[i].questionId === questionId && studentAnswer[i].answerId === answerId){
+            for (let i = 0; i < studentAnswer.length; i++) {
+                if (studentAnswer[i].questionId === questionId && studentAnswer[i].answerId === answerId) {
                     continue;
                 }
                 newStudentAnswer.push(studentAnswer[i]);
@@ -219,16 +221,16 @@ export default function StudentLoginPage() {
     }
 
     const loadTimer = () => {
-        if(data.loginTimeStart > Date.now()) return (
+        if (data.loginTimeStart > Date.now()) return (
             <div>
                 <div>Logowanie możliwe za:</div>
-                <MyTimer expiryTimestamp={data.loginTimeStart}/>
+                <MyTimer expiryTimestamp={data.loginTimeStart} />
             </div>
         );
-        if(data.loginTimeEnd > Date.now()) return (
+        if (data.loginTimeEnd > Date.now()) return (
             <div>
                 <div>Logowanie możliwe przez:</div>
-                <MyTimer expiryTimestamp={data.loginTimeEnd}/>
+                <MyTimer expiryTimestamp={data.loginTimeEnd} />
             </div>
         );
         return (
@@ -244,12 +246,12 @@ export default function StudentLoginPage() {
                     <form>
                         <label>
                             Login:
-                            <input type='text' value={loginField} onChange={(e) => setLoginField(e.target.value)}/>
+                            <input type='text' value={loginField} onChange={(e) => setLoginField(e.target.value)} />
                             {loginError && <div>{loginError}</div>}
                         </label>
                         <label>
                             Hasło:
-                            <input type='password' value={passwordField} onChange={(e) => setPasswordField(e.target.value)}/>
+                            <input type='password' value={passwordField} onChange={(e) => setPasswordField(e.target.value)} />
                             {passwordError && <div>{passwordError}</div>}
                         </label>
                         <button type='button' onClick={() => handleSubmit()}>Zaloguj</button>
@@ -258,17 +260,17 @@ export default function StudentLoginPage() {
                 </div>
             ) : (
                 <div>
-                    <MyTimer expiryTimestamp={testTime}/>
+                    <MyTimer expiryTimestamp={testTime} />
                     {loadQuestions().map(q => <div key={q.id} className='questionBox'>
                         <div className='question'>{q.name}</div>
                         {!q.type ? (
                             q.answers.map(a => <div key={a.id} className='answer'>
-                                <input type='radio' id={a.id} name={q.id} value={a.id} onClick={() => setAnswer(q.id, a.id)}/>
+                                <input type='radio' id={a.id} name={q.id} value={a.id} onClick={() => setAnswer(q.id, a.id)} />
                                 {a.name}
                             </div>)
                         ) : (
                             q.answers.map(a => <div key={a.id} className='answer'>
-                                <input type='checkbox' id={a.id} name={a.id} value={a.id} onClick={() => toggleAnswer(q.id, a.id)}/>
+                                <input type='checkbox' id={a.id} name={a.id} value={a.id} onClick={() => toggleAnswer(q.id, a.id)} />
                                 {a.name}
                             </div>)
                         )}
