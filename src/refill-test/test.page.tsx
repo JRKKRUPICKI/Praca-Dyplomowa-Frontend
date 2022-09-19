@@ -83,8 +83,10 @@ export default function TestPage({ user, setUser }: any) {
             }
         }
         const newAnswer = {
+            testId: parseInt(testId),
             questionId: questionId,
-            answerId: answerId
+            answerId: answerId,
+            studentId: user.id
         }
         studentAnswer.push(newAnswer);
     }
@@ -112,8 +114,10 @@ export default function TestPage({ user, setUser }: any) {
             return;
         }
         const newAnswer = {
+            testId: parseInt(testId),
             questionId: questionId,
-            answerId: answerId
+            answerId: answerId,
+            studentId: user.id
         }
         studentAnswer.push(newAnswer);
         axios.post(API + 'logs', {
@@ -132,18 +136,23 @@ export default function TestPage({ user, setUser }: any) {
         e.preventDefault();
         const studentId = user.id;
         const testId = data.id;
-        studentAnswer.forEach(a => {
-            axios.post(API + 'studentanswer', {
-                studentId: studentId,
-                testId: testId,
-                questionId: a.questionId,
-                answerId: a.answerId
-            }).then((res) => {
-                alert('Odpowiedzi zapisane');
-            }).catch((err) => {
-                alert('Problem z zapisem odpowiedzi');
-            })
-        });
+        // studentAnswer.forEach(a => {
+        //     axios.post(API + 'studentanswer', {
+        //         studentId: studentId,
+        //         testId: testId,
+        //         questionId: a.questionId,
+        //         answerId: a.answerId
+        //     }).then((res) => {
+        //         alert('Odpowiedz zapisana');
+        //     }).catch((err) => {
+        //         alert('Problem z zapisem odpowiedzi');
+        //     })
+        // });
+        axios.post(API + 'studentanswer/all', { answers: studentAnswer }).then((res) => {
+            alert('Odpowiedzi zapisane');
+        }).catch((err) => {
+            alert('Problem z zapisem odpowiedzi');
+        })
         setUser();
     }
 

@@ -104,6 +104,7 @@ export default function StudentEdit() {
             <Item>
                 <div>Status</div>
                 <Input type='checkbox' onChange={(e) => setActiveField(e.target.checked)} defaultChecked={activeField} />
+                <div></div>{!data.active && activeField && <Error>Odpowiedzi i dziennik interakcji zostaną usunięte po zapisaniu!</Error>}
             </Item>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.DETAILS)}>Anuluj</Button>
