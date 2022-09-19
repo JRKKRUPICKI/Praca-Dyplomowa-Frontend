@@ -45,14 +45,10 @@ export default function Login({ setUser }: any) {
 
     const [loginField, setLoginField] = useState('');
     const [passwordField, setPasswordField] = useState('');
-
     const [loginError, setLoginError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-
     const [loginTimeError, setLoginTimeError] = useState('');
-
     const [data, setData] = useState<Test>();
-    const [questionData, setQuestionData] = useState();
     const [loading, setLoading] = useState(true);
 
     const params = useParams();
@@ -60,10 +56,7 @@ export default function Login({ setUser }: any) {
     useEffect(() => {
         axios.get(API + 'test/' + params.testId).then((res) => {
             setData(res.data);
-            axios.get(API + 'question/test/' + params.testId).then((res) => {
-                setQuestionData(res.data);
-                setLoading(false);
-            });
+            setLoading(false);
         })
     }, [params.testId])
 
@@ -77,17 +70,13 @@ export default function Login({ setUser }: any) {
             setLoginError('Podaj login');
             valid = false;
         }
-        else if (loginField !== loginField.trim()) {
+        else if (!loginField.match(/^[a-zA-Z0-9_]+$/)) {
             setLoginError('Podaj prawidłowy login');
             valid = false;
         }
         else setLoginError('');
         if (!passwordField) {
             setPasswordError('Podaj hasło');
-            valid = false;
-        }
-        else if (passwordField !== passwordField.trim()) {
-            setPasswordError('Podaj prawidłowe hasło');
             valid = false;
         }
         else setPasswordError('');

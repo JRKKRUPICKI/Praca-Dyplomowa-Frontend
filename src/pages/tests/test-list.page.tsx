@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useAuth } from "../../auth/Auth";
 import axios from "axios";
 import { PAGES, usePage } from "../../providers/tests.provider";

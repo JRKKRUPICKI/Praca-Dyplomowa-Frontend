@@ -1,4 +1,3 @@
-import { ReactElement } from "react";
 import styled, { css } from "styled-components"
 
 const Style = css`

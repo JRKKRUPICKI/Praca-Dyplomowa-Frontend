@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Login from "./login";
-import '../pages/StudentLoginPage.scss';
+import '../App.scss';
 import TestPage from "./test.page";
 
 export default function Main() {
