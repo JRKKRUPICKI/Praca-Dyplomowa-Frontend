@@ -10,6 +10,12 @@ import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { API } from "../../App";
 
+const Container = styled.div`
+    ${Tile}:not(:first-child){
+        margin-top: 16px;
+    }
+`;
+
 const Select = styled.select`
     background: #1e1f24;
     border: 1px solid #7d8093;
@@ -76,7 +82,7 @@ export default function QuestionList() {
     }
 
     return (
-        <div>
+        <Container>
             <Tile>
                 <Title>Wybierz test</Title>
                 <Select onChange={e => page.setTestId(e.target.value)} value={page.testId}>
@@ -110,6 +116,6 @@ export default function QuestionList() {
                     </Tile>
                 )
             )}
-        </div>
+        </Container>
     )
 }

@@ -9,10 +9,15 @@ import { Tile } from "../components/tile";
 import { Title } from "../components/typography";
 import { Test } from "../models";
 import { formatDatetime } from "../utils/TimeUtils";
+import { Topbar } from "../components/topbar";
 
 const Container = styled.div`
     display: grid;
     grid-template-columns: 270px auto;
+
+    ${Tile}:not(:first-child){
+        margin-top: 16px;
+    }
 `;
 
 const Content = styled.div`
@@ -59,44 +64,6 @@ const Content = styled.div`
 
     & > *:nth-child(2){
         margin-top: 16px;
-    }
-`;
-
-const Header = styled.div`
-    display: grid;
-    grid-template-columns: 400px auto;
-    align-items: center;
-    justify-content: space-between;
-
-    & > input{
-        background: #1e1f24;
-        border: none;
-        border-radius: 10px;
-        padding: 14px;
-        font-size: 14px;
-        color: #7d8093;
-        height: 40px;
-
-        &:focus{
-            outline: none;
-        }
-    }
-`;
-
-const User = styled.div`
-    display: grid;
-    grid-template-columns: 40px auto;
-    align-items: center;
-
-    div:first-child{
-        width: 40px;
-        height: 40px;
-        background: yellow;
-        border-radius: 50%;
-    }
-
-    div:nth-child(2){
-        margin-left: 16px;
     }
 `;
 
@@ -214,13 +181,7 @@ export default function LiveLogsPoage() {
         <Container>
             <Navigation activeLink={LINKS.LIVE} />
             <Content>
-                <Header>
-                    <input type='text' placeholder="Wyszukiwanie..." />
-                    <User>
-                        <div></div>
-                        <div>teacher@gmail.com</div>
-                    </User>
-                </Header>
+                <Topbar userName={auth?.user?.email ? auth?.user?.email : 'none'} />
                 <Tile>
                     <Title>Wybierz test</Title>
                     <Select onChange={e => chooseTest(e.target.value)} value={testId}>

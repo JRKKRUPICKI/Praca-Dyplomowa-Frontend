@@ -1,5 +1,7 @@
 import styled from "styled-components";
+import { useAuth } from "../auth/Auth";
 import { LINKS, Navigation } from "../components/navigation";
+import { Topbar } from "../components/topbar";
 import { QuestionsProvider } from "../providers/questions.provider";
 
 const Container = styled.div`
@@ -58,58 +60,16 @@ const Content = styled.div`
     }
 `;
 
-const Header = styled.div`
-    display: grid;
-    grid-template-columns: 400px auto;
-    align-items: center;
-    justify-content: space-between;
+export default function Questions() {
 
-    & > input{
-        background: #1e1f24;
-        border: none;
-        border-radius: 10px;
-        padding: 14px;
-        font-size: 14px;
-        color: #7d8093;
-        height: 40px;
-
-        &:focus{
-            outline: none;
-        }
-    }
-`;
-
-const User = styled.div`
-    display: grid;
-    grid-template-columns: 40px auto;
-    align-items: center;
-
-    div:first-child{
-        width: 40px;
-        height: 40px;
-        background: yellow;
-        border-radius: 50%;
-    }
-
-    div:nth-child(2){
-        margin-left: 16px;
-    }
-`;
-
-export default function Questions(){
+    const auth = useAuth();
 
     return (
         <Container>
-            <Navigation activeLink={LINKS.QUESTIONS}/>
+            <Navigation activeLink={LINKS.QUESTIONS} />
             <Content>
-                <Header>
-                    <input type='text' placeholder="Wyszukiwanie..."/>
-                    <User>
-                        <div></div>
-                        <div>teacher@gmail.com</div>
-                    </User>
-                </Header>
-                <QuestionsProvider/>
+                <Topbar userName={auth?.user?.email ? auth?.user?.email : 'none'} />
+                <QuestionsProvider />
             </Content>
         </Container>
     )

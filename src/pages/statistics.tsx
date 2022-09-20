@@ -9,6 +9,8 @@ import { Button } from "../components/button";
 import { LINKS, Navigation } from "../components/navigation";
 import { Test } from "../models";
 import Chart from "../components/chart";
+import { Topbar } from "../components/topbar";
+import { Tile } from "../components/tile";
 
 const Container = styled.div`
     display: grid;
@@ -66,62 +68,27 @@ const Content = styled.div`
     }
 `;
 
-const Header = styled.div`
-    display: grid;
-    grid-template-columns: 400px auto;
-    align-items: center;
-    justify-content: space-between;
-
-    & > input{
-        background: #1e1f24;
-        border: none;
-        border-radius: 10px;
-        padding: 14px;
-        font-size: 14px;
-        color: #7d8093;
-        height: 40px;
-
-        &:focus{
-            outline: none;
-        }
-    }
-`;
-
-const User = styled.div`
-    display: grid;
-    grid-template-columns: 40px auto;
-    align-items: center;
-
-    div:first-child{
-        width: 40px;
-        height: 40px;
-        background: yellow;
-        border-radius: 50%;
-    }
-
-    div:nth-child(2){
-        margin-left: 16px;
-    }
-`;
-
 const Tiles = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 16px;
     margin-top: 16px;
-`;
-
-const Tile = styled.div`
-    background: #1E1F24;
-    border-radius: 16px;
-    padding: 20px;
     text-align: center;
-    display: inline-block;
 
-    & > :nth-child(3){
-        margin: auto;
+    & > ${Tile}{
+        background: #1E1F24;
+        border-radius: 16px;
+        padding: 20px;
+        text-align: center;
+        display: inline-block;
+    
+        & > :nth-child(3){
+            margin: auto;
+        }
     }
 `;
+
+
 
 const Select = styled.select`
     background: #1e1f24;
@@ -178,13 +145,7 @@ export default function Statistics() {
         <Container>
             <Navigation activeLink={LINKS.STATISTICS} />
             <Content>
-                <Header>
-                    <input type='text' placeholder="Wyszukiwanie..." />
-                    <User>
-                        <div></div>
-                        <div>teacher@gmail.com</div>
-                    </User>
-                </Header>
+                <Topbar userName={auth?.user?.email ? auth?.user?.email : 'none'} />
                 <Tile>
                     <Title>Wybierz test</Title>
                     <Select onChange={e => setTest(e.target.value)} value={test}>
