@@ -89,7 +89,7 @@ export default function TestDetails() {
             </Item>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Wróc</Button>
-                <Button onClick={() => navigate('/' + page.testId)}>Link</Button>
+                <Button onClick={() => navigate('/test/' + page.testId)}>Link</Button>
                 <Button onClick={() => page.setPage(PAGES.EDIT)}>Edytuj</Button>
                 <Button className='danger' onClick={() => deleteTest()}>Usuń</Button>
             </Footer>

@@ -46,7 +46,7 @@ export default function TestsList() {
                 <td>{test.students.length}</td>
                 <td>{now < start || now >= end ? <Label inactive>nieaktywny</Label> : <Label active>aktywny</Label>}</td>
                 <td>
-                    <Button onClick={() => navigate('/' + test.id)}>Link</Button>
+                    <Button onClick={() => navigate('/test/' + test.id)}>Link</Button>
                     <Button onClick={() => { page.setTestId(test.id); page.setPage(PAGES.DETAILS) }}>Otwórz</Button>
                     <Button onClick={() => { page.setTestId(test.id); page.setPage(PAGES.EDIT) }}>Edytuj</Button>
                     <Button className="danger" onClick={() => removeTest(test.id)}>Usuń</Button>

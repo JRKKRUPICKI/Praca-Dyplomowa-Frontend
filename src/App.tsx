@@ -23,7 +23,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<TeacherLoginPage />} />
-          <Route path=':testId' element={<Main />} />
+          <Route path='test/:testId' element={<Main />} />
           <Route path='dashboard' element={<RequireAuth><Dashboard /></RequireAuth>} />
           <Route path='tests' element={<RequireAuth><Tests /></RequireAuth>} />
           <Route path='students' element={<RequireAuth><Students /></RequireAuth>} />

@@ -14,9 +14,9 @@ const Image = styled.img`
     margin-bottom: 16px;
 `;
 
-export default function NotFoundPage(){
+export default function NotFoundPage() {
     return <Container>
-        <Image src="/support.png"/>
+        <Image src="/not-found.png" />
         <Title>Page not found</Title>
     </Container>;
 }
