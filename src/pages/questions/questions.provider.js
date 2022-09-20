@@ -1,10 +1,10 @@
 import { createContext, useContext, useState } from "react";
-import AnswerAdd from "../pages/questions/answer-add.page";
-import AnswerEdit from "../pages/questions/answer-edit.page";
-import QuestionAdd from "../pages/questions/question-add.page";
-import QuestionDetails from "../pages/questions/question-details.page";
-import QuestionEdit from "../pages/questions/question-edit.page";
-import QuestionList from "../pages/questions/question-list.page";
+import AnswerAdd from "./answer-add.page";
+import AnswerEdit from "./answer-edit.page";
+import QuestionAdd from "./question-add.page";
+import QuestionDetails from "./question-details.page";
+import QuestionEdit from "./question-edit.page";
+import QuestionList from "./question-list.page";
 
 const QuestionsContext = createContext();
 

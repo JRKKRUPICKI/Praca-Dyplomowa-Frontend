@@ -1,13 +1,13 @@
 import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { PAGES, usePage } from "../../providers/tests.provider";
 import { useAuth } from "../../auth/Auth";
 import { formatDatetime } from "../../utils/TimeUtils";
 import { Error, Title } from "../../components/typography";
 import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { API } from "../../App";
+import { PAGES, usePage } from "./tests.provider";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -39,7 +39,7 @@ const Input = styled.input`
     }
 `;
 
-export default function TestAdd(){
+export default function TestAdd() {
 
     const auth = useAuth();
 
@@ -61,26 +61,26 @@ export default function TestAdd(){
 
     const validate = () => {
         let valid = true;
-        if(!nameField){
+        if (!nameField) {
             setNameError('Brak nazwy testu');
             valid = false;
         }
-        else if(nameField !== nameField.trim()){
+        else if (nameField !== nameField.trim()) {
             setNameError('Nieprawidłowa nazwa testu');
             valid = false;
         }
         else setNameError('');
-        if(timeField <= 0){
+        if (timeField <= 0) {
             setTimeError('Za krótki czas trwania testu');
             valid = false;
         }
         else setTimeError('');
-        if(Date.parse(loginTimeStartField) <= Date.now()){
+        if (Date.parse(loginTimeStartField) <= Date.now()) {
             setLoginTimeStartError('Wybierz późniejszą datę');
             valid = false;
         }
         else setLoginTimeStartError('');
-        if(Date.parse(loginTimeEndField) <= Date.parse(loginTimeStartField)){
+        if (Date.parse(loginTimeEndField) <= Date.parse(loginTimeStartField)) {
             setLoginTimeEndError('Wybierz późniejszą datę');
             valid = false;
         }
@@ -89,7 +89,7 @@ export default function TestAdd(){
     }
 
     const saveTest = () => {
-        if(!validate()) return;
+        if (!validate()) return;
         setLoading(true);
         axios.post(API + 'test', {
             name: nameField,
@@ -109,22 +109,22 @@ export default function TestAdd(){
             <Title>Tworzenie nowego testu</Title>
             <Item>
                 <div>Nazwa testu:</div>
-                <Input onChange={(e) => setNameField(e.target.value)}/>
+                <Input onChange={(e) => setNameField(e.target.value)} />
                 {nameError && <Error>{nameError}</Error>}
             </Item>
             <Item>
                 <div>Czas trwania testu w minutach:</div>
-                <Input onChange={(e) => setTimeField(parseInt(e.target.value))}/>
+                <Input onChange={(e) => setTimeField(parseInt(e.target.value))} />
                 {timeError && <Error>{timeError}</Error>}
             </Item>
             <Item>
                 <div>Czas od kiedy można się zalogować do testu:</div>
-                <Input type='datetime-local' onChange={(e) => setLoginTimeStartField(e.target.value)}/>
+                <Input type='datetime-local' onChange={(e) => setLoginTimeStartField(e.target.value)} />
                 {loginTimeStartError && <Error>{loginTimeStartError}</Error>}
             </Item>
             <Item>
                 <div>Czas do kiedy można się zalogować do testu:</div>
-                <Input type='datetime-local' onChange={(e) => setLoginTimeEndField(e.target.value)}/>
+                <Input type='datetime-local' onChange={(e) => setLoginTimeEndField(e.target.value)} />
                 {loginTimeEndError && <Error>{loginTimeEndError}</Error>}
             </Item>
             <Footer>

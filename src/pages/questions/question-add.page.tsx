@@ -1,11 +1,11 @@
 import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { PAGES, usePage } from "../../providers/questions.provider";
 import { Error, Title } from "../../components/typography";
 import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { API } from "../../App";
+import { PAGES, usePage } from "./questions.provider";
 
 const Container = styled.div`
     background: #1E1F24;

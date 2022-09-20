@@ -3,7 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../../auth/Auth";
 import axios from "axios";
-import { PAGES, usePage } from "../../providers/tests.provider";
+import { PAGES, usePage } from "./tests.provider";
 import { Title } from "../../components/typography";
 import { Tile } from "../../components/tile";
 import { Footer } from "../../components/footer";

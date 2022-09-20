@@ -2,13 +2,13 @@ import { useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { PAGES, usePage } from "../../providers/students.provider";
 import { Error, Title } from "../../components/typography";
 import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { Input } from "../../components/input";
 import { API } from "../../App";
 import { Student } from "../../models";
+import { PAGES, usePage } from "./students.provider";
 
 const Container = styled.div`
     background: #1E1F24;

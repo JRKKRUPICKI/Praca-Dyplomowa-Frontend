@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { StudentsProvider } from "../providers/students.provider";
 import { LINKS, Navigation } from "../components/navigation";
 import { useAuth } from "../auth/Auth";
 import { Topbar } from "../components/topbar";
+import { StudentsProvider } from "./students/students.provider";
 
 const Container = styled.div`
     display: grid;

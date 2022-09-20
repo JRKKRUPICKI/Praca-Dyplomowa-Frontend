@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { PAGES, usePage } from "../../providers/tests.provider";
+import { PAGES, usePage } from "./tests.provider";
 import { formatDatetime } from "../../utils/TimeUtils";
 import { Title } from "../../components/typography";
 import { Footer } from "../../components/footer";

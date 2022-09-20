@@ -1,8 +1,8 @@
 import { createContext, useContext, useState } from "react";
-import TestAdd from "../pages/tests/test-add.page";
-import TestDetails from "../pages/tests/test-details.page";
-import TestEdit from "../pages/tests/test-edit.page";
-import TestsList from "../pages/tests/test-list.page";
+import TestAdd from "./test-add.page";
+import TestDetails from "./test-details.page";
+import TestEdit from "./test-edit.page";
+import TestsList from "./test-list.page";
 
 const TestsContext = createContext();
 

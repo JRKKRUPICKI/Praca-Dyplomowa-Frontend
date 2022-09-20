@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { PAGES, usePage } from "../../providers/students.provider";
 import { Title } from "../../components/typography";
 import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
@@ -10,6 +9,7 @@ import { API } from "../../App";
 import { Student } from "../../models";
 import { Label } from "../../components/label";
 import { formatDatetime } from "../../utils/TimeUtils";
+import { PAGES, usePage } from "./students.provider";
 
 const Container = styled.div`
     background: #1E1F24;

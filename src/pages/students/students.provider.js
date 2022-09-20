@@ -1,8 +1,8 @@
 import { createContext, useContext, useState } from "react";
-import StudentAdd from "../pages/students/student-add.page";
-import StudentDetails from "../pages/students/student-details.page";
-import StudentEdit from "../pages/students/student-edit.page";
-import StudentsList from "../pages/students/students-list.page";
+import StudentAdd from "./student-add.page";
+import StudentDetails from "./student-details.page";
+import StudentEdit from "./student-edit.page";
+import StudentsList from "./students-list.page";
 
 const StudentsContext = createContext();
 

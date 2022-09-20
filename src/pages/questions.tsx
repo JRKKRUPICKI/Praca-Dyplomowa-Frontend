@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useAuth } from "../auth/Auth";
 import { LINKS, Navigation } from "../components/navigation";
 import { Topbar } from "../components/topbar";
-import { QuestionsProvider } from "../providers/questions.provider";
+import { QuestionsProvider } from "./questions/questions.provider";
 
 const Container = styled.div`
     display: grid;

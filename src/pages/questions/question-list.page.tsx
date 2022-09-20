@@ -3,12 +3,12 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../../auth/Auth";
 import axios from "axios";
-import { PAGES, usePage } from "../../providers/questions.provider";
 import { Description, Title } from "../../components/typography";
 import { Tile } from "../../components/tile";
 import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { API } from "../../App";
+import { PAGES, usePage } from "./questions.provider";
 
 const Container = styled.div`
     ${Tile}:not(:first-child){
