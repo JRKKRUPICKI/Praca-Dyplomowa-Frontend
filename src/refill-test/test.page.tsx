@@ -2,8 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTimer } from "react-timer-hook";
+import styled from "styled-components";
 import { API } from "../App";
 import { AnswerNoCorrect, QuestionNoCorrect, StudentAnswer, Test } from "../models";
+
+const Container = styled.div`
+    margin: 16px;
+`;
 
 export default function TestPage({ user, setUser }: any) {
 
@@ -89,6 +94,7 @@ export default function TestPage({ user, setUser }: any) {
             studentId: user.id
         }
         studentAnswer.push(newAnswer);
+        unselectBadQuestion(questionId);
     }
 
     const toggleAnswer = (questionId: number, answerId: number) => {
@@ -111,6 +117,7 @@ export default function TestPage({ user, setUser }: any) {
             }).catch((err) => {
                 alert('Problem z zapisem logów');
             })
+            studentAnswer.filter(answer => answer.questionId === questionId).length === 0 && selectBadQuestion(questionId);
             return;
         }
         const newAnswer = {
@@ -130,24 +137,12 @@ export default function TestPage({ user, setUser }: any) {
         }).catch((err) => {
             alert('Problem z zapisem logów');
         })
+        unselectBadQuestion(questionId);
     }
 
     const saveAnswers = (e: any) => {
         e.preventDefault();
-        const studentId = user.id;
-        const testId = data.id;
-        // studentAnswer.forEach(a => {
-        //     axios.post(API + 'studentanswer', {
-        //         studentId: studentId,
-        //         testId: testId,
-        //         questionId: a.questionId,
-        //         answerId: a.answerId
-        //     }).then((res) => {
-        //         alert('Odpowiedz zapisana');
-        //     }).catch((err) => {
-        //         alert('Problem z zapisem odpowiedzi');
-        //     })
-        // });
+        if (!areAnswersSelected()) return;
         axios.post(API + 'studentanswer/all', { answers: studentAnswer }).then((res) => {
             alert('Odpowiedzi zapisane');
         }).catch((err) => {
@@ -156,24 +151,55 @@ export default function TestPage({ user, setUser }: any) {
         setUser();
     }
 
+    const areAnswersSelected = () => {
+        const questionsToCheck = [...data.questions];
+        studentAnswer.forEach(answer => {
+            const questionIndex = questionsToCheck.findIndex((question: any) => question.id === answer.questionId);
+            if (questionIndex >= 0) questionsToCheck.splice(questionIndex, 1);
+        });
+        data.questions.forEach((question: any) => {
+            let element = document.getElementById(question.id);
+            if (element) element.style.border = 'none';
+        })
+        questionsToCheck.forEach((question: any) => {
+            let element = document.getElementById(question.id);
+            if (element) element.style.border = '1px solid #FF0000';
+        })
+        return questionsToCheck.length === 0;
+    }
+
+    const selectBadQuestion = (questionId: any) => {
+        let element = document.getElementById(questionId);
+        if (element) element.style.border = '1px solid #FF0000';
+    }
+
+    const unselectBadQuestion = (questionId: any) => {
+        let element = document.getElementById(questionId);
+        if (element) element.style.border = 'none';
+    }
+
     return (
-        <div>
+        <Container>
             <MyTimer expiryTimestamp={testTime} />
-            {data.questions.map((q: QuestionNoCorrect) => <div key={q.id} className='questionBox'>
+            {data.questions.map((q: QuestionNoCorrect) => <div key={q.id} className='questionBox' id={q.id + ''}>
                 <div className='question'>{q.name}</div>
                 {!q.type ? (
-                    q.answers.map((a: AnswerNoCorrect) => <div key={a.id} className='answer'>
-                        <input type='radio' id={'a-' + a.id} name={'q-' + q.id} value={a.id} onClick={() => setAnswer(q.id, a.id)} />
-                        {a.name}
-                    </div>)
+                    q.answers.map((a: AnswerNoCorrect) => (
+                        <label key={a.id} className='answer'>
+                            <input type='radio' id={'a-' + a.id} name={'q-' + q.id} value={a.id} onClick={() => setAnswer(q.id, a.id)} />
+                            <div>{a.name}</div>
+                        </label>
+                    ))
                 ) : (
-                    q.answers.map(a => <div key={a.id} className='answer'>
-                        <input type='checkbox' id={'a-' + a.id} name={'a-' + a.id} value={a.id} onClick={() => toggleAnswer(q.id, a.id)} />
-                        {a.name}
-                    </div>)
+                    q.answers.map(a => (
+                        <label key={a.id} className='answer'>
+                            <input type='checkbox' id={'a-' + a.id} name={'a-' + a.id} value={a.id} onClick={() => toggleAnswer(q.id, a.id)} />
+                            <div>{a.name}</div>
+                        </label>
+                    ))
                 )}
             </div>)}
             <button onClick={(e) => saveAnswers(e)} className='save'>Zapisz odpowiedzi</button>
-        </div>
+        </Container>
     );
 }
