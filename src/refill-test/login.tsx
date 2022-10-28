@@ -47,9 +47,10 @@ export default function Login({ setUser }: any) {
     const [passwordField, setPasswordField] = useState('');
     const [loginError, setLoginError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    const [loginTimeError, setLoginTimeError] = useState('');
     const [data, setData] = useState<Test>();
     const [loading, setLoading] = useState(true);
+
+    const [error, setError] = useState('');
 
     const params = useParams();
 
@@ -80,18 +81,6 @@ export default function Login({ setUser }: any) {
             valid = false;
         }
         else setPasswordError('');
-        const now = new Date();
-        const start = new Date(data.loginTimeStart);
-        const end = new Date(data.loginTimeEnd);
-        if (now < start) {
-            setLoginTimeError('Test jeszcze nie rozpoczął się');
-            valid = false;
-        }
-        else if (now >= end) {
-            setLoginTimeError('Czas za zalogowanie się minął');
-            valid = false;
-        }
-        else setLoginTimeError('');
         return valid;
     }
 
@@ -106,7 +95,10 @@ export default function Login({ setUser }: any) {
             setLoginField('');
             setPasswordField('');
         }).catch((err) => {
-            alert(err.response.data.message);
+            if (err.response.data.message === 'Test has not started yet') setError('Test się jeszcze nie rozpoczał');
+            else if (err.response.data.message === 'Time to log in has expired') setError('Czas na zalogowanie się minął');
+            else if (err.response.data.message === 'Inactive student account') setError('Już wykorzystałeś swoją próbę na wypełnienie testu');
+            else setError('Nieprawidłowy login lub hasło');
         })
     }
 
@@ -116,16 +108,8 @@ export default function Login({ setUser }: any) {
             minutes,
             hours,
             days,
-            //isRunning,
-            //start,
-            //pause,
-            //resume,
-            //restart,
         } = useTimer({
-            expiryTimestamp, onExpire: () => {
-                alert('Koniec czasu, odpowiedzi zostały automatycznie przesłane');
-                setUser();
-            }
+            expiryTimestamp, onExpire: () => { }
         });
 
         return (
@@ -166,7 +150,7 @@ export default function Login({ setUser }: any) {
                 <Input type='password' value={passwordField} onChange={(e) => setPasswordField(e.target.value)} />
                 {passwordError && <Error>{passwordError}</Error>}
                 <Button onClick={() => handleSubmit()}>Zaloguj</Button>
-                {loginTimeError && <Error>{loginTimeError}</Error>}
+                {error && <Error>{error}</Error>}
             </Container>
         </FlexContainer>
     );
