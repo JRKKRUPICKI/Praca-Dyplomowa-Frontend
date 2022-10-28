@@ -2,7 +2,6 @@ import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { useAuth } from "../../auth/Auth";
-import { formatDatetime } from "../../utils/TimeUtils";
 import { Error, Title } from "../../components/typography";
 import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
@@ -13,6 +12,11 @@ const Container = styled.div`
     background: #1E1F24;
     border-radius: 16px;
     padding: 20px;
+
+    ${Footer} > ${Error}{
+        text-align: center;
+        margin-top: 8px;
+    }
 `;
 
 const Item = styled.div`
@@ -53,16 +57,18 @@ export default function TestAdd() {
     const [timeField, setTimeField] = useState(0);
     const [timeError, setTimeError] = useState('');
 
-    const [loginTimeStartField, setLoginTimeStartField] = useState(formatDatetime(Date.now()));
+    const [loginTimeStartField, setLoginTimeStartField] = useState('');
     const [loginTimeStartError, setLoginTimeStartError] = useState('');
 
-    const [loginTimeEndField, setLoginTimeEndField] = useState(formatDatetime(Date.now()));
+    const [loginTimeEndField, setLoginTimeEndField] = useState('');
     const [loginTimeEndError, setLoginTimeEndError] = useState('');
+
+    const [error, setError] = useState('');
 
     const validate = () => {
         let valid = true;
         if (!nameField) {
-            setNameError('Brak nazwy testu');
+            setNameError('Podaj nazwe testu');
             valid = false;
         }
         else if (nameField !== nameField.trim()) {
@@ -70,18 +76,30 @@ export default function TestAdd() {
             valid = false;
         }
         else setNameError('');
-        if (timeField <= 0) {
-            setTimeError('Za krótki czas trwania testu');
+        if (isNaN(timeField)) {
+            setTimeError('Podaj czas trwania testu');
+            valid = false;
+        }
+        else if (timeField <= 0) {
+            setTimeError('Podaj prawidłowy czas trwania testu');
             valid = false;
         }
         else setTimeError('');
-        if (Date.parse(loginTimeStartField) <= Date.now()) {
-            setLoginTimeStartError('Wybierz późniejszą datę');
+        if (!loginTimeStartField) {
+            setLoginTimeStartError('Podaj date z czasem');
             valid = false;
         }
+        // else if (Date.parse(loginTimeStartField) <= Date.now()) {
+        //     setLoginTimeStartError('Podaj późniejszą date z czasem');
+        //     valid = false;
+        // }
         else setLoginTimeStartError('');
-        if (Date.parse(loginTimeEndField) <= Date.parse(loginTimeStartField)) {
-            setLoginTimeEndError('Wybierz późniejszą datę');
+        if (!loginTimeEndField) {
+            setLoginTimeEndError('Podaj date z czasem');
+            valid = false;
+        }
+        else if (Date.parse(loginTimeEndField) <= Date.parse(loginTimeStartField)) {
+            setLoginTimeEndError('Podaj późniejszą date z czasem');
             valid = false;
         }
         else setLoginTimeEndError('');
@@ -99,12 +117,14 @@ export default function TestAdd() {
             loginTimeEnd: Date.parse(loginTimeEndField)
         }).then((res) => {
             page.setPage(PAGES.LIST);
+            setError('');
         }).catch((err) => {
-            alert(err.response.data.message)
+            if (err.response.data.message === 'Test already exists') setError('Test o podanej nazwie już istnieje');
+            else setError('Nie można stworzyć nowego testu');
         }).finally(() => setLoading(false))
     }
 
-    return loading ? <div>Loading</div> : (
+    return (
         <Container>
             <Title>Tworzenie nowego testu</Title>
             <Item>
@@ -129,7 +149,8 @@ export default function TestAdd() {
             </Item>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Anuluj</Button>
-                <Button onClick={() => saveTest()}>Zapisz</Button>
+                {loading ? <Button>Zapisz</Button> : <Button onClick={() => saveTest()}>Zapisz</Button>}
+                {error && <Error>{error}</Error>}
             </Footer>
         </Container>
     )

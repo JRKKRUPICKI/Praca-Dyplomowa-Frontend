@@ -7,7 +7,7 @@ import { formatDatetime } from "../../utils/TimeUtils";
 import { Title } from "../../components/typography";
 import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { API } from "../../App";
 import { Test } from "../../models";
 
@@ -32,7 +32,7 @@ export default function TestDetails() {
     const [isLoading, setIsLoading] = useState(true);
 
     const page = usePage();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(API + 'test/' + page.testId).then((res) => {
@@ -40,14 +40,6 @@ export default function TestDetails() {
             setIsLoading(false);
         })
     }, [page.testId])
-
-    const deleteTest = () => {
-        setIsLoading(true);
-        axios.delete(API + 'test/' + page.testId).then((res) => {
-            page.setTestId()
-            page.setPage(PAGES.LIST);
-        })
-    }
 
     if (!data || isLoading) {
         return <div>Loading</div>;
@@ -88,10 +80,11 @@ export default function TestDetails() {
                 <div>{data.students.length}</div>
             </Item>
             <Footer>
-                <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Wróc</Button>
-                <Button onClick={() => navigate('/test/' + page.testId)}>Link</Button>
+                <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Wróć</Button>
+                {/* <Button onClick={() => navigate('/test/' + page.testId)}>Otwórz test</Button> */}
+                <Button onClick={() => window.open('/test/' + page.testId)}>Otwórz test</Button>
                 <Button onClick={() => page.setPage(PAGES.EDIT)}>Edytuj</Button>
-                <Button className='danger' onClick={() => deleteTest()}>Usuń</Button>
+                <Button className="danger" onClick={() => { page.setTestId(page.testId); page.setPage(PAGES.DELETE) }}>Usuń</Button>
             </Footer>
         </Container>
     )

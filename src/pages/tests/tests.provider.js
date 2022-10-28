@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import TestAdd from "./test-add.page";
+import TestDelete from "./test-delete.page";
 import TestDetails from "./test-details.page";
 import TestEdit from "./test-edit.page";
 import TestsList from "./test-list.page";
@@ -10,7 +11,8 @@ export const PAGES = {
     LIST: <TestsList />,
     DETAILS: <TestDetails />,
     EDIT: <TestEdit />,
-    ADD: <TestAdd />
+    ADD: <TestAdd />,
+    DELETE: <TestDelete />
 }
 
 export const TestsProvider = () => {

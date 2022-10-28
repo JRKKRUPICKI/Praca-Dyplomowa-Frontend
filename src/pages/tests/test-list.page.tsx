@@ -8,7 +8,7 @@ import { Title } from "../../components/typography";
 import { Tile } from "../../components/tile";
 import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { API } from "../../App";
 import { Label } from "../../components/label";
 
@@ -33,7 +33,7 @@ export default function TestsList() {
 
     const page = usePage();
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const getTest = (test: any) => {
         const now = new Date();
@@ -46,23 +46,14 @@ export default function TestsList() {
                 <td>{test.students.length}</td>
                 <td>{now < start || now >= end ? <Label inactive>nieaktywny</Label> : <Label active>aktywny</Label>}</td>
                 <td>
-                    <Button onClick={() => navigate('/test/' + test.id)}>Link</Button>
-                    <Button onClick={() => { page.setTestId(test.id); page.setPage(PAGES.DETAILS) }}>Otwórz</Button>
+                    {/* <Button onClick={() => navigate('/test/' + test.id)}>Link</Button> */}
+                    <Button onClick={() => window.open('/test/' + test.id)}>Otwórz test</Button>
+                    <Button onClick={() => { page.setTestId(test.id); page.setPage(PAGES.DETAILS) }}>Szczegóły</Button>
                     <Button onClick={() => { page.setTestId(test.id); page.setPage(PAGES.EDIT) }}>Edytuj</Button>
-                    <Button className="danger" onClick={() => removeTest(test.id)}>Usuń</Button>
+                    <Button className="danger" onClick={() => { page.setTestId(test.id); page.setPage(PAGES.DELETE) }}>Usuń</Button>
                 </td>
             </tr>
         )
-    }
-
-    const removeTest = (testId: any) => {
-        setLoading(true);
-        axios.delete(API + 'test/' + testId).then((res) => {
-            axios.get(API + 'test').then((res) => {
-                setTests(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
-                setLoading(false);
-            });
-        })
     }
 
     return (
