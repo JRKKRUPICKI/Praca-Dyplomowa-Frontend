@@ -33,21 +33,19 @@ const Select = styled.select`
 `;
 
 export default function QuestionList() {
+
     const auth = useAuth();
-
-    const [loading, setLoading] = useState(true);
-
+    const [isLoading, setIsLoading] = useState(true);
     const [tests, setTests] = useState([]);
+    const page = usePage();
 
     useEffect(() => {
         axios.get(API + 'test').then((res) => {
             setTests(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
-            setLoading(false);
+            setIsLoading(false);
         });
         if (page.testId) loadQuestions();
-    }, [auth?.user?.id])
-
-    const page = usePage();
+    }, [auth?.user?.id, page.testId])
 
     const getQuestion = (question: any) => {
         return (
@@ -56,28 +54,23 @@ export default function QuestionList() {
                 <td>{question.answers.length}</td>
                 <td>{question.answers.filter((answer: any) => answer.correct).length}</td>
                 <td>
-                    <Button onClick={() => { page.setQuestionId(question.id); page.setPage(PAGES.DETAILS) }}>Otwórz</Button>
+                    <Button onClick={() => { page.setQuestionId(question.id); page.setPage(PAGES.DETAILS) }}>Szczegóły</Button>
                     <Button onClick={() => { page.setQuestionId(question.id); page.setPage(PAGES.EDIT) }}>Edytuj</Button>
-                    <Button className="danger" onClick={() => removeQuestion(question.id)}>Usuń</Button>
+                    <Button className='danger' onClick={() => { page.setQuestionId(question.id); page.setPage(PAGES.DELETE) }}>Usuń</Button>
+
                 </td>
             </tr>
         )
     }
 
-    const removeQuestion = (questionId: any) => {
-        setLoading(true);
-        axios.delete(API + 'question/' + questionId).then((res) => {
-            loadQuestions()
-        })
-    }
-
     const [questions, setQuestions] = useState([]);
 
     const loadQuestions = () => {
-        setLoading(true);
+        if (!page.testId || page.testId < 1) return;
+        setIsLoading(true);
         axios.get(API + 'question').then((res) => {
             setQuestions(res.data.filter((question: any) => question.test.id === parseInt(page.testId)));
-            setLoading(false);
+            setIsLoading(false);
         })
     }
 
@@ -92,27 +85,31 @@ export default function QuestionList() {
                 <Button onClick={() => loadQuestions()}>Pokaż pytania</Button>
             </Tile>
             {questions && (
-                loading ? <div>Loading</div> : (
+                isLoading ? <div>Loading</div> : (
                     <Tile>
                         <Title>Lista pytań</Title>
-                        {questions.length === 0 ? <Description>Test nie posiada przypisanych pytań</Description> : (
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <td>Treść pytania</td>
-                                        <td>Liczba odpowiedzi</td>
-                                        <td>Liczba poprawnych odpowiedzi</td>
-                                        <td></td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {questions.map((question: any) => getQuestion(question))}
-                                </tbody>
-                            </table>
+                        {page.testId < 1 ? <Description>Wybierz test, aby wyświetlić pytania</Description> : (
+                            questions.length === 0 ? <Description>Test nie posiada przypisanych pytań</Description> : (
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <td>Treść pytania</td>
+                                            <td>Liczba odpowiedzi</td>
+                                            <td>Liczba poprawnych odpowiedzi</td>
+                                            <td></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {questions.map((question: any) => getQuestion(question))}
+                                    </tbody>
+                                </table>
+                            )
                         )}
-                        <Footer>
-                            <Button className='success' onClick={() => page.setPage(PAGES.ADD)}>Dodaj pytanie</Button>
-                        </Footer>
+                        {page.testId > 0 &&
+                            <Footer>
+                                <Button className='success' onClick={() => page.setPage(PAGES.ADD)}>Dodaj pytanie</Button>
+                            </Footer>
+                        }
                     </Tile>
                 )
             )}

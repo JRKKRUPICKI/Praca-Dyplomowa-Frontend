@@ -14,6 +14,11 @@ const Container = styled.div`
     background: #1E1F24;
     border-radius: 16px;
     padding: 20px;
+
+    ${Footer} > ${Error}{
+        text-align: center;
+        margin-top: 8px;
+    }
 `;
 
 const Item = styled.div`
@@ -29,9 +34,8 @@ const Item = styled.div`
 export default function QuestionEdit() {
 
     const [loading, setLoading] = useState(true);
-
+    const [isSaveLoading, setIsSaveLoading] = useState(false);
     const page = usePage();
-
     const [question, setQuestion] = useState<Question>();
 
     useEffect(() => {
@@ -46,8 +50,9 @@ export default function QuestionEdit() {
 
     const [questionField, setQuestionField] = useState('');
     const [questionError, setQuestionError] = useState('');
-
     const [typeField, setTypeField] = useState(false);
+
+    const [error, setError] = useState('');
 
     if (loading || !question) {
         return <div>Loading</div>
@@ -69,15 +74,16 @@ export default function QuestionEdit() {
 
     const saveQuestion = () => {
         if (!validate()) return;
-        setLoading(true);
+        setIsSaveLoading(true);
         axios.patch(API + 'question/' + page.questionId, {
             name: questionField,
             type: typeField
         }).then((res) => {
             page.setPage(PAGES.DETAILS);
         }).catch((err) => {
-            alert(err.response.data.message)
-        })
+            if (err.response.data.message === 'Question already exists') setError('Pytanie o podanej treści już istnieje');
+            else setError('Nie można zapisać zmian');
+        }).finally(() => setIsSaveLoading(false));
     }
 
     return (
@@ -94,7 +100,8 @@ export default function QuestionEdit() {
             </Item>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.DETAILS)}>Anuluj</Button>
-                <Button onClick={() => saveQuestion()}>Zapisz</Button>
+                {isSaveLoading ? <Button>Zapisz</Button> : <Button onClick={() => saveQuestion()}>Zapisz</Button>}
+                {error && <Error>{error}</Error>}
             </Footer>
         </Container>
     )

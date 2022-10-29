@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react";
 import AnswerAdd from "./answer-add.page";
 import AnswerEdit from "./answer-edit.page";
 import QuestionAdd from "./question-add.page";
+import QuestionDelete from "./question-delete.page";
 import QuestionDetails from "./question-details.page";
 import QuestionEdit from "./question-edit.page";
 import QuestionList from "./question-list.page";
@@ -13,6 +14,7 @@ export const PAGES = {
     DETAILS: <QuestionDetails />,
     EDIT: <QuestionEdit />,
     ADD: <QuestionAdd />,
+    DELETE: <QuestionDelete />,
     EDIT_ANSWER: <AnswerEdit />,
     ADD_ANSWER: <AnswerAdd />
 }

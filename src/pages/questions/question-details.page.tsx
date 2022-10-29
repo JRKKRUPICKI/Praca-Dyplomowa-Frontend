@@ -32,41 +32,31 @@ const Label2 = styled(Label)`
 
 export default function QuestionDetails() {
 
-    const [loading, setLoading] = useState(true);
-
+    const [isLoading, setIsLoading] = useState(true);
     const page = usePage();
-
     const [question, setQuestion] = useState<Question>();
 
     useEffect(() => {
         axios.get(API + 'question/' + page.questionId).then((res) => {
             setQuestion(res.data);
-            setLoading(false);
+            setIsLoading(false);
         })
     }, [page.questionId])
 
-    if (loading || !question) {
+    if (isLoading || !question) {
         return <div>Loading</div>;
     }
 
-    const deleteQuestion = () => {
-        setLoading(true);
-        axios.delete(API + 'question/' + page.questionId).then((res) => {
-            page.setQuestionId()
-            page.setPage(PAGES.LIST);
-        })
-    }
-
     const loadQuestion = () => {
-        setLoading(true);
+        setIsLoading(true);
         axios.get(API + 'question/' + page.questionId).then((res) => {
             setQuestion(res.data);
-            setLoading(false);
+            setIsLoading(false);
         })
     }
 
     const deleteAnswer = (answerId: number) => {
-        setLoading(true);
+        setIsLoading(true);
         axios.delete(API + 'answer/' + answerId).then((res) => {
             loadQuestion();
         })
@@ -95,10 +85,10 @@ export default function QuestionDetails() {
                 </Item>
             ))}
             <Footer>
-                <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Wróc</Button>
+                <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Wróć</Button>
                 <Button onClick={() => page.setPage(PAGES.EDIT)}>Edytuj pytanie</Button>
                 <Button className='success' onClick={() => page.setPage(PAGES.ADD_ANSWER)}>Dodaj odpowiedź</Button>
-                <Button className='danger' onClick={() => deleteQuestion()}>Usuń pytanie</Button>
+                <Button className='danger' onClick={() => { page.setQuestionId(page.questionId); page.setPage(PAGES.DELETE) }}>Usuń pytanie</Button>
             </Footer>
         </Container>
     )
