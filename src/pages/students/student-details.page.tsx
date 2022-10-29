@@ -29,33 +29,24 @@ const Item = styled.div`
 export default function StudentDetails() {
 
     const [data, setData] = useState<Student>();
-
-    const [loading, setLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
     const page = usePage();
 
     useEffect(() => {
         axios.get(API + 'student/' + page.studentId).then((res) => {
             setData(res.data);
-            setLoading(false);
+            setIsLoading(false);
         })
     }, [page.studentId])
 
-    if (loading || !data) {
+    if (isLoading || !data) {
         return <div>Loading</div>;
-    }
-
-    const deleteStudent = () => {
-        setLoading(true);
-        axios.delete(API + 'student/' + page.studentId).then((res) => {
-            page.setStudentId()
-            page.setPage(PAGES.LIST);
-        })
     }
 
     return (
         <Container>
-            <Title>Informacje o koncie studenta</Title>
+            <Title>Informacje o studencie</Title>
             <Item>
                 <div>Login:</div>
                 <div>{data.login}</div>
@@ -73,9 +64,9 @@ export default function StudentDetails() {
                 <div>{data.status === 0 ? <Label inactive>nieprzesłane</Label> : <Label active>przesłane ({formatDatetime(data.status)})</Label>}</div>
             </Item>
             <Footer>
-                <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Wróc</Button>
+                <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Wróć</Button>
                 <Button onClick={() => page.setPage(PAGES.EDIT)}>Edytuj</Button>
-                <Button className='danger' onClick={() => deleteStudent()}>Usuń</Button>
+                <Button className='danger' onClick={() => { page.setStudentId(page.studentId); page.setPage(PAGES.DELETE) }}>Usuń</Button>
             </Footer>
         </Container>
     )

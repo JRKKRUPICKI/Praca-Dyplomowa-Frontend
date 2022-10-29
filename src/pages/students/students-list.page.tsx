@@ -35,21 +35,20 @@ const Select = styled.select`
 `;
 
 export default function StudentsList() {
+
     const auth = useAuth();
-
     const [data, setData] = useState([]);
-
-    const [loading, setLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
+    const page = usePage();
 
     useEffect(() => {
         axios.get(API + 'test').then((res) => {
             setData(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
-            setLoading(false);
+            setIsLoading(false);
         });
         if (page.testId) loadStudents();
-    }, [auth?.user?.id])
+    }, [auth?.user?.id, page.testId])
 
-    const page = usePage();
 
     const getStudent = (student: any) => {
         return (
@@ -59,28 +58,22 @@ export default function StudentsList() {
                 <td>{student.active ? <Label active>aktywne</Label> : <Label inactive>nieaktywne</Label>}</td>
                 <td>{student.status === 0 ? <Label inactive>nieprzesłane</Label> : <Label active>przesłane ({formatDatetime(student.status)})</Label>}</td>
                 <td>
-                    <Button onClick={() => { page.setStudentId(student.id); page.setPage(PAGES.DETAILS) }}>Otwórz</Button>
+                    <Button onClick={() => { page.setStudentId(student.id); page.setPage(PAGES.DETAILS) }}>Szczegóły</Button>
                     <Button onClick={() => { page.setStudentId(student.id); page.setPage(PAGES.EDIT) }}>Edytuj</Button>
-                    <Button className="danger" onClick={() => removeStudent(student.id)}>Usuń</Button>
+                    <Button className='danger' onClick={() => { page.setStudentId(student.id); page.setPage(PAGES.DELETE) }}>Usuń</Button>
                 </td>
             </tr>
         )
     }
 
-    const removeStudent = (studentId: any) => {
-        setLoading(true);
-        axios.delete(API + 'student/' + studentId).then((res) => {
-            loadStudents()
-        })
-    }
-
     const [students, setStudents] = useState([]);
 
     const loadStudents = () => {
-        setLoading(true);
+        if (!page.testId || page.testId === '0') return;
+        setIsLoading(true);
         axios.get(API + 'test/' + page.testId).then((res) => {
             setStudents(res.data.students);
-            setLoading(false);
+            setIsLoading(false);
         })
     }
 
@@ -94,30 +87,32 @@ export default function StudentsList() {
                 </Select>
                 <Button onClick={() => loadStudents()}>Pokaż studentów</Button>
             </Tile>
-            {students && (
-                loading ? <div>Loading</div> : (
-                    <Tile>
-                        <Title>Lista studentów</Title>
-                        {students.length === 0 ? <Description>Żaden student nie jest przypisany do testu</Description> : (
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <td>Login</td>
-                                        <td>Hasło</td>
-                                        <td>Konto</td>
-                                        <td>Odpowiedzi</td>
-                                        <td></td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {students.map(student => getStudent(student))}
-                                </tbody>
-                            </table>
-                        )}
-                        <Footer>
-                            <Button className='success' onClick={() => page.setPage(PAGES.ADD)}>Dodaj konto studenta</Button>
-                        </Footer>
-                    </Tile>
+            {!(!page.testId || page.testId === '0') && (
+                students && (
+                    isLoading ? <div>Loading</div> : (
+                        <Tile>
+                            <Title>Lista studentów</Title>
+                            {students.length === 0 ? <Description>Żaden student nie jest przypisany do testu</Description> : (
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <td>Login</td>
+                                            <td>Hasło</td>
+                                            <td>Konto</td>
+                                            <td>Odpowiedzi</td>
+                                            <td></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {students.map(student => getStudent(student))}
+                                    </tbody>
+                                </table>
+                            )}
+                            <Footer>
+                                <Button className='success' onClick={() => page.setPage(PAGES.ADD)}>Dodaj studenta</Button>
+                            </Footer>
+                        </Tile>
+                    )
                 )
             )}
         </Container>

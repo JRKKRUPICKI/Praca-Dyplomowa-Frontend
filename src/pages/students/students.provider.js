@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import StudentAdd from "./student-add.page";
+import StudentDelete from "./student-delete.page";
 import StudentDetails from "./student-details.page";
 import StudentEdit from "./student-edit.page";
 import StudentsList from "./students-list.page";
@@ -10,7 +11,8 @@ export const PAGES = {
     LIST: <StudentsList />,
     DETAILS: <StudentDetails />,
     EDIT: <StudentEdit />,
-    ADD: <StudentAdd />
+    ADD: <StudentAdd />,
+    DELETE: <StudentDelete />
 }
 
 export const StudentsProvider = () => {

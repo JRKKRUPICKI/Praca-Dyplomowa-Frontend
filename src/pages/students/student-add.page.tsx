@@ -11,6 +11,11 @@ const Container = styled.div`
     background: #1E1F24;
     border-radius: 16px;
     padding: 20px;
+
+    ${Footer} > ${Error}{
+        text-align: center;
+        margin-top: 8px;
+    }
 `;
 
 const Item = styled.div`
@@ -39,7 +44,7 @@ const Input = styled.input`
 
 export default function StudentAdd() {
 
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const page = usePage();
 
@@ -48,19 +53,21 @@ export default function StudentAdd() {
     const [passwordField, setPasswordField] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
+    const [error, setError] = useState('');
+
     const validate = () => {
         let valid = true;
         if (!loginField) {
-            setLoginError('Nieprawidłowy login');
+            setLoginError('Podaj login');
             valid = false;
         }
         else if (!loginField.match(/^[a-zA-Z0-9_]+$/)) {
-            setLoginError('Nieprawidłowy login');
+            setLoginError('Podaj prawidłowy login');
             valid = false;
         }
         else setLoginError('');
         if (!passwordField) {
-            setPasswordError('Nieprawidłowe hasło');
+            setPasswordError('Podaj hasło');
             valid = false;
         }
         else setPasswordError('');
@@ -69,7 +76,7 @@ export default function StudentAdd() {
 
     const saveStudent = () => {
         if (!validate()) return;
-        setLoading(true);
+        setIsLoading(true);
         axios.post(API + 'student', {
             login: loginField,
             password: passwordField,
@@ -77,11 +84,12 @@ export default function StudentAdd() {
         }).then((res) => {
             page.setPage(PAGES.LIST);
         }).catch((err) => {
-            alert(err.response.data.message)
-        }).finally(() => setLoading(false))
+            if (err.response.data.message === 'Student already exists') setError('Student o podanym loginie już istnieje');
+            else setError('Nie można dodać studenta');
+        }).finally(() => setIsLoading(false))
     }
 
-    return loading ? <div>Loading</div> : (
+    return (
         <Container>
             <Title>Tworzenie nowego konta studenta</Title>
             <Item>
@@ -96,7 +104,8 @@ export default function StudentAdd() {
             </Item>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Anuluj</Button>
-                <Button onClick={() => saveStudent()}>Zapisz</Button>
+                {isLoading ? <Button>Zapisz</Button> : <Button onClick={() => saveStudent()}>Zapisz</Button>}
+                {error && <Error>{error}</Error>}
             </Footer>
         </Container>
     )

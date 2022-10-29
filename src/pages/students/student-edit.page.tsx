@@ -14,6 +14,11 @@ const Container = styled.div`
     background: #1E1F24;
     border-radius: 16px;
     padding: 20px;
+
+    ${Footer} > ${Error}{
+        text-align: center;
+        margin-top: 8px;
+    }
 `;
 
 const Item = styled.div`
@@ -24,13 +29,18 @@ const Item = styled.div`
     &:not(:first-child){
         margin-top: 10px;
     }
+
+    & > ${Error}{
+        text-align: center;
+        margin-top: 8px;
+    }
 `;
 
 export default function StudentEdit() {
 
     const [data, setData] = useState<Student>();
-
-    const [loading, setLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
+    const [saveLoading, setSaveLoading] = useState(false);
 
     const page = usePage();
 
@@ -40,7 +50,7 @@ export default function StudentEdit() {
             setLoginField(res.data.login);
             setPasswordField(res.data.password);
             setActiveField(res.data.active);
-            setLoading(false);
+            setIsLoading(false);
         })
     }, [page.studentId])
 
@@ -51,7 +61,9 @@ export default function StudentEdit() {
     const [passwordError, setPasswordError] = useState('');
     const [activeField, setActiveField] = useState(false);
 
-    if (loading || !data) {
+    const [error, setError] = useState('');
+
+    if (isLoading || !data) {
         return <div>Loading</div>;
     }
 
@@ -76,7 +88,7 @@ export default function StudentEdit() {
 
     const saveStudent = () => {
         if (!validate()) return;
-        setLoading(true);
+        setSaveLoading(true);
         axios.patch(API + 'student/' + page.studentId, {
             login: loginField,
             password: passwordField,
@@ -84,13 +96,14 @@ export default function StudentEdit() {
         }).then((res) => {
             page.setPage(PAGES.DETAILS);
         }).catch((err) => {
-            alert(err.response.data.message)
-        })
+            if (err.response.data.message === 'Student already exists') setError('Student o podanym loginie już istnieje');
+            else setError('Nie można dodać studenta');
+        }).finally(() => setSaveLoading(false))
     }
 
-    return (
+    return isLoading ? <div>Loading</div> : (
         <Container>
-            <Title>Edycja konta studenta: {data.login}</Title>
+            <Title>Edycja studenta: {data.login}</Title>
             <Item>
                 <div>Login:</div>
                 <Input defaultValue={data.login} onChange={(e) => setLoginField(e.target.value)} />
@@ -104,11 +117,12 @@ export default function StudentEdit() {
             <Item>
                 <div>Status</div>
                 <Input type='checkbox' onChange={(e) => setActiveField(e.target.checked)} defaultChecked={activeField} />
-                <div></div>{!data.active && activeField && <Error>Odpowiedzi i dziennik interakcji zostaną usunięte po zapisaniu!</Error>}
+                <div></div>{!data.active && activeField && <Error>Przesłane odpowiedzi oraz wpisy z dziennika interakcji zostaną usunięte po zapisaniu!</Error>}
             </Item>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.DETAILS)}>Anuluj</Button>
-                <Button onClick={() => saveStudent()}>Zapisz</Button>
+                {saveLoading ? <Button>Zapisz</Button> : <Button onClick={() => saveStudent()}>Zapisz</Button>}
+                {error && <Error>{error}</Error>}
             </Footer>
         </Container>
     )
