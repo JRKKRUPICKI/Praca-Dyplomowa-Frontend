@@ -33,7 +33,7 @@ interface TopbarProps {
 export const Topbar = (props: TopbarProps) => {
     return (
         <Container>
-            <input type='text' placeholder="Wyszukiwanie..." />
+            <div></div>{/* <input type='text' placeholder="Wyszukiwanie..." /> */}
             <User>{props.userName}</User>
         </Container>
     )
