@@ -5,7 +5,6 @@ import { useState } from "react";
 import axios from "axios";
 import { Number, Title } from "../components/typography";
 import { API } from "../App";
-import { Button } from "../components/button";
 import { LINKS, Navigation } from "../components/navigation";
 import { Test } from "../models";
 import Chart from "../components/chart";
@@ -19,49 +18,6 @@ const Container = styled.div`
 
 const Content = styled.div`
     margin: 20px;
-
-    table{
-        width: 100%;
-        border-collapse: collapse;
-        color: #7d8093;
-        white-space: nowrap;
-
-        thead tr{
-            font-weight: bold;
-        }
-
-        tr{
-            border: none;
-        }
-
-        tbody tr:hover{
-            background: #333541;
-            color: #c9c9c9;
-            
-            td:first-child{
-                border-top-left-radius: 16px;
-                border-bottom-left-radius: 16px;
-            }
-
-            td:last-child{
-                border-top-right-radius: 16px;
-                border-bottom-right-radius: 16px;
-            }
-        }
-
-        td{
-            padding: 8px 16px;
-            text-align: center;
-
-            &:nth-child(1){
-                text-align: left;
-            }
-
-            & > *:not(:first-child){
-                margin-left: 8px;
-            }
-        }
-    }
 
     & > *:nth-child(2){
         margin-top: 16px;
@@ -88,8 +44,6 @@ const Tiles = styled.div`
     }
 `;
 
-
-
 const Select = styled.select`
     background: #1e1f24;
     border: 1px solid #7d8093;
@@ -97,7 +51,7 @@ const Select = styled.select`
     padding: 8px;
     font-size: 14px;
     color: #FFFFFF;
-    width: 400px;
+    width: 100%;
     cursor: pointer;
     margin-right: 16px;
 
@@ -109,7 +63,6 @@ const Select = styled.select`
 export default function Statistics() {
 
     const auth = useAuth();
-
     const [data, setData] = useState({
         questions: 0,
         answers: 0,
@@ -118,27 +71,37 @@ export default function Statistics() {
         startedStudents: 0,
         endedStudents: 0
     });
-
-    const [loading, setLoading] = useState(true);
-
+    const [isLoading, setIsLoading] = useState(true);
     const [tests, setTests] = useState<Test[]>([]);
-
-    const [test, setTest] = useState('');
+    const [testId, setTestId] = useState('');
 
     useEffect(() => {
         axios.get(API + 'test').then((res) => {
             setTests(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
-            setLoading(false);
+            setIsLoading(false);
         });
     }, [auth?.user?.id])
 
-    const loadStatistics = () => {
-        if (!test) return;
-        setLoading(true);
-        axios.get(API + 'statistics/' + test).then((res) => {
+    const loadStatistics = (testId: string) => {
+        if (!testId || testId === '0') return;
+        setIsLoading(true);
+        axios.get(API + 'statistics/' + testId).then((res) => {
             setData(res.data);
-            setLoading(false);
+            setIsLoading(false);
         });
+    }
+
+    const chooseTest = (testId: string) => {
+        setTestId(testId);
+        setData({
+            questions: 0,
+            answers: 0,
+            students: 0,
+            logs: 0,
+            startedStudents: 0,
+            endedStudents: 0
+        });
+        loadStatistics(testId);
     }
 
     return (
@@ -148,14 +111,13 @@ export default function Statistics() {
                 <Topbar userName={auth?.user?.email ? auth?.user?.email : 'none'} />
                 <Tile>
                     <Title>Wybierz test</Title>
-                    <Select onChange={e => setTest(e.target.value)} value={test}>
+                    <Select onChange={e => chooseTest(e.target.value)} value={testId}>
                         <option value='0'>Wybierz test</option>
                         {tests.map(test => <option value={test.id} key={test.id}>{test.name}</option>)}
                     </Select>
-                    <Button onClick={() => loadStatistics()}>Pokaż statystyki</Button>
                 </Tile>
-                {data && (
-                    loading ? <div>Loading</div> : (
+                {isLoading ? (<></>) : (
+                    testId !== '0' ? (
                         <Tiles>
                             <Tile>
                                 <Title>Pytań w teście</Title>
@@ -187,7 +149,7 @@ export default function Statistics() {
                                 <Chart data={[data.endedStudents, data.endedStudents === 0 ? 1 : data.students - data.endedStudents]} size={100} />
                             </Tile>
                         </Tiles>
-                    )
+                    ) : (<></>)
                 )}
             </Content>
         </Container>
