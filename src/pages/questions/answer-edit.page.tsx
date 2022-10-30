@@ -14,6 +14,11 @@ const Container = styled.div`
     background: #1E1F24;
     border-radius: 16px;
     padding: 20px;
+
+    ${Footer} > ${Error}{
+        text-align: center;
+        margin-top: 8px;
+    }
 `;
 
 const Item = styled.div`
@@ -29,6 +34,7 @@ const Item = styled.div`
 export default function AnswerEdit() {
 
     const [loading, setLoading] = useState(true);
+    const [isSaveLoading, setIsSaveLoading] = useState(false);
 
     const page = usePage();
 
@@ -46,8 +52,9 @@ export default function AnswerEdit() {
 
     const [answerField, setAnswerField] = useState('');
     const [answerError, setAnswerError] = useState('');
-
     const [correctField, setCorrectField] = useState(false);
+
+    const [error, setError] = useState('');
 
     if (loading || !answer) {
         return <div>Loading</div>
@@ -56,11 +63,11 @@ export default function AnswerEdit() {
     const validate = () => {
         let valid = true;
         if (!answerField) {
-            setAnswerError('Nieprawidłowa treść odpowiedzi');
+            setAnswerError('Podaj treść odpowiedzi');
             valid = false;
         }
         else if (answerField !== answerField.trim()) {
-            setAnswerError('Nieprawidłowa treść odpowiedzi');
+            setAnswerError('Podaj prawidłową treść odpowiedzi');
             valid = false;
         }
         else setAnswerError('');
@@ -69,15 +76,16 @@ export default function AnswerEdit() {
 
     const saveAnswer = () => {
         if (!validate()) return;
-        setLoading(true);
+        setIsSaveLoading(true);
         axios.patch(API + 'answer/' + page.answerId, {
             name: answerField,
             correct: correctField
         }).then((res) => {
             page.setPage(PAGES.DETAILS);
         }).catch((err) => {
-            alert(err.response.data.message)
-        })
+            if (err.response.data.message === 'Answer already exists') setError('Odpowiedź o podanej treści już istnieje');
+            else setError('Nie można dodać odpowiedzi');
+        }).finally(() => setIsSaveLoading(false))
     }
 
     return (
@@ -94,7 +102,8 @@ export default function AnswerEdit() {
             </Item>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.DETAILS)}>Anuluj</Button>
-                <Button onClick={() => saveAnswer()}>Zapisz</Button>
+                {isSaveLoading ? <Button>Zapisz</Button> : <Button onClick={() => saveAnswer()}>Zapisz</Button>}
+                {error && <Error>{error}</Error>}
             </Footer>
         </Container>
     )

@@ -30,6 +30,19 @@ const Label2 = styled(Label)`
     margin-right: 15px;
 `;
 
+const AnswerList = styled.div``;
+
+const AnswerItem = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 192px 254px;
+    gap: 10px;
+    margin-bottom: 10px;
+
+    ${Button}:not(:first-child){
+        margin-left: 10px;
+    }
+`;
+
 export default function QuestionDetails() {
 
     const [isLoading, setIsLoading] = useState(true);
@@ -47,21 +60,6 @@ export default function QuestionDetails() {
         return <div>Loading</div>;
     }
 
-    const loadQuestion = () => {
-        setIsLoading(true);
-        axios.get(API + 'question/' + page.questionId).then((res) => {
-            setQuestion(res.data);
-            setIsLoading(false);
-        })
-    }
-
-    const deleteAnswer = (answerId: number) => {
-        setIsLoading(true);
-        axios.delete(API + 'answer/' + answerId).then((res) => {
-            loadQuestion();
-        })
-    }
-
     return (
         <Container>
             <Title>Szczegóły pytania</Title>
@@ -75,15 +73,18 @@ export default function QuestionDetails() {
             </Item>
             <br />
             <Title>Odpowiedzi</Title>
-            {question.answers.map(answer => (
-                <Item key={answer.id}>
-                    <div>{answer.name}</div>
-                    <div>{answer.correct ? <Label2 active>odpowiedź poprawna</Label2> : <Label2 inactive>odpowiedź niepoprawna</Label2>}
-                        <Button onClick={() => { page.setAnswerId(answer.id); page.setPage(PAGES.EDIT_ANSWER) }}>Edytuj odpowiedź</Button>
-                        <Button className='danger' onClick={() => deleteAnswer(answer.id)}>Usuń odpowiedź</Button>
-                    </div>
-                </Item>
-            ))}
+            <AnswerList>
+                {question.answers.map(answer => (
+                    <AnswerItem key={answer.id}>
+                        <div>{answer.name}</div>
+                        {answer.correct ? <Label2 active>odpowiedź poprawna</Label2> : <Label2 inactive>odpowiedź niepoprawna</Label2>}
+                        <div>
+                            <Button onClick={() => { page.setAnswerId(answer.id); page.setPage(PAGES.EDIT_ANSWER) }}>Edytuj odpowiedź</Button>
+                            <Button className='danger' onClick={() => { page.setAnswerId(answer.id); page.setPage(PAGES.DELETE_ANSWER) }}>Usuń odpowiedź</Button>
+                        </div>
+                    </AnswerItem>
+                ))}
+            </AnswerList>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Wróć</Button>
                 <Button onClick={() => page.setPage(PAGES.EDIT)}>Edytuj pytanie</Button>

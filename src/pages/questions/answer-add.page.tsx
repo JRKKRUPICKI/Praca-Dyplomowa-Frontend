@@ -11,6 +11,11 @@ const Container = styled.div`
     background: #1E1F24;
     border-radius: 16px;
     padding: 20px;
+
+    ${Footer} > ${Error}{
+        text-align: center;
+        margin-top: 8px;
+    }
 `;
 
 const Item = styled.div`
@@ -39,23 +44,24 @@ const Input = styled.input`
 
 export default function AnswerAdd() {
 
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const page = usePage();
 
     const [answerField, setAnswerField] = useState('');
     const [answerError, setAnswerError] = useState('');
-
     const [correctField, setCorrectField] = useState(false);
+
+    const [error, setError] = useState('');
 
     const validate = () => {
         let valid = true;
         if (!answerField) {
-            setAnswerError('Nieprawidłowa treść odpowiedzi');
+            setAnswerError('Podaj treść odpowiedzi');
             valid = false;
         }
         else if (answerField !== answerField.trim()) {
-            setAnswerError('Nieprawidłowa treść odpowiedzi');
+            setAnswerError('Podaj prawidłową treść odpowiedzi');
             valid = false;
         }
         else setAnswerError('');
@@ -64,7 +70,7 @@ export default function AnswerAdd() {
 
     const saveAnswer = () => {
         if (!validate()) return;
-        setLoading(true);
+        setIsLoading(true);
         axios.post(API + 'answer', {
             name: answerField,
             correct: correctField,
@@ -72,11 +78,12 @@ export default function AnswerAdd() {
         }).then((res) => {
             page.setPage(PAGES.DETAILS);
         }).catch((err) => {
-            alert(err.response.data.message)
-        }).finally(() => setLoading(false))
+            if (err.response.data.message === 'Answer already exists') setError('Odpowiedź o podanej treści już istnieje');
+            else setError('Nie można dodać odpowiedzi');
+        }).finally(() => setIsLoading(false))
     }
 
-    return loading ? <div>Loading</div> : (
+    return (
         <Container>
             <Title>Dodawanie odpowiedzi</Title>
             <Item>
@@ -90,7 +97,8 @@ export default function AnswerAdd() {
             </Item>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.DETAILS)}>Anuluj</Button>
-                <Button onClick={() => saveAnswer()}>Zapisz</Button>
+                {isLoading ? <Button>Zapisz</Button> : <Button onClick={() => saveAnswer()}>Zapisz</Button>}
+                {error && <Error>{error}</Error>}
             </Footer>
         </Container>
     )

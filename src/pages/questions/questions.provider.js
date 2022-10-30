@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import AnswerAdd from "./answer-add.page";
+import AnswerDelete from "./answer-delete.page";
 import AnswerEdit from "./answer-edit.page";
 import QuestionAdd from "./question-add.page";
 import QuestionDelete from "./question-delete.page";
@@ -16,7 +17,8 @@ export const PAGES = {
     ADD: <QuestionAdd />,
     DELETE: <QuestionDelete />,
     EDIT_ANSWER: <AnswerEdit />,
-    ADD_ANSWER: <AnswerAdd />
+    ADD_ANSWER: <AnswerAdd />,
+    DELETE_ANSWER: <AnswerDelete />
 }
 
 export const QuestionsProvider = () => {
