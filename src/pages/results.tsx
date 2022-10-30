@@ -5,11 +5,11 @@ import { API } from "../App";
 import { useAuth } from "../auth/Auth";
 import { LINKS, Navigation } from "../components/navigation";
 import Answer from "../components/answer";
-import { Button } from "../components/button";
 import { Tile } from "../components/tile";
 import { Description, Title } from "../components/typography";
 import { Test } from "../models";
 import { Topbar } from "../components/topbar";
+import { Label } from "../components/label";
 
 const Container = styled.div`
     display: grid;
@@ -56,12 +56,8 @@ const Content = styled.div`
             padding: 8px 16px;
             text-align: center;
 
-            &:nth-child(1), &:nth-child(2){
+            &:nth-child(1){
                 text-align: left;
-            }
-
-            & > *:not(:first-child){
-                margin-left: 8px;
             }
         }
     }
@@ -78,7 +74,7 @@ const Select = styled.select`
     padding: 8px;
     font-size: 14px;
     color: #FFFFFF;
-    width: 400px;
+    width: 100%;
     cursor: pointer;
     margin-right: 16px;
 
@@ -104,8 +100,8 @@ export default function Results() {
         });
     }, [auth?.user?.id])
 
-    const loadStudents = () => {
-        if (!testId) return;
+    const loadStudents = (testId: string) => {
+        if (!testId || testId === '0') return;
         setLoading(true);
         axios.get(API + 'test/' + testId).then((res) => {
             setStudentList(res.data.students);
@@ -115,8 +111,11 @@ export default function Results() {
 
     const [results, setResults] = useState([]);
 
-    const loadResults = () => {
-        if (!testId || !studentId) return;
+    const [isTestResultsLoading, setIsTestResultsLoading] = useState(false);
+    const [testResults, setTestResults] = useState([]);
+
+    const loadResults = (studentId: string) => {
+        if (!studentId || studentId === '0') return;
         setLoading(true);
         axios.get(API + 'results/student/' + studentId).then((res) => {
             setResults(res.data);
@@ -124,12 +123,29 @@ export default function Results() {
         })
     }
 
+    const loadTestResults = (testId: string) => {
+        if (!testId || testId === '0') return;
+        setIsTestResultsLoading(true);
+        axios.get(API + 'results/test/' + testId).then((res) => {
+            setTestResults(res.data);
+            setIsTestResultsLoading(false);
+        })
+    }
 
     const chooseTest = (testId: string) => {
         setTestId(testId);
-        setStudentId('');
+        setStudentId('0');
         setStudentList([]);
         setResults([]);
+        setTestResults([]);
+        loadTestResults(testId);
+        loadStudents(testId);
+    }
+
+    const chooseStudent = (studentId: string) => {
+        setStudentId(studentId);
+        setResults([]);
+        loadResults(studentId);
     }
 
     return (
@@ -140,35 +156,73 @@ export default function Results() {
                 <Tile>
                     <Title>Wybierz test</Title>
                     <Select onChange={e => chooseTest(e.target.value)} value={testId}>
-                        <option value=''>Wybierz test</option>
+                        <option value='0'>Wybierz test</option>
                         {testList.map((test: Test) => <option value={test.id} key={test.id}>{test.name}</option>)}
                     </Select>
-                    <Button onClick={() => loadStudents()}>Pokaż studentów</Button>
+                    {/* <Button onClick={() => { loadStudents() }}>Pokaż studentów</Button> */}
                 </Tile>
                 <Tile>
                     <Title>Wybierz studenta</Title>
-                    <Select onChange={e => setStudentId(e.target.value)} value={studentId}>
-                        <option value=''>Wybierz studenta</option>
+                    <Select onChange={e => chooseStudent(e.target.value)} value={studentId}>
+                        <option value='0'>Wybierz studenta</option>
                         {studentList.map((student: any) => <option value={student.id} key={student.id}>{student.login}</option>)}
                     </Select>
-                    <Button onClick={() => loadResults()}>Pokaż wyniki</Button>
+                    {/* <Button onClick={() => loadResults()}>Pokaż wyniki</Button> */}
                 </Tile>
-                {!studentId || studentId !== '0' && (
-                    loading ? <div>Loading</div> : (
-                        <Tile>
-                            <Title>Zapisane odpowiedzi</Title>
-                            {results.length > 0 ? (
-                                results.map((result: any, i) => (
-                                    <div key={i} className='questionBox'>
-                                        <div className='question'>{result.question.name}</div>
-                                        {result.answers.map((answer: any, i: number) => (
-                                            <Answer key={i} multiCheck={result.question.type} type={answer.checked === answer.correct ? 'correct' : 'incorrect'} checked={answer.checked}>{answer.name}</Answer>
-                                        ))}
-                                    </div>
-                                ))) : <Description>Brak wpisów w dzienniku interakcji dla wybranego studenta</Description>}
-                        </Tile>
-                    )
-                )}
+                <Tile>
+                    <Title>Wyniki dla wszystkich studentów</Title>
+                    {isTestResultsLoading ? (
+                        <Description>Trwa ładowanie danych</Description>
+                    ) : (
+                        testResults.length > 0 ? (
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <td>Student</td>
+                                        <td>Odpowiedzi</td>
+                                        <td>Odpowiedzi poprawnych</td>
+                                        <td></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {testResults.map((item: any) =>
+                                        <tr>
+                                            <td>{item.student}</td>
+                                            <td>{item.correctQuestions + '/' + (item.notCorrectQuestions + item.correctQuestions)}</td>
+                                            <td>{Math.round(item.correctQuestions / (item.notCorrectQuestions + item.correctQuestions) * 100) >= 50 ? (
+                                                <Label active>{Math.round(item.correctQuestions / (item.notCorrectQuestions + item.correctQuestions) * 100)}%</Label>
+                                            ) : (
+                                                <Label inactive>{item.correctQuestions === 0 ? 0 : Math.round(item.correctQuestions / (item.notCorrectQuestions + item.correctQuestions) * 100)}%</Label>
+                                            )}
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <Description>Brak danych</Description>
+                        )
+                    )}
+                </Tile>
+                <Tile>
+                    <Title>Przesłane odpowiedzi</Title>
+                    {loading ? (
+                        <Description>Trwa ładowanie danych</Description>
+                    ) : (
+                        results.length > 0 ? (
+                            results.map((result: any, i) => (
+                                <div key={i} className='questionBox'>
+                                    <div className='question'>{result.question.name}</div>
+                                    {result.answers.map((answer: any, i: number) => (
+                                        <Answer key={i} multiCheck={result.question.type} type={answer.checked === answer.correct ? 'correct' : 'incorrect'} checked={answer.checked}>{answer.name}</Answer>
+                                    ))}
+                                </div>
+                            ))
+                        ) : (
+                            <Description>Brak danych</Description>
+                        )
+                    )}
+                </Tile>
             </Content>
         </Container>
     )
