@@ -183,8 +183,8 @@ export default function Statistics() {
                             </Tile>
                             <Tile>
                                 <Title>Studentów z przesłanymi testami</Title>
-                                <Number>{data.endedStudents === 0 ? 0 : data.endedStudents / (data.students + data.endedStudents) * 100}%</Number>
-                                <Chart data={[data.endedStudents, data.endedStudents === 0 ? 1 : data.students]} size={100} />
+                                <Number>{Math.round(data.endedStudents === 0 ? 0 : data.endedStudents / data.students * 100)}%</Number>
+                                <Chart data={[data.endedStudents, data.endedStudents === 0 ? 1 : data.students - data.endedStudents]} size={100} />
                             </Tile>
                         </Tiles>
                     )

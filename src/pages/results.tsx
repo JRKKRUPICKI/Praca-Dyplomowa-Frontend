@@ -7,7 +7,7 @@ import { LINKS, Navigation } from "../components/navigation";
 import Answer from "../components/answer";
 import { Button } from "../components/button";
 import { Tile } from "../components/tile";
-import { Title } from "../components/typography";
+import { Description, Title } from "../components/typography";
 import { Test } from "../models";
 import { Topbar } from "../components/topbar";
 
@@ -118,7 +118,7 @@ export default function Results() {
     const loadResults = () => {
         if (!testId || !studentId) return;
         setLoading(true);
-        axios.get(API + 'results/' + studentId).then((res) => {
+        axios.get(API + 'results/student/' + studentId).then((res) => {
             setResults(res.data);
             setLoading(false);
         })
@@ -153,19 +153,21 @@ export default function Results() {
                     </Select>
                     <Button onClick={() => loadResults()}>Pokaż wyniki</Button>
                 </Tile>
-                {loading ? <>Loading</> : (
-                    <Tile>
-                        <Title>Zapisane odpowiedzi</Title>
-                        {results.length > 0 && (
-                            results.map((result: any, i) => (
-                                <div key={i} className='questionBox'>
-                                    <div className='question'>{result.question.name}</div>
-                                    {result.answers.map((answer: any, i: number) => (
-                                        <Answer key={i} multiCheck={result.question.type} type={answer.checked === answer.correct ? 'correct' : 'incorrect'} checked={answer.checked}>{answer.name}</Answer>
-                                    ))}
-                                </div>
-                            )))}
-                    </Tile>
+                {!studentId || studentId !== '0' && (
+                    loading ? <div>Loading</div> : (
+                        <Tile>
+                            <Title>Zapisane odpowiedzi</Title>
+                            {results.length > 0 ? (
+                                results.map((result: any, i) => (
+                                    <div key={i} className='questionBox'>
+                                        <div className='question'>{result.question.name}</div>
+                                        {result.answers.map((answer: any, i: number) => (
+                                            <Answer key={i} multiCheck={result.question.type} type={answer.checked === answer.correct ? 'correct' : 'incorrect'} checked={answer.checked}>{answer.name}</Answer>
+                                        ))}
+                                    </div>
+                                ))) : <Description>Brak wpisów w dzienniku interakcji dla wybranego studenta</Description>}
+                        </Tile>
+                    )
                 )}
             </Content>
         </Container>
