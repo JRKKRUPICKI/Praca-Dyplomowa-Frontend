@@ -42,7 +42,7 @@ const Content = styled.div`
         }
 
         td{
-            padding: 8px 16px;
+            padding: 8px;
             text-align: center;
 
             &:nth-child(1){

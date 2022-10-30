@@ -42,11 +42,12 @@ const Content = styled.div`
         }
 
         td{
-            padding: 8px 16px;
+            padding: 8px;
             text-align: center;
 
             &:nth-child(1), &:nth-child(2){
                 text-align: left;
+                width: 50%
             }
 
             & > *:not(:first-child){

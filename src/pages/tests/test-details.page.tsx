@@ -7,7 +7,6 @@ import { formatDatetime } from "../../utils/TimeUtils";
 import { Title } from "../../components/typography";
 import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
-// import { useNavigate } from "react-router-dom";
 import { API } from "../../App";
 import { Test } from "../../models";
 
@@ -32,7 +31,6 @@ export default function TestDetails() {
     const [isLoading, setIsLoading] = useState(true);
 
     const page = usePage();
-    // const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(API + 'test/' + page.testId).then((res) => {
@@ -81,7 +79,6 @@ export default function TestDetails() {
             </Item>
             <Footer>
                 <Button className='secondary' onClick={() => page.setPage(PAGES.LIST)}>Wróć</Button>
-                {/* <Button onClick={() => navigate('/test/' + page.testId)}>Otwórz test</Button> */}
                 <Button onClick={() => window.open('/test/' + page.testId)}>Otwórz test</Button>
                 <Button onClick={() => page.setPage(PAGES.EDIT)}>Edytuj</Button>
                 <Button className="danger" onClick={() => { page.setTestId(page.testId); page.setPage(PAGES.DELETE) }}>Usuń</Button>

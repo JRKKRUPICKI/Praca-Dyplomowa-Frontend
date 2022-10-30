@@ -25,7 +25,7 @@ const Select = styled.select`
     padding: 8px;
     font-size: 14px;
     color: #FFFFFF;
-    width: 400px;
+    width: 100%;
     cursor: pointer;
     margin-right: 16px;
 
@@ -46,7 +46,7 @@ export default function StudentsList() {
             setData(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
             setIsLoading(false);
         });
-        if (page.testId) loadStudents();
+        if (page.testId) loadStudents(page.testId);
     }, [auth?.user?.id, page.testId])
 
 
@@ -68,53 +68,60 @@ export default function StudentsList() {
 
     const [students, setStudents] = useState([]);
 
-    const loadStudents = () => {
-        if (!page.testId || page.testId === '0') return;
+    const loadStudents = (testId: string) => {
+        if (!testId || testId === '0') return;
         setIsLoading(true);
-        axios.get(API + 'test/' + page.testId).then((res) => {
+        axios.get(API + 'test/' + testId).then((res) => {
             setStudents(res.data.students);
             setIsLoading(false);
         })
+    }
+
+    const chooseTest = (testId: string) => {
+        page.setTestId(testId);
+        setStudents([]);
+        loadStudents(testId);
     }
 
     return (
         <Container>
             <Tile>
                 <Title>Wybierz test</Title>
-                <Select onChange={e => page.setTestId(e.target.value)} value={page.testId}>
+                <Select onChange={e => chooseTest(e.target.value)} value={page.testId}>
                     <option value='0'>Wybierz test</option>
                     {data.map((test: any) => <option value={test.id} key={test.id}>{test.name}</option>)}
                 </Select>
-                <Button onClick={() => loadStudents()}>Pokaż studentów</Button>
             </Tile>
-            {!(!page.testId || page.testId === '0') && (
-                students && (
-                    isLoading ? <div>Loading</div> : (
-                        <Tile>
-                            <Title>Lista studentów</Title>
-                            {students.length === 0 ? <Description>Żaden student nie jest przypisany do testu</Description> : (
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <td>Login</td>
-                                            <td>Hasło</td>
-                                            <td>Konto</td>
-                                            <td>Odpowiedzi</td>
-                                            <td></td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {students.map(student => getStudent(student))}
-                                    </tbody>
-                                </table>
-                            )}
-                            <Footer>
-                                <Button className='success' onClick={() => page.setPage(PAGES.ADD)}>Dodaj studenta</Button>
-                            </Footer>
-                        </Tile>
-                    )
-                )
-            )}
+            <Tile>
+                <Title>Lista studentów</Title>
+                {!page.testId || page.testId === '0' ? (
+                    <Description>Wybierz test, aby wyświetlić studentów</Description>
+                ) : (
+                    <>
+                        {students.length === 0 ? (
+                            <Description>Żaden student nie jest przypisany do testu</Description>
+                        ) : (
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <td>Login</td>
+                                        <td>Hasło</td>
+                                        <td>Konto</td>
+                                        <td>Odpowiedzi</td>
+                                        <td></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {students.map(student => getStudent(student))}
+                                </tbody>
+                            </table>
+                        )}
+                        <Footer>
+                            <Button className='success' onClick={() => page.setPage(PAGES.ADD)}>Dodaj studenta</Button>
+                        </Footer>
+                    </>
+                )}
+            </Tile>
         </Container>
     )
 }

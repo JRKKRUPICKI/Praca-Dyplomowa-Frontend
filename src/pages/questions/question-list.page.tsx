@@ -14,6 +14,10 @@ const Container = styled.div`
     ${Tile}:not(:first-child){
         margin-top: 16px;
     }
+
+    & td:nth-child(1){
+        width: 100%;
+    }
 `;
 
 const Select = styled.select`
@@ -23,7 +27,7 @@ const Select = styled.select`
     padding: 8px;
     font-size: 14px;
     color: #FFFFFF;
-    width: 400px;
+    width: 100%;
     cursor: pointer;
     margin-right: 16px;
 
@@ -44,7 +48,7 @@ export default function QuestionList() {
             setTests(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
             setIsLoading(false);
         });
-        if (page.testId) loadQuestions();
+        if (page.testId) loadQuestions(page.testId);
     }, [auth?.user?.id, page.testId])
 
     const getQuestion = (question: any) => {
@@ -57,7 +61,6 @@ export default function QuestionList() {
                     <Button onClick={() => { page.setQuestionId(question.id); page.setPage(PAGES.DETAILS) }}>Szczegóły</Button>
                     <Button onClick={() => { page.setQuestionId(question.id); page.setPage(PAGES.EDIT) }}>Edytuj</Button>
                     <Button className='danger' onClick={() => { page.setQuestionId(question.id); page.setPage(PAGES.DELETE) }}>Usuń</Button>
-
                 </td>
             </tr>
         )
@@ -65,54 +68,57 @@ export default function QuestionList() {
 
     const [questions, setQuestions] = useState([]);
 
-    const loadQuestions = () => {
-        if (!page.testId || page.testId < 1) return;
+    const loadQuestions = (testId: string) => {
+        if (!testId || testId === '0') return;
         setIsLoading(true);
         axios.get(API + 'question').then((res) => {
-            setQuestions(res.data.filter((question: any) => question.test.id === parseInt(page.testId)));
+            setQuestions(res.data.filter((question: any) => question.test.id === parseInt(testId)));
             setIsLoading(false);
         })
+    }
+
+    const chooseTest = (testId: string) => {
+        page.setTestId(testId);
+        setQuestions([]);
+        loadQuestions(testId);
     }
 
     return (
         <Container>
             <Tile>
                 <Title>Wybierz test</Title>
-                <Select onChange={e => page.setTestId(e.target.value)} value={page.testId}>
+                <Select onChange={e => chooseTest(e.target.value)} value={page.testId}>
                     <option value='0'>Wybierz test</option>
                     {tests.map((test: any) => <option value={test.id} key={test.id}>{test.name}</option>)}
                 </Select>
-                <Button onClick={() => loadQuestions()}>Pokaż pytania</Button>
             </Tile>
-            {questions && (
-                isLoading ? <div>Loading</div> : (
-                    <Tile>
-                        <Title>Lista pytań</Title>
-                        {page.testId < 1 ? <Description>Wybierz test, aby wyświetlić pytania</Description> : (
-                            questions.length === 0 ? <Description>Test nie posiada przypisanych pytań</Description> : (
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <td>Treść pytania</td>
-                                            <td>Liczba odpowiedzi</td>
-                                            <td>Liczba poprawnych odpowiedzi</td>
-                                            <td></td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {questions.map((question: any) => getQuestion(question))}
-                                    </tbody>
-                                </table>
-                            )
-                        )}
-                        {page.testId > 0 &&
-                            <Footer>
-                                <Button className='success' onClick={() => page.setPage(PAGES.ADD)}>Dodaj pytanie</Button>
-                            </Footer>
-                        }
-                    </Tile>
-                )
-            )}
-        </Container>
+            <Tile>
+                <Title>Lista pytań</Title>
+                {!page.testId || page.testId === '0' ? (
+                    <Description>Wybierz test, aby wyświetlić pytania</Description>
+                ) : (<>
+                    {questions.length === 0 ? (
+                        <Description>Test nie posiada przypisanych pytań</Description>
+                    ) : (
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>Treść pytania</td>
+                                    <td>Liczba odpowiedzi</td>
+                                    <td>Liczba poprawnych odpowiedzi</td>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {questions.map((question: any) => getQuestion(question))}
+                            </tbody>
+                        </table>
+                    )}
+                    <Footer>
+                        <Button className='success' onClick={() => page.setPage(PAGES.ADD)}>Dodaj pytanie</Button>
+                    </Footer>
+                </>)}
+            </Tile>
+        </Container >
     )
 }

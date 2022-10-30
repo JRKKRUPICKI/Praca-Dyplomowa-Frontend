@@ -8,7 +8,6 @@ import { Title } from "../../components/typography";
 import { Tile } from "../../components/tile";
 import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
-// import { useNavigate } from "react-router-dom";
 import { API } from "../../App";
 import { Label } from "../../components/label";
 
@@ -33,8 +32,6 @@ export default function TestsList() {
 
     const page = usePage();
 
-    // const navigate = useNavigate();
-
     const getTest = (test: any) => {
         const now = new Date();
         const start = new Date(test.loginTimeStart);
@@ -46,7 +43,6 @@ export default function TestsList() {
                 <td>{test.students.length}</td>
                 <td>{now < start || now >= end ? <Label inactive>nieaktywny</Label> : <Label active>aktywny</Label>}</td>
                 <td>
-                    {/* <Button onClick={() => navigate('/test/' + test.id)}>Link</Button> */}
                     <Button onClick={() => window.open('/test/' + test.id)}>Otwórz test</Button>
                     <Button onClick={() => { page.setTestId(test.id); page.setPage(PAGES.DETAILS) }}>Szczegóły</Button>
                     <Button onClick={() => { page.setTestId(test.id); page.setPage(PAGES.EDIT) }}>Edytuj</Button>

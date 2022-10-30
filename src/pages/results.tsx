@@ -53,11 +53,16 @@ const Content = styled.div`
         }
 
         td{
-            padding: 8px 16px;
+            padding: 8px;
             text-align: center;
 
             &:nth-child(1){
                 text-align: left;
+                width: 100%;
+            }
+
+            &:nth-child(2), &:nth-child(3){
+                width: fit-content;
             }
         }
     }
@@ -159,7 +164,6 @@ export default function Results() {
                         <option value='0'>Wybierz test</option>
                         {testList.map((test: Test) => <option value={test.id} key={test.id}>{test.name}</option>)}
                     </Select>
-                    {/* <Button onClick={() => { loadStudents() }}>Pokaż studentów</Button> */}
                 </Tile>
                 <Tile>
                     <Title>Wybierz studenta</Title>
@@ -167,7 +171,6 @@ export default function Results() {
                         <option value='0'>Wybierz studenta</option>
                         {studentList.map((student: any) => <option value={student.id} key={student.id}>{student.login}</option>)}
                     </Select>
-                    {/* <Button onClick={() => loadResults()}>Pokaż wyniki</Button> */}
                 </Tile>
                 <Tile>
                     <Title>Wyniki dla wszystkich studentów</Title>
@@ -181,12 +184,11 @@ export default function Results() {
                                         <td>Student</td>
                                         <td>Odpowiedzi</td>
                                         <td>Odpowiedzi poprawnych</td>
-                                        <td></td>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {testResults.map((item: any) =>
-                                        <tr>
+                                    {testResults.map((item: any, i) =>
+                                        <tr key={i}>
                                             <td>{item.student}</td>
                                             <td>{item.correctQuestions + '/' + (item.notCorrectQuestions + item.correctQuestions)}</td>
                                             <td>{Math.round(item.correctQuestions / (item.notCorrectQuestions + item.correctQuestions) * 100) >= 50 ? (
