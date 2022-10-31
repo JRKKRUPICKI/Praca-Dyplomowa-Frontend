@@ -18,5 +18,5 @@ export default function NotFoundPage() {
     return <Container>
         <Image src="/not-found.png" />
         <Title>Page not found</Title>
-    </Container>;
+    </Container>
 }

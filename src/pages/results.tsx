@@ -10,6 +10,7 @@ import { Description, Title } from "../components/typography";
 import { Test } from "../models";
 import { Topbar } from "../components/topbar";
 import { Label } from "../components/label";
+import { Select } from "../components/select";
 
 const Container = styled.div`
     display: grid;
@@ -72,22 +73,6 @@ const Content = styled.div`
     }
 `;
 
-const Select = styled.select`
-    background: #1e1f24;
-    border: 1px solid #7d8093;
-    border-radius: 10px;
-    padding: 8px;
-    font-size: 14px;
-    color: #FFFFFF;
-    width: 100%;
-    cursor: pointer;
-    margin-right: 16px;
-
-    &:focus{
-        outline: none;
-    }
-`;
-
 export default function Results() {
 
     const auth = useAuth();
@@ -103,7 +88,7 @@ export default function Results() {
             setTestList(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
             setLoading(false);
         });
-    }, [auth?.user?.id])
+    }, [auth?.user?.id]);
 
     const loadStudents = (testId: string) => {
         if (!testId || testId === '0') return;
@@ -125,7 +110,7 @@ export default function Results() {
         axios.get(API + 'results/student/' + studentId).then((res) => {
             setResults(res.data);
             setLoading(false);
-        })
+        });
     }
 
     const loadTestResults = (testId: string) => {
@@ -134,7 +119,7 @@ export default function Results() {
         axios.get(API + 'results/test/' + testId).then((res) => {
             setTestResults(res.data);
             setIsTestResultsLoading(false);
-        })
+        });
     }
 
     const chooseTest = (testId: string) => {

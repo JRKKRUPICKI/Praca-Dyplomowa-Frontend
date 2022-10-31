@@ -9,6 +9,7 @@ import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { API } from "../../App";
 import { PAGES, usePage } from "./questions.provider";
+import { Select } from "../../components/select";
 
 const Container = styled.div`
     ${Tile}:not(:first-child){
@@ -20,22 +21,6 @@ const Container = styled.div`
     }
 `;
 
-const Select = styled.select`
-    background: #1e1f24;
-    border: 1px solid #7d8093;
-    border-radius: 10px;
-    padding: 8px;
-    font-size: 14px;
-    color: #FFFFFF;
-    width: 100%;
-    cursor: pointer;
-    margin-right: 16px;
-
-    &:focus{
-        outline: none;
-    }
-`;
-
 export default function QuestionList() {
 
     const auth = useAuth();
@@ -44,12 +29,11 @@ export default function QuestionList() {
     const page = usePage();
 
     useEffect(() => {
-        axios.get(API + 'test').then((res) => {
-            setTests(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
+        axios.get(API + 'test/teacher/' + auth?.user?.id).then((res) => {
+            setTests(res.data);
             setIsLoading(false);
         });
-        if (page.testId) loadQuestions(page.testId);
-    }, [auth?.user?.id, page.testId])
+    }, [auth?.user?.id]);
 
     const getQuestion = (question: any) => {
         return (
@@ -74,7 +58,7 @@ export default function QuestionList() {
         axios.get(API + 'question').then((res) => {
             setQuestions(res.data.filter((question: any) => question.test.id === parseInt(testId)));
             setIsLoading(false);
-        })
+        });
     }
 
     const chooseTest = (testId: string) => {
@@ -119,6 +103,6 @@ export default function QuestionList() {
                     </Footer>
                 </>)}
             </Tile>
-        </Container >
+        </Container>
     )
 }

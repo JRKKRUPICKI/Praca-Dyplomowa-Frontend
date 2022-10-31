@@ -4,12 +4,12 @@ import styled from "styled-components";
 import { API } from "../App";
 import { useAuth } from "../auth/Auth";
 import { LINKS, Navigation } from "../components/navigation";
-import { Button } from "../components/button";
 import { Tile } from "../components/tile";
-import { Title } from "../components/typography";
+import { SpecialText, Title } from "../components/typography";
 import { Test } from "../models";
 import { formatDatetime } from "../utils/TimeUtils";
 import { Topbar } from "../components/topbar";
+import { Select } from "../components/select";
 
 const Container = styled.div`
     display: grid;
@@ -67,27 +67,6 @@ const Content = styled.div`
     }
 `;
 
-const Select = styled.select`
-    background: #1e1f24;
-    border: 1px solid #7d8093;
-    border-radius: 10px;
-    padding: 8px;
-    font-size: 14px;
-    color: #FFFFFF;
-    width: 400px;
-    cursor: pointer;
-    margin-right: 16px;
-
-    &:focus{
-        outline: none;
-    }
-`;
-
-const SpecialText = styled.span`
-    color: #FFFFFF;
-    font-weigth: bold;
-`;
-
 export default function LogsPage() {
 
     const auth = useAuth();
@@ -103,33 +82,40 @@ export default function LogsPage() {
             setTestList(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
             setLoading(false);
         });
-    }, [auth?.user?.id])
+    }, [auth?.user?.id]);
 
-    const loadStudents = () => {
-        if (!testId) return;
+    const loadStudents = (testId: string) => {
+        if (!testId || testId === '0') return;
         setLoading(true);
         axios.get(API + 'test/' + testId).then((res) => {
             setStudentList(res.data.students);
             setLoading(false);
-        })
+        });
     }
 
     const [logs, setLogs] = useState([]);
 
-    const loadLogs = () => {
-        if (!testId || !studentId) return;
+    const loadLogs = (studentId: string) => {
+        if (!studentId || studentId === '0') return;
         setLoading(true);
         axios.get(API + 'logs/student/' + studentId).then((res) => {
             setLogs(res.data);
             setLoading(false);
-        })
+        });
     }
 
     const chooseTest = (testId: string) => {
         setTestId(testId);
-        setStudentId('');
+        setStudentId('0');
         setStudentList([]);
         setLogs([]);
+        loadStudents(testId);
+    }
+
+    const chooseStudent = (studentId: string) => {
+        setStudentId(studentId);
+        setLogs([]);
+        loadLogs(studentId);
     }
 
     return (
@@ -140,18 +126,16 @@ export default function LogsPage() {
                 <Tile>
                     <Title>Wybierz test</Title>
                     <Select onChange={e => chooseTest(e.target.value)} value={testId}>
-                        <option value=''>Wybierz test</option>
+                        <option value='0'>Wybierz test</option>
                         {testList.map((test: Test) => <option value={test.id} key={test.id}>{test.name}</option>)}
                     </Select>
-                    <Button onClick={() => loadStudents()}>Pokaż studentów</Button>
                 </Tile>
                 <Tile>
                     <Title>Wybierz studenta</Title>
-                    <Select onChange={e => setStudentId(e.target.value)} value={studentId}>
+                    <Select onChange={e => chooseStudent(e.target.value)} value={studentId}>
                         <option value=''>Wybierz studenta</option>
                         {studentList.map((student: any) => <option value={student.id} key={student.id}>{student.login}</option>)}
                     </Select>
-                    <Button onClick={() => loadLogs()}>Pokaż wpisy</Button>
                 </Tile>
                 {loading ? <div>Loading</div> : (
                     <Tile>

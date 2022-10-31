@@ -45,7 +45,7 @@ export default function TestEdit() {
             setLoginTimeEndField(new Date(new Date(res.data.loginTimeEnd).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, -1));
             setLoading(false);
         })
-    }, [page.testId])
+    }, [page.testId]);
 
     const [nameField, setNameField] = useState('');
     const [nameError, setNameError] = useState('');
@@ -115,7 +115,7 @@ export default function TestEdit() {
         }).catch((err) => {
             if (err.response.data.message === 'Test already exists') setError('Test o podanej nazwie już istnieje');
             else setError('Nie można stworzyć nowego testu');
-        }).finally(() => setSaveLoading(false))
+        }).finally(() => setSaveLoading(false));
     }
 
     return loading ? <div>Loading</div> : (

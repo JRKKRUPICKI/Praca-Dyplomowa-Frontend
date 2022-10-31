@@ -52,7 +52,7 @@ export default function StudentEdit() {
             setActiveField(res.data.active);
             setIsLoading(false);
         })
-    }, [page.studentId])
+    }, [page.studentId]);
 
 
     const [loginField, setLoginField] = useState('');
@@ -98,7 +98,7 @@ export default function StudentEdit() {
         }).catch((err) => {
             if (err.response.data.message === 'Student already exists') setError('Student o podanym loginie już istnieje');
             else setError('Nie można dodać studenta');
-        }).finally(() => setSaveLoading(false))
+        }).finally(() => setSaveLoading(false));
     }
 
     return isLoading ? <div>Loading</div> : (

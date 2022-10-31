@@ -27,7 +27,7 @@ export default function TestDelete() {
             setData(res.data);
             setIsLoading(false);
         })
-    }, [page.testId])
+    }, [page.testId]);
 
     const deleteTest = () => {
         setIsLoading(true);

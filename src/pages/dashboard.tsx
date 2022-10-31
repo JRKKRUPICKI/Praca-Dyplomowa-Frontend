@@ -87,16 +87,15 @@ export default function Dashboard() {
         let tests = 0;
         let students = 0;
         let questions = 0;
-        axios.get(API + 'test').then((res) => {
-            const data = res.data.filter((t: any) => t.teacher.id === auth?.user?.id);
-            tests = data.length;
-            data.forEach((test: any) => {
+        axios.get(API + 'test/teacher/' + auth?.user?.id).then((res) => {
+            tests = res.data.length;
+            res.data.forEach((test: any) => {
                 students += test.students.length;
                 questions += test.questions.length;
             });
             setData({ tests: tests, students: students, questions: questions })
         });
-    }, [auth?.user?.id])
+    }, [auth?.user?.id]);
 
     return (
         <Container>

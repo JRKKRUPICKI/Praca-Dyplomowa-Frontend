@@ -6,6 +6,7 @@ import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { API } from "../../App";
 import { PAGES, usePage } from "./students.provider";
+import { Input } from "../../components/input";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -25,20 +26,6 @@ const Item = styled.div`
 
     &:not(:first-child){
         margin-top: 10px;
-    }
-`;
-
-const Input = styled.input`
-    background: #1e1f24;
-    border: 1px solid #7d8093;
-    border-radius: 10px;
-    padding: 14px;
-    font-size: 14px;
-    color: #FFFFFF;
-    height: 40px;
-
-    &:focus{
-        outline: none;
     }
 `;
 
@@ -86,7 +73,7 @@ export default function StudentAdd() {
         }).catch((err) => {
             if (err.response.data.message === 'Student already exists') setError('Student o podanym loginie już istnieje');
             else setError('Nie można dodać studenta');
-        }).finally(() => setIsLoading(false))
+        }).finally(() => setIsLoading(false));
     }
 
     return (

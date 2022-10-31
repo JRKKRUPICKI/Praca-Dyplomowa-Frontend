@@ -19,10 +19,15 @@ const Container = styled.div`
 
 const Item = styled.div`
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1fr 2fr;
+    padding: 8px;
 
-    &:not(:first-child){
-        margin-top: 10px;
+    &:hover{
+        background: #333541;
+        border-top-left-radius: 16px;
+        border-bottom-left-radius: 16px;
+        border-top-right-radius: 16px;
+        border-bottom-right-radius: 16px;
     }
 `;
 
@@ -38,7 +43,7 @@ export default function StudentDetails() {
             setData(res.data);
             setIsLoading(false);
         })
-    }, [page.studentId])
+    }, [page.studentId]);
 
     if (isLoading || !data) {
         return <div>Loading</div>;

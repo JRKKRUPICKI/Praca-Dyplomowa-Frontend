@@ -11,26 +11,11 @@ import { Button } from "../../components/button";
 import { API } from "../../App";
 import { Label } from "../../components/label";
 import { PAGES, usePage } from "./students.provider";
+import { Select } from "../../components/select";
 
 const Container = styled.div`
     ${Tile}:not(:first-child){
         margin-top: 16px;
-    }
-`;
-
-const Select = styled.select`
-    background: #1e1f24;
-    border: 1px solid #7d8093;
-    border-radius: 10px;
-    padding: 8px;
-    font-size: 14px;
-    color: #FFFFFF;
-    width: 100%;
-    cursor: pointer;
-    margin-right: 16px;
-
-    &:focus{
-        outline: none;
     }
 `;
 
@@ -42,12 +27,11 @@ export default function StudentsList() {
     const page = usePage();
 
     useEffect(() => {
-        axios.get(API + 'test').then((res) => {
-            setData(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
+        axios.get(API + 'test/teacher/' + auth?.user?.id).then((res) => {
+            setData(res.data);
             setIsLoading(false);
         });
-        if (page.testId) loadStudents(page.testId);
-    }, [auth?.user?.id, page.testId])
+    }, [auth?.user?.id]);
 
 
     const getStudent = (student: any) => {
@@ -74,7 +58,7 @@ export default function StudentsList() {
         axios.get(API + 'test/' + testId).then((res) => {
             setStudents(res.data.students);
             setIsLoading(false);
-        })
+        });
     }
 
     const chooseTest = (testId: string) => {
@@ -87,7 +71,7 @@ export default function StudentsList() {
         <Container>
             <Tile>
                 <Title>Wybierz test</Title>
-                <Select onChange={e => chooseTest(e.target.value)} value={page.testId}>
+                <Select onChange={e => chooseTest(e.target.value)} value={page.testId} disabled={isLoading}>
                     <option value='0'>Wybierz test</option>
                     {data.map((test: any) => <option value={test.id} key={test.id}>{test.name}</option>)}
                 </Select>

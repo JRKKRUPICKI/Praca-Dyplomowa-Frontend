@@ -21,3 +21,8 @@ export const Number = styled.div`
     font-size: 50px;
     color: #FFFFFF;
 `;
+
+export const SpecialText = styled.span`
+    color: #FFFFFF;
+    font-weigth: bold;
+`;

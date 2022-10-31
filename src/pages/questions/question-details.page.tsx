@@ -18,10 +18,15 @@ const Container = styled.div`
 
 const Item = styled.div`
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1fr 2fr;
+    padding: 8px;
 
-    &:not(:first-child){
-        margin-top: 10px;
+    &:hover{
+        background: #333541;
+        border-top-left-radius: 16px;
+        border-bottom-left-radius: 16px;
+        border-top-right-radius: 16px;
+        border-bottom-right-radius: 16px;
     }
 `;
 
@@ -35,11 +40,20 @@ const AnswerList = styled.div``;
 const AnswerItem = styled.div`
     display: grid;
     grid-template-columns: 1fr 192px 254px;
+    align-items: center;
     gap: 10px;
-    margin-bottom: 10px;
+    padding: 8px;
 
     ${Button}:not(:first-child){
         margin-left: 10px;
+    }
+
+    &:hover{
+        background: #333541;
+        border-top-left-radius: 16px;
+        border-bottom-left-radius: 16px;
+        border-top-right-radius: 16px;
+        border-bottom-right-radius: 16px;
     }
 `;
 
@@ -54,7 +68,7 @@ export default function QuestionDetails() {
             setQuestion(res.data);
             setIsLoading(false);
         })
-    }, [page.questionId])
+    }, [page.questionId]);
 
     if (isLoading || !question) {
         return <div>Loading</div>;

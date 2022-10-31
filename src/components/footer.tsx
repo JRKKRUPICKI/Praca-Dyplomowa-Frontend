@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Button } from "./button";
 
 export const Footer = styled.div`
-    margin-top: 16px;
+    margin-top: 8px;
     text-align: right;
 
     & > ${Button}:not(:first-child){

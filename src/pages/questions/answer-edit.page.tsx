@@ -47,7 +47,7 @@ export default function AnswerEdit() {
             setCorrectField(res.data.correct);
             setLoading(false);
         })
-    }, [page.answerId])
+    }, [page.answerId]);
 
 
     const [answerField, setAnswerField] = useState('');
@@ -85,7 +85,7 @@ export default function AnswerEdit() {
         }).catch((err) => {
             if (err.response.data.message === 'Answer already exists') setError('Odpowiedź o podanej treści już istnieje');
             else setError('Nie można dodać odpowiedzi');
-        }).finally(() => setIsSaveLoading(false))
+        }).finally(() => setIsSaveLoading(false));
     }
 
     return (

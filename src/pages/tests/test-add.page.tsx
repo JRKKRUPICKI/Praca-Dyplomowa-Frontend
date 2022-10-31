@@ -7,6 +7,7 @@ import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { API } from "../../App";
 import { PAGES, usePage } from "./tests.provider";
+import { Input } from "../../components/input";
 
 const Container = styled.div`
     background: #1E1F24;
@@ -26,20 +27,6 @@ const Item = styled.div`
 
     &:not(:first-child){
         margin-top: 10px;
-    }
-`;
-
-const Input = styled.input`
-    background: #1e1f24;
-    border: 1px solid #7d8093;
-    border-radius: 10px;
-    padding: 14px;
-    font-size: 14px;
-    color: #FFFFFF;
-    height: 40px;
-
-    &:focus{
-        outline: none;
     }
 `;
 
@@ -121,7 +108,7 @@ export default function TestAdd() {
         }).catch((err) => {
             if (err.response.data.message === 'Test already exists') setError('Test o podanej nazwie już istnieje');
             else setError('Nie można stworzyć nowego testu');
-        }).finally(() => setLoading(false))
+        }).finally(() => setLoading(false));
     }
 
     return (

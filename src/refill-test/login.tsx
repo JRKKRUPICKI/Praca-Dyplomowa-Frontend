@@ -59,7 +59,7 @@ export default function Login({ setUser }: any) {
             setData(res.data);
             setLoading(false);
         })
-    }, [params.testId])
+    }, [params.testId]);
 
     if (loading || !data) {
         return <div>Loading</div>;
@@ -99,7 +99,7 @@ export default function Login({ setUser }: any) {
             else if (err.response.data.message === 'Time to log in has expired') setError('Czas na zalogowanie się minął');
             else if (err.response.data.message === 'Inactive student account') setError('Już wykorzystałeś swoją próbę na wypełnienie testu');
             else setError('Nieprawidłowy login lub hasło');
-        })
+        });
     }
 
     function MyTimer({ expiryTimestamp }: any) {

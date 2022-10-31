@@ -1,20 +1,14 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import styled from "styled-components";
 import { useAuth } from "../../auth/Auth";
 import axios from "axios";
 import { PAGES, usePage } from "./tests.provider";
-import { Title } from "../../components/typography";
+import { Description, Title } from "../../components/typography";
 import { Tile } from "../../components/tile";
 import { Footer } from "../../components/footer";
 import { Button } from "../../components/button";
 import { API } from "../../App";
 import { Label } from "../../components/label";
-
-const Description = styled.div`
-    font-size: 14px;
-    color: #7d8093;
-`;
 
 export default function TestsList() {
     const auth = useAuth();
@@ -24,11 +18,11 @@ export default function TestsList() {
     const [tests, setTests] = useState([]);
 
     useEffect(() => {
-        axios.get(API + 'test').then((res) => {
-            setTests(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
+        axios.get(API + 'test/teacher/' + auth?.user?.id).then((res) => {
+            setTests(res.data);
             setLoading(false);
         });
-    }, [auth?.user?.id])
+    }, [auth?.user?.id]);
 
     const page = usePage();
 

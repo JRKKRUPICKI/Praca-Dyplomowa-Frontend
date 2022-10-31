@@ -54,7 +54,7 @@ export const LINKS = {
     STATISTICS: 'STATISTICS',
     LOGS: 'LOGS',
     LIVE: 'LIVE',
-};
+}
 
 interface NavigationProps {
     activeLink: string
@@ -63,7 +63,6 @@ interface NavigationProps {
 export const Navigation = (props: NavigationProps) => {
 
     const navigate = useNavigate();
-
     const auth = useAuth();
 
     return (

@@ -4,12 +4,12 @@ import styled from "styled-components";
 import { API } from "../App";
 import { useAuth } from "../auth/Auth";
 import { LINKS, Navigation } from "../components/navigation";
-import { Button } from "../components/button";
 import { Tile } from "../components/tile";
-import { Title } from "../components/typography";
+import { SpecialText, Title } from "../components/typography";
 import { Test } from "../models";
 import { formatDatetime } from "../utils/TimeUtils";
 import { Topbar } from "../components/topbar";
+import { Select } from "../components/select";
 
 const Container = styled.div`
     display: grid;
@@ -67,27 +67,6 @@ const Content = styled.div`
     }
 `;
 
-const Select = styled.select`
-    background: #1e1f24;
-    border: 1px solid #7d8093;
-    border-radius: 10px;
-    padding: 8px;
-    font-size: 14px;
-    color: #FFFFFF;
-    width: 400px;
-    cursor: pointer;
-    margin-right: 16px;
-
-    &:focus{
-        outline: none;
-    }
-`;
-
-const SpecialText = styled.span`
-    color: #FFFFFF;
-    font-weigth: bold;
-`;
-
 export default function LiveLogsPoage() {
 
     const auth = useAuth();
@@ -100,41 +79,35 @@ export default function LiveLogsPoage() {
     const [logsType, setLogsType] = useState<'TEST' | 'STUDENT' | null>(null);
 
     useEffect(() => {
-        axios.get(API + 'test').then((res) => {
-            setTestList(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
+        axios.get(API + 'test/teacher/' + auth?.user?.id).then((res) => {
+            setTestList(res.data);
             setLoading(false);
         });
-    }, [auth?.user?.id])
+    }, [auth?.user?.id]);
 
     useEffect(() => {
         const timer = setInterval(() => loadLogs(), 5000);
         return () => clearInterval(timer);
-    }, [logsType, studentId, testId])
+    }, [logsType, studentId, testId]);
 
-    const loadStudents = () => {
-        if (!testId) return;
+    const loadStudents = (testId: string) => {
+        if (!testId || testId === '0') return;
         setLoading(true);
         axios.get(API + 'test/' + testId).then((res) => {
             setStudentList(res.data.students);
             setLoading(false);
-        })
+        });
     }
 
     const [logs, setLogs] = useState([]);
 
-    const loadLogs = (type?: LogsType) => {
-        console.log(studentId)
-        if (type) {
-            if (type === 'TEST') loadTestLogs();
-            else if (type === 'STUDENT') loadStudentLogs();
-            return;
-        }
+    const loadLogs = () => {
         if (logsType === 'TEST') loadTestLogs();
         else if (logsType === 'STUDENT') loadStudentLogs();
     }
 
     const loadTestLogs = () => {
-        if (!testId) return;
+        if (!testId || testId === '0') return;
         setLoading(true);
         axios.get(API + 'logs/test/' + testId + '/live').then((res) => {
             let newData: any = logs;
@@ -149,7 +122,7 @@ export default function LiveLogsPoage() {
     }
 
     const loadStudentLogs = () => {
-        if (!testId || !studentId) return;
+        if (!studentId || studentId === '0') return;
         setLoading(true);
         axios.get(API + 'logs/student/' + studentId + '/live').then((res) => {
             let newData: any = logs;
@@ -160,21 +133,24 @@ export default function LiveLogsPoage() {
             newData = newData.slice(0, 10);
             setLogs(newData);
             setLoading(false);
-        })
+        });
     }
 
     const chooseTest = (testId: string) => {
         setTestId(testId);
-        setStudentId('');
         setStudentList([]);
+        setStudentId('0');
+        loadStudents(testId);
         setLogs([]);
+        setLogsType(testId === '0' ? null : 'TEST');
+        loadLogs();
     }
 
-    type LogsType = 'TEST' | 'STUDENT' | null;
-
-    const chooseLogsType = (type: LogsType) => {
-        setLogsType(type);
-        loadLogs(type);
+    const chooseStudent = (studentId: string) => {
+        setStudentId(studentId);
+        setLogs([]);
+        setLogsType(studentId === '0' ? 'TEST' : 'STUDENT');
+        loadLogs();
     }
 
     return (
@@ -185,19 +161,16 @@ export default function LiveLogsPoage() {
                 <Tile>
                     <Title>Wybierz test</Title>
                     <Select onChange={e => chooseTest(e.target.value)} value={testId}>
-                        <option value=''>Wybierz test</option>
+                        <option value='0'>Wybierz test</option>
                         {testList.map((test: Test) => <option value={test.id} key={test.id}>{test.name}</option>)}
                     </Select>
-                    <Button onClick={() => loadStudents()}>Pokaż studentów</Button>
-                    <Button onClick={() => chooseLogsType("TEST")}>Pokaż wpisy</Button>
                 </Tile>
                 <Tile>
                     <Title>Wybierz studenta</Title>
-                    <Select onChange={e => { setStudentId(e.target.value); setLogs([]) }} value={studentId}>
-                        <option value=''>Wybierz studenta</option>
+                    <Select onChange={e => chooseStudent(e.target.value)} value={studentId}>
+                        <option value='0'>Wybierz studenta</option>
                         {studentList.map((student: any) => <option value={student.id} key={student.id}>{student.login}</option>)}
                     </Select>
-                    <Button onClick={() => chooseLogsType("STUDENT")}>Pokaż wpisy</Button>
                 </Tile>
                 <Tile>
                     <Title>Zapisane odpowiedzi</Title>
@@ -223,6 +196,6 @@ export default function LiveLogsPoage() {
                     )}
                 </Tile>
             </Content>
-        </Container >
+        </Container>
     )
 }

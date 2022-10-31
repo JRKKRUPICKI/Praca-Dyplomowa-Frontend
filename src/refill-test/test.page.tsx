@@ -24,7 +24,7 @@ export default function TestPage({ user, setUser }: any) {
             setData(res.data);
             setLoading(false);
         });
-    }, [testId])
+    }, [testId]);
 
     if (!testId) {
         return <div>'ERROR'</div>
@@ -80,7 +80,7 @@ export default function TestPage({ user, setUser }: any) {
             actionType: 0
         }).catch((err) => {
             alert('Problem z zapisem logów');
-        })
+        });
         for (let i = 0; i < studentAnswer.length; i++) {
             if (studentAnswer[i].questionId === questionId) {
                 studentAnswer[i].answerId = answerId;

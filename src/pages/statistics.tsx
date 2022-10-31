@@ -10,6 +10,7 @@ import { Test } from "../models";
 import Chart from "../components/chart";
 import { Topbar } from "../components/topbar";
 import { Tile } from "../components/tile";
+import { Select } from "../components/select";
 
 const Container = styled.div`
     display: grid;
@@ -44,22 +45,6 @@ const Tiles = styled.div`
     }
 `;
 
-const Select = styled.select`
-    background: #1e1f24;
-    border: 1px solid #7d8093;
-    border-radius: 10px;
-    padding: 8px;
-    font-size: 14px;
-    color: #FFFFFF;
-    width: 100%;
-    cursor: pointer;
-    margin-right: 16px;
-
-    &:focus{
-        outline: none;
-    }
-`;
-
 export default function Statistics() {
 
     const auth = useAuth();
@@ -80,7 +65,7 @@ export default function Statistics() {
             setTests(res.data.filter((t: any) => t.teacher.id === auth?.user?.id));
             setIsLoading(false);
         });
-    }, [auth?.user?.id])
+    }, [auth?.user?.id]);
 
     const loadStatistics = (testId: string) => {
         if (!testId || testId === '0') return;

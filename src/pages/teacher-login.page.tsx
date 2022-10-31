@@ -106,7 +106,7 @@ export default function TeacherLoginPage() {
             setError('');
         }).catch((err) => {
             setError('Nieprawidłowy adres e-mail lub hasło');
-        })
+        });
     }
 
     const handleRegister = () => {

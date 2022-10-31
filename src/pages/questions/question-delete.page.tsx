@@ -28,7 +28,7 @@ export default function QuestionDelete() {
             setQuestion(res.data);
             setIsLoading(false);
         })
-    }, [page.questionId])
+    }, [page.questionId]);
 
     if (isLoading || !question) {
         return <div>Loading</div>
@@ -39,7 +39,7 @@ export default function QuestionDelete() {
         axios.delete(API + 'question/' + page.questionId).then((res) => {
             page.setQuestionId()
             page.setPage(PAGES.LIST);
-        })
+        });
     }
 
     return (
