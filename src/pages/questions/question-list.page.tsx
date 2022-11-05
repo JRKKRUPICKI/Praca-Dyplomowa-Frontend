@@ -33,6 +33,7 @@ export default function QuestionList() {
             setTests(res.data);
             setIsLoading(false);
         });
+        loadQuestions(page.testId);
     }, [auth?.user?.id]);
 
     const getQuestion = (question: any) => {

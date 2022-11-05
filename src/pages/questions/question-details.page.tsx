@@ -67,7 +67,7 @@ export default function QuestionDetails() {
         axios.get(API + 'question/' + page.questionId).then((res) => {
             setQuestion(res.data);
             setIsLoading(false);
-        })
+        });
     }, [page.questionId]);
 
     if (isLoading || !question) {

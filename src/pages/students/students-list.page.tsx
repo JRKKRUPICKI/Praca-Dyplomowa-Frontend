@@ -31,6 +31,7 @@ export default function StudentsList() {
             setData(res.data);
             setIsLoading(false);
         });
+        loadStudents(page.testId);
     }, [auth?.user?.id]);
 
 
