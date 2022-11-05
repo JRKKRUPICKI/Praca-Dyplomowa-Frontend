@@ -136,7 +136,7 @@ export default function TestPage({ user, setUser }: any) {
     }
 
     const saveAnswers = (e?: any) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         if (!areAnswersSelected()) return;
         axios.post(API + 'studentanswer/all', { answers: studentAnswer }).then((res) => {
             alert('Odpowiedzi zapisane');
