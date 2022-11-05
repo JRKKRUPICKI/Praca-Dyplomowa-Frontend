@@ -39,14 +39,9 @@ export default function TestPage({ user, setUser }: any) {
             seconds,
             minutes,
             hours,
-            //days,
-            //isRunning,
-            //start,
-            //pause,
-            //resume,
-            //restart,
         } = useTimer({
             expiryTimestamp, onExpire: () => {
+                saveAnswers();
                 alert('Koniec czasu, odpowiedzi zostały automatycznie przesłane');
                 setUser();
             }
@@ -140,7 +135,7 @@ export default function TestPage({ user, setUser }: any) {
         unselectBadQuestion(questionId);
     }
 
-    const saveAnswers = (e: any) => {
+    const saveAnswers = (e?: any) => {
         e.preventDefault();
         if (!areAnswersSelected()) return;
         axios.post(API + 'studentanswer/all', { answers: studentAnswer }).then((res) => {

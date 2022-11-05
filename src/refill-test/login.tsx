@@ -109,7 +109,7 @@ export default function Login({ setUser }: any) {
             hours,
             days,
         } = useTimer({
-            expiryTimestamp, onExpire: () => { }
+            expiryTimestamp, onExpire: () => window.location.reload()
         });
 
         return (
