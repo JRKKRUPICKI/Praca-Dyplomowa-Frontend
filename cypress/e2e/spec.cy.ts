@@ -110,8 +110,8 @@ describe('Czyszczenie danych po testach', () => {
   })
 })
 
-describe('wylogowywanie', () => {
-  it('czy wylogowalo', () => {
+describe('Wylogowywanie nauczyciela', () => {
+  it('Sprawdzenie czy nauczyciel został wylogowany', () => {
     cy.get('div').contains('Wyloguj się').click()
     cy.contains('Zaloguj się')
   })
