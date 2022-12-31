@@ -12,6 +12,7 @@ import { API } from "../../App";
 import { Label } from "../../components/label";
 import { PAGES, usePage } from "./students.provider";
 import { Select } from "../../components/select";
+import PasswordVisible from "../../components/password-visible";
 
 const Container = styled.div`
     ${Tile}:not(:first-child){
@@ -49,22 +50,6 @@ export default function StudentsList() {
                 </td>
             </tr>
         )
-    }
-
-    function PasswordVisible(props: any) {
-        const [isVisible, setIsVisible] = useState(false);
-
-        const toggleIsVisible = () => {
-            setIsVisible(!isVisible);
-        }
-
-        const VisibleButton = styled(Button)`
-            background: #000000;
-            margin-left: 8px;
-        `;
-
-        if (!isVisible) return <>********<VisibleButton onClick={() => toggleIsVisible()}>Pokaż</VisibleButton></>
-        return <>{props.children}<VisibleButton onClick={() => toggleIsVisible()}>Ukryj</VisibleButton></>
     }
 
     const [students, setStudents] = useState([]);
