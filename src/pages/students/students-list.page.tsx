@@ -39,7 +39,7 @@ export default function StudentsList() {
         return (
             <tr key={student.id}>
                 <td>{student.login}</td>
-                <td>{student.password}</td>
+                <td><PasswordVisible>{student.password}</PasswordVisible></td>
                 <td>{student.active ? <Label active>aktywne</Label> : <Label inactive>nieaktywne</Label>}</td>
                 <td>{student.status === 0 ? <Label inactive>nieprzesłane</Label> : <Label active>przesłane ({formatDatetime(student.status)})</Label>}</td>
                 <td>
@@ -49,6 +49,22 @@ export default function StudentsList() {
                 </td>
             </tr>
         )
+    }
+
+    function PasswordVisible(props: any) {
+        const [isVisible, setIsVisible] = useState(false);
+
+        const toggleIsVisible = () => {
+            setIsVisible(!isVisible);
+        }
+
+        const VisibleButton = styled(Button)`
+            background: #000000;
+            margin-left: 8px;
+        `;
+
+        if (!isVisible) return <>********<VisibleButton onClick={() => toggleIsVisible()}>Pokaż</VisibleButton></>
+        return <>{props.children}<VisibleButton onClick={() => toggleIsVisible()}>Ukryj</VisibleButton></>
     }
 
     const [students, setStudents] = useState([]);
