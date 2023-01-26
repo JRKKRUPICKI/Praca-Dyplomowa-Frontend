@@ -148,7 +148,7 @@ export default function TeacherLoginPage() {
                     {passwordError && <Error>{passwordError}</Error>}
                     <Button onClick={() => handleLogin()}>Zaloguj</Button>
                     {error && <Error>{error}</Error>}
-                    {/* <Button onClick={() => changeAuthType()}>Stwórz nowe konto</Button> */}
+                    <Button onClick={() => changeAuthType()}>Stwórz nowe konto</Button>
                 </>) : (<>
                     <Title>Stwórz nowe konto</Title>
                     <InputLabel>Adres e-mail:</InputLabel>
